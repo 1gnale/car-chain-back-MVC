@@ -1,0 +1,43 @@
+{
+  "name": "car-chain-back-mvc",
+  "version": "1.0.0",
+  "description": "Backend para sistema de pólizas de seguros usando Express, TypeScript y Sequelize",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "seed": "npx sequelize-cli db:seed:all",
+    "seed:undo": "npx sequelize-cli db:seed:undo:all"
+  },
+  "keywords": ["express", "typescript", "sequelize", "mvc", "polizas", "seguros"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0",
+    "sequelize": "^6.32.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "express-validator": "^7.0.1",
+    "multer": "^1.4.5-lts.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.4.9",
+    "@types/cors": "^2.8.13",
+    "@types/morgan": "^1.9.4",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/multer": "^1.4.7",
+    "typescript": "^5.1.6",
+    "ts-node-dev": "^2.0.0",
+    "sequelize-cli": "^6.6.1"
+  }
+}
