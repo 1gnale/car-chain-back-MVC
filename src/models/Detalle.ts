@@ -1,65 +1,69 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
-interface ModeloAttributes {
+interface DetalleAttributes {
   id: number;
   nombre: string;
   descripcion: string;
-  marca_id: number;
+  porcentaje_miles: number;
+  monto_fijo: number;
   activo: boolean;
 }
 
-interface ModeloCreationAttributes extends Optional<ModeloAttributes, 'id'> {}
+interface DetalleCreationAttributes extends Optional<DetalleAttributes, 'id'> {}
 
-class Modelo extends Model<ModeloAttributes, ModeloCreationAttributes> 
-  implements ModeloAttributes {
+class Detalle extends Model<DetalleAttributes, DetalleCreationAttributes> 
+  implements DetalleAttributes {
   public id!: number;
   public nombre!: string;
   public descripcion!: string;
-  public marca_id!: number;
+  public porcentaje_miles!: number;
+  public monto_fijo!: number;
   public activo!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-Modelo.init(
+Detalle.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idmodelo'
+      field: 'iddetalle'
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombremodelo'
+      field: 'nombredetalle'
     },
     descripcion: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(100),
       allowNull: false,
-      field: 'descripcionmodelo'
+      field: 'descripciondetalle'
     },
-    marca_id: {
+    porcentaje_miles: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'marca',
-        key: 'idmarca',
-      },
+      field: 'porcentajemiles'
+    },
+    monto_fijo: {
+      type: DataTypes.DOUBLE(10, 2),
+      allowNull: false,
+      field: 'montofijo'
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      field: 'activodetalle'
     },
   },
   {
     sequelize,
-    tableName: 'modelo',
+    tableName: 'detalle',
     timestamps: true,
   }
 );
 
-export default Modelo;
+export default Detalle;

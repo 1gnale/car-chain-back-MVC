@@ -7,7 +7,7 @@ export class ProvinciaController {
   static async getAllProvincias(req: Request, res: Response) {
     try {
       const provincias = await Provincia.findAll({
-        order: [['descripcionprovincia', 'ASC']]
+        order: [['descripcion', 'ASC']]
       });
       
       return BaseService.success(res, provincias, 'Provincias obtenidas exitosamente', provincias.length);
@@ -33,16 +33,17 @@ export class ProvinciaController {
 
   static async createProvincia(req: Request, res: Response) {
     try {
-      const { descripcionprovincia } = req.body;
+      const { descripcion } = req.body;
 
-      if (!descripcionprovincia) {
+      if (!descripcion) {
         return BaseService.validationError(res, {
-          array: () => [{ msg: 'La descripción de la provincia es requerida', path: 'descripcionprovincia' }]
+          array: () => [{ msg: 'La descripción de la provincia es requerida', path: 'descripcion' }]
         } as any);
       }
 
       const nuevaProvincia = await Provincia.create({
-        descripcionprovincia
+        descripcion,
+        activo: true
       });
 
       return BaseService.created(res, nuevaProvincia, 'Provincia creada exitosamente');
@@ -54,7 +55,7 @@ export class ProvinciaController {
   static async updateProvincia(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { descripcionprovincia } = req.body;
+      const { descripcion } = req.body;
 
       const provincia = await Provincia.findByPk(id);
 
@@ -62,7 +63,7 @@ export class ProvinciaController {
         return BaseService.notFound(res, 'Provincia no encontrada');
       }
 
-      await provincia.update({ descripcionprovincia });
+      await provincia.update({ descripcion });
 
       return BaseService.success(res, provincia, 'Provincia actualizada exitosamente');
     } catch (error: any) {

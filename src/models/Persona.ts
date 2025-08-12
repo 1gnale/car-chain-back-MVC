@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import Localidad from './Localidad';
 
 export enum TipoDocumento {
   CUIT = 'CUIT',
@@ -8,39 +7,44 @@ export enum TipoDocumento {
   DNI = 'DNI',
   LIBRETA_ENROLE = 'LIBRETA_ENROLE',
   LIBRETA_CIVICA = 'LIBRETA_CIVICA',
-  PASAPORTE = 'PASAPORTE'
+  PASAPORTE = 'PASAPORTE',
+}
+
+export enum sexo {
+  MASCULINO = 'Masculino',
+  FEMENINO = 'Femenino'
 }
 
 interface PersonaAttributes {
-  idpersona: number;
+  id: number;
   localidad_id: number;
   nombres: string;
-  apellidos: string;
-  fechanacimiento: Date;
-  tipodocumento: TipoDocumento;
+  apellido: string;
+  fechaNacimiento: Date;
+  tipoDocumento: TipoDocumento;
   documento: string;
   domicilio: string;
   correo: string;
   telefono: string;
-  sexo: boolean;
+  sexo: string;
   contraseña: string;
 }
 
-interface PersonaCreationAttributes extends Optional<PersonaAttributes, 'idpersona'> {}
+interface PersonaCreationAttributes extends Optional<PersonaAttributes, 'id'> {}
 
 class Persona extends Model<PersonaAttributes, PersonaCreationAttributes> 
   implements PersonaAttributes {
-  public idpersona!: number;
+  public id!: number;
   public localidad_id!: number;
   public nombres!: string;
-  public apellidos!: string;
-  public fechanacimiento!: Date;
-  public tipodocumento!: TipoDocumento;
+  public apellido!: string;
+  public fechaNacimiento!: Date;
+  public tipoDocumento!: TipoDocumento;
   public documento!: string;
   public domicilio!: string;
   public correo!: string;
   public telefono!: string;
-  public sexo!: boolean;
+  public sexo!: string;
   public contraseña!: string;
 
   public readonly createdAt!: Date;
@@ -49,16 +53,17 @@ class Persona extends Model<PersonaAttributes, PersonaCreationAttributes>
 
 Persona.init(
   {
-    idpersona: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      field: 'idpersona'
     },
     localidad_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Localidad,
+        model: 'localidad',
         key: 'idLocalidad',
       },
     },
@@ -66,17 +71,20 @@ Persona.init(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    apellidos: {
+    apellido: {
       type: DataTypes.STRING(50),
       allowNull: false,
+      field: 'apellidos'
     },
-    fechanacimiento: {
+    fechaNacimiento: {
       type: DataTypes.DATEONLY,
       allowNull: false,
+      field: 'fechanacimiento'
     },
-    tipodocumento: {
+    tipoDocumento: {
       type: DataTypes.ENUM(...Object.values(TipoDocumento)),
       allowNull: false,
+      field: 'tipodocumento'
     },
     documento: {
       type: DataTypes.STRING(20),
@@ -96,7 +104,7 @@ Persona.init(
       allowNull: false,
     },
     sexo: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.ENUM(...Object.values(sexo)),
       allowNull: false,
     },
     contraseña: {

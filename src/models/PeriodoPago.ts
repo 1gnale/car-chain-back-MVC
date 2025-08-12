@@ -1,53 +1,50 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
-interface ModeloAttributes {
+interface PeriodoPagoAttributes {
   id: number;
   nombre: string;
-  descripcion: string;
-  marca_id: number;
+  cantidadMeses: number;
+  descuento: number;
   activo: boolean;
 }
 
-interface ModeloCreationAttributes extends Optional<ModeloAttributes, 'id'> {}
+interface PeriodoPagoCreationAttributes extends Optional<PeriodoPagoAttributes, 'id'> {}
 
-class Modelo extends Model<ModeloAttributes, ModeloCreationAttributes> 
-  implements ModeloAttributes {
+class PeriodoPago extends Model<PeriodoPagoAttributes, PeriodoPagoCreationAttributes> 
+  implements PeriodoPagoAttributes {
   public id!: number;
   public nombre!: string;
-  public descripcion!: string;
-  public marca_id!: number;
+  public cantidadMeses!: number;
+  public descuento!: number;
   public activo!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-Modelo.init(
+PeriodoPago.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idmodelo'
+      field: 'idperiodopago'
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombremodelo'
+      field: 'nombreperiodopago'
     },
-    descripcion: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      field: 'descripcionmodelo'
-    },
-    marca_id: {
+    cantidadMeses: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'marca',
-        key: 'idmarca',
-      },
+      field: 'cantidadmesespago'
+    },
+    descuento: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'descuentoperiodopago'
     },
     activo: {
       type: DataTypes.BOOLEAN,
@@ -57,9 +54,9 @@ Modelo.init(
   },
   {
     sequelize,
-    tableName: 'modelo',
+    tableName: 'periodopago',
     timestamps: true,
   }
 );
 
-export default Modelo;
+export default PeriodoPago;

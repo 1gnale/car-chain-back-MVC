@@ -2,18 +2,20 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
 interface MarcaAttributes {
-  idmarca: number;
-  nombremarca: string;
-  descripcionmarca: string;
+  id: number;
+  nombre: string;
+  descripcion: string;
+  activo: boolean;
 }
 
-interface MarcaCreationAttributes extends Optional<MarcaAttributes, 'idmarca'> {}
+interface MarcaCreationAttributes extends Optional<MarcaAttributes, 'id'> {}
 
 class Marca extends Model<MarcaAttributes, MarcaCreationAttributes> 
   implements MarcaAttributes {
-  public idmarca!: number;
-  public nombremarca!: string;
-  public descripcionmarca!: string;
+  public id!: number;
+  public nombre!: string;
+  public descripcion!: string;
+  public activo!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -21,18 +23,26 @@ class Marca extends Model<MarcaAttributes, MarcaCreationAttributes>
 
 Marca.init(
   {
-    idmarca: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      field: 'idmarca'
     },
-    nombremarca: {
+    nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
+      field: 'nombremarca'
     },
-    descripcionmarca: {
+    descripcion: {
       type: DataTypes.STRING(50),
       allowNull: false,
+      field: 'descripcionmarca'
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
   },
   {

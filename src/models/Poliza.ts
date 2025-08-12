@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import Usuario from './Usuario';
 
 export enum EstadoPoliza {
   PENDIENTE = 'PENDIENTE',
@@ -14,40 +13,40 @@ export enum EstadoPoliza {
 }
 
 interface PolizaAttributes {
-  numeropoliza: number;
+  numero_poliza: number;
   usuario_legajo?: string;
   documentacion_id: number;
-  lineacotizacion_id: number;
-  periodopago_id?: number;
-  tipocontratacion_id?: number;
-  preciopolizaactual: number;
-  montoasegurado: number;
-  fec_cont_poliza?: Date;
-  hora_cont_poliza?: string;
-  fec_venc_poliza?: Date;
-  fec_canc_poliza?: Date;
-  auto_renov_poliza: boolean;
-  estadopoliza: EstadoPoliza;
+  lineaContizacion_id: number;
+  periodoPago_id?: number;
+  tipoContratacion_id?: number;
+  precioPolzaActual: number;
+  montoAsegurado: number;
+  fechaContratacion?: Date;
+  horaContratacion?: string;
+  fechaVencimiento?: Date;
+  fechaCancelacion?: Date;
+  renovacionAutomatica: boolean;
+  estadoPoliza: EstadoPoliza;
 }
 
-interface PolizaCreationAttributes extends Optional<PolizaAttributes, 'numeropoliza'> {}
+interface PolizaCreationAttributes extends Optional<PolizaAttributes, 'numero_poliza'> {}
 
 class Poliza extends Model<PolizaAttributes, PolizaCreationAttributes> 
   implements PolizaAttributes {
-  public numeropoliza!: number;
+  public numero_poliza!: number;
   public usuario_legajo?: string;
   public documentacion_id!: number;
-  public lineacotizacion_id!: number;
-  public periodopago_id?: number;
-  public tipocontratacion_id?: number;
-  public preciopolizaactual!: number;
-  public montoasegurado!: number;
-  public fec_cont_poliza?: Date;
-  public hora_cont_poliza?: string;
-  public fec_venc_poliza?: Date;
-  public fec_canc_poliza?: Date;
-  public auto_renov_poliza!: boolean;
-  public estadopoliza!: EstadoPoliza;
+  public lineaContizacion_id!: number;
+  public periodoPago_id?: number;
+  public tipoContratacion_id?: number;
+  public precioPolzaActual!: number;
+  public montoAsegurado!: number;
+  public fechaContratacion?: Date;
+  public horaContratacion?: string;
+  public fechaVencimiento?: Date;
+  public fechaCancelacion?: Date;
+  public renovacionAutomatica!: boolean;
+  public estadoPoliza!: EstadoPoliza;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -55,66 +54,95 @@ class Poliza extends Model<PolizaAttributes, PolizaCreationAttributes>
 
 Poliza.init(
   {
-    numeropoliza: {
+    numero_poliza: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      field: 'numeropoliza'
     },
     usuario_legajo: {
       type: DataTypes.STRING(50),
       allowNull: true,
       references: {
-        model: Usuario,
+        model: 'usuario',
         key: 'legajo',
       },
     },
     documentacion_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'documentacion',
+        key: 'iddocumentacion',
+      },
     },
-    lineacotizacion_id: {
+    lineaContizacion_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'lineacotizacion_id',
+      references: {
+        model: 'lineacotizacion',
+        key: 'idlineacotizacion',
+      },
     },
-    periodopago_id: {
+    periodoPago_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'periodopago_id',
+      references: {
+        model: 'periodopago',
+        key: 'idperiodopago',
+      },
     },
-    tipocontratacion_id: {
+    tipoContratacion_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'tipocontratacion_id',
+      references: {
+        model: 'tipocontratacion',
+        key: 'idtipocontratacion',
+      },
     },
-    preciopolizaactual: {
+    precioPolzaActual: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: false,
+      field: 'preciopolizaactual'
     },
-    montoasegurado: {
+    montoAsegurado: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: false,
+      field: 'montoasegurado'
     },
-    fec_cont_poliza: {
+    fechaContratacion: {
       type: DataTypes.DATEONLY,
       allowNull: true,
+      field: 'fec_cont_poliza'
     },
-    hora_cont_poliza: {
+    horaContratacion: {
       type: DataTypes.TIME,
       allowNull: true,
+      field: 'hora_cont_poliza'
     },
-    fec_venc_poliza: {
+    fechaVencimiento: {
       type: DataTypes.DATEONLY,
       allowNull: true,
+      field: 'fec_venc_poliza'
     },
-    fec_canc_poliza: {
+    fechaCancelacion: {
       type: DataTypes.DATEONLY,
       allowNull: true,
+      field: 'fec_canc_poliza'
     },
-    auto_renov_poliza: {
+    renovacionAutomatica: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      field: 'auto_renov_poliza'
     },
-    estadopoliza: {
+    estadoPoliza: {
       type: DataTypes.ENUM(...Object.values(EstadoPoliza)),
       allowNull: false,
+      defaultValue: EstadoPoliza.PENDIENTE,
+      field: 'estadopoliza'
     },
   },
   {

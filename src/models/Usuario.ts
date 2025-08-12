@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import Persona from './Persona';
 
 export enum TipoUsuario {
   ADMINISTRADOR = 'ADMINISTRADOR',
@@ -10,20 +9,22 @@ export enum TipoUsuario {
 }
 
 interface UsuarioAttributes {
+  idUsuario: number;
   legajo: string;
   persona_id: number;
-  estado: boolean;
-  tipousuario: TipoUsuario;
+  estado: string;
+  tipoUsuario: TipoUsuario;
 }
 
-interface UsuarioCreationAttributes extends UsuarioAttributes {}
+interface UsuarioCreationAttributes extends Optional<UsuarioAttributes, 'idUsuario'> {}
 
 class Usuario extends Model<UsuarioAttributes, UsuarioCreationAttributes> 
   implements UsuarioAttributes {
+  public idUsuario!: number;
   public legajo!: string;
   public persona_id!: number;
-  public estado!: boolean;
-  public tipousuario!: TipoUsuario;
+  public estado!: string;
+  public tipoUsuario!: TipoUsuario;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -31,26 +32,34 @@ class Usuario extends Model<UsuarioAttributes, UsuarioCreationAttributes>
 
 Usuario.init(
   {
+    idUsuario: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      field: 'idusuario'
+    },
     legajo: {
       type: DataTypes.STRING(50),
-      primaryKey: true,
+      allowNull: false,
       unique: true,
     },
     persona_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Persona,
+        model: 'persona',
         key: 'idpersona',
       },
     },
     estado: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.STRING(20),
       allowNull: false,
+      defaultValue: 'ACTIVO'
     },
-    tipousuario: {
+    tipoUsuario: {
       type: DataTypes.ENUM(...Object.values(TipoUsuario)),
       allowNull: false,
+      field: 'tipousuario'
     },
   },
   {

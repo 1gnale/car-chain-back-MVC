@@ -2,22 +2,22 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
 interface CoberturaAttributes {
-  idcobertura: number;
-  nombrecobertura: string;
-  descripcioncobertura: string;
-  recargoporatraso: number;
-  activocobertura: boolean;
+  id_cobertura: number;
+  nombre: string;
+  descripcion: string;
+  recargoPorAtraso: number;
+  activo: boolean;
 }
 
-interface CoberturaCreationAttributes extends Optional<CoberturaAttributes, 'idcobertura'> {}
+interface CoberturaCreationAttributes extends Optional<CoberturaAttributes, 'id_cobertura'> {}
 
 class Cobertura extends Model<CoberturaAttributes, CoberturaCreationAttributes> 
   implements CoberturaAttributes {
-  public idcobertura!: number;
-  public nombrecobertura!: string;
-  public descripcioncobertura!: string;
-  public recargoporatraso!: number;
-  public activocobertura!: boolean;
+  public id_cobertura!: number;
+  public nombre!: string;
+  public descripcion!: string;
+  public recargoPorAtraso!: number;
+  public activo!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -25,26 +25,31 @@ class Cobertura extends Model<CoberturaAttributes, CoberturaCreationAttributes>
 
 Cobertura.init(
   {
-    idcobertura: {
+    id_cobertura: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      field: 'idcobertura'
     },
-    nombrecobertura: {
+    nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
+      field: 'nombrecobertura'
     },
-    descripcioncobertura: {
+    descripcion: {
       type: DataTypes.STRING(100),
       allowNull: false,
+      field: 'descripcioncobertura'
     },
-    recargoporatraso: {
+    recargoPorAtraso: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'recargoporatraso'
     },
-    activocobertura: {
+    activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      field: 'activocobertura'
     },
   },
   {

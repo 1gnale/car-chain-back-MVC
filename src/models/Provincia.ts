@@ -2,16 +2,18 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
 interface ProvinciaAttributes {
-  idprovincia: number;
-  descripcionprovincia: string;
+  id: number;
+  descripcion: string;
+  activo: boolean;
 }
 
-interface ProvinciaCreationAttributes extends Optional<ProvinciaAttributes, 'idprovincia'> {}
+interface ProvinciaCreationAttributes extends Optional<ProvinciaAttributes, 'id'> {}
 
 class Provincia extends Model<ProvinciaAttributes, ProvinciaCreationAttributes> 
   implements ProvinciaAttributes {
-  public idprovincia!: number;
-  public descripcionprovincia!: string;
+  public id!: number;
+  public descripcion!: string;
+  public activo!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -19,14 +21,21 @@ class Provincia extends Model<ProvinciaAttributes, ProvinciaCreationAttributes>
 
 Provincia.init(
   {
-    idprovincia: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      field: 'idprovincia'
     },
-    descripcionprovincia: {
+    descripcion: {
       type: DataTypes.STRING(100),
       allowNull: false,
+      field: 'descripcionprovincia'
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
   },
   {

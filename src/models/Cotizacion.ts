@@ -1,28 +1,27 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import Vehiculo from './Vehiculo';
 
 interface CotizacionAttributes {
-  idcotizacion: number;
+  id: number;
+  fechaCreacion: Date;
+  fechaVencimiento: Date;
   vehiculo_id: number;
-  configlocalidad_id?: number;
-  configedad_id?: number;
-  configantiguedad_id?: number;
-  fechacreacioncotizacion: Date;
-  fechavencimientocotizacion: Date;
+  configuracionLocalidad_id?: number;
+  configuracionEdad_id?: number;
+  configuracionAntiguedad_id?: number;
 }
 
-interface CotizacionCreationAttributes extends Optional<CotizacionAttributes, 'idcotizacion'> {}
+interface CotizacionCreationAttributes extends Optional<CotizacionAttributes, 'id'> {}
 
 class Cotizacion extends Model<CotizacionAttributes, CotizacionCreationAttributes> 
   implements CotizacionAttributes {
-  public idcotizacion!: number;
+  public id!: number;
+  public fechaCreacion!: Date;
+  public fechaVencimiento!: Date;
   public vehiculo_id!: number;
-  public configlocalidad_id?: number;
-  public configedad_id?: number;
-  public configantiguedad_id?: number;
-  public fechacreacioncotizacion!: Date;
-  public fechavencimientocotizacion!: Date;
+  public configuracionLocalidad_id?: number;
+  public configuracionEdad_id?: number;
+  public configuracionAntiguedad_id?: number;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -30,38 +29,44 @@ class Cotizacion extends Model<CotizacionAttributes, CotizacionCreationAttribute
 
 Cotizacion.init(
   {
-    idcotizacion: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      field: 'idcotizacion'
+    },
+    fechaCreacion: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      field: 'fechacreacioncotizacion'
+    },
+    fechaVencimiento: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      field: 'fechavencimientocotizacion'
     },
     vehiculo_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Vehiculo,
+        model: 'vehiculo',
         key: 'idvehiculo',
       },
     },
-    configlocalidad_id: {
+    configuracionLocalidad_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'configlocalidad_id'
     },
-    configedad_id: {
+    configuracionEdad_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'configedad_id'
     },
-    configantiguedad_id: {
+    configuracionAntiguedad_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-    },
-    fechacreacioncotizacion: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
-    },
-    fechavencimientocotizacion: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
+      field: 'configantiguedad_id'
     },
   },
   {

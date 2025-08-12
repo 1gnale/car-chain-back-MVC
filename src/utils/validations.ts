@@ -3,7 +3,7 @@ import { body, param, query } from 'express-validator';
 export const provinciaValidation = {
   // Validación para crear provincia
   create: [
-    body('descripcionprovincia')
+    body('descripcion')
       .notEmpty()
       .withMessage('La descripción de la provincia es requerida')
       .isLength({ min: 2, max: 100 })
@@ -16,7 +16,7 @@ export const provinciaValidation = {
     param('id')
       .isInt({ min: 1 })
       .withMessage('El ID debe ser un número entero positivo'),
-    body('descripcionprovincia')
+    body('descripcion')
       .notEmpty()
       .withMessage('La descripción de la provincia es requerida')
       .isLength({ min: 2, max: 100 })

@@ -1,26 +1,27 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import Modelo from './Modelo';
 
 interface VersionAttributes {
-  idversion: number;
-  nombreversion: string;
-  descripcionversion: string;
-  preciomercado: number;
-  preciomercadognc: number;
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio_mercado: number;
+  precio_mercado_gnc: number;
   modelo_id: number;
+  activo: boolean;
 }
 
-interface VersionCreationAttributes extends Optional<VersionAttributes, 'idversion'> {}
+interface VersionCreationAttributes extends Optional<VersionAttributes, 'id'> {}
 
 class Version extends Model<VersionAttributes, VersionCreationAttributes> 
   implements VersionAttributes {
-  public idversion!: number;
-  public nombreversion!: string;
-  public descripcionversion!: string;
-  public preciomercado!: number;
-  public preciomercadognc!: number;
+  public id!: number;
+  public nombre!: string;
+  public descripcion!: string;
+  public precio_mercado!: number;
+  public precio_mercado_gnc!: number;
   public modelo_id!: number;
+  public activo!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -28,34 +29,44 @@ class Version extends Model<VersionAttributes, VersionCreationAttributes>
 
 Version.init(
   {
-    idversion: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      field: 'idversion'
     },
-    nombreversion: {
+    nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
+      field: 'nombreversion'
     },
-    descripcionversion: {
+    descripcion: {
       type: DataTypes.STRING(50),
       allowNull: false,
+      field: 'descripcionversion'
     },
-    preciomercado: {
+    precio_mercado: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: false,
+      field: 'preciomercado'
     },
-    preciomercadognc: {
+    precio_mercado_gnc: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: false,
+      field: 'preciomercadognc'
     },
     modelo_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Modelo,
+        model: 'modelo',
         key: 'idmodelo',
       },
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
   },
   {

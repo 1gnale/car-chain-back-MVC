@@ -1,53 +1,43 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
-interface ModeloAttributes {
+interface TipoContratacionAttributes {
   id: number;
   nombre: string;
-  descripcion: string;
-  marca_id: number;
+  cantidadMeses: number;
   activo: boolean;
 }
 
-interface ModeloCreationAttributes extends Optional<ModeloAttributes, 'id'> {}
+interface TipoContratacionCreationAttributes extends Optional<TipoContratacionAttributes, 'id'> {}
 
-class Modelo extends Model<ModeloAttributes, ModeloCreationAttributes> 
-  implements ModeloAttributes {
+class TipoContratacion extends Model<TipoContratacionAttributes, TipoContratacionCreationAttributes> 
+  implements TipoContratacionAttributes {
   public id!: number;
   public nombre!: string;
-  public descripcion!: string;
-  public marca_id!: number;
+  public cantidadMeses!: number;
   public activo!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-Modelo.init(
+TipoContratacion.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idmodelo'
+      field: 'idtipocontratacion'
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombremodelo'
+      field: 'nombrecontratacion'
     },
-    descripcion: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      field: 'descripcionmodelo'
-    },
-    marca_id: {
+    cantidadMeses: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'marca',
-        key: 'idmarca',
-      },
+      field: 'cantidadmesescontratacion'
     },
     activo: {
       type: DataTypes.BOOLEAN,
@@ -57,9 +47,9 @@ Modelo.init(
   },
   {
     sequelize,
-    tableName: 'modelo',
+    tableName: 'tipocontratacion',
     timestamps: true,
   }
 );
 
-export default Modelo;
+export default TipoContratacion;

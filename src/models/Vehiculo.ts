@@ -1,29 +1,27 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database';
-import Cliente from './Cliente';
-import Version from './Version';
 
 interface VehiculoAttributes {
-  idvehiculo: number;
+  id: number;
   cliente_id: number;
   version_id: number;
   matricula: string;
-  añofabricación: number;
-  numeromotor: string;
+  añoFabricacion: number;
+  numeroMotor: string;
   chasis: string;
   gnc: boolean;
 }
 
-interface VehiculoCreationAttributes extends Optional<VehiculoAttributes, 'idvehiculo'> {}
+interface VehiculoCreationAttributes extends Optional<VehiculoAttributes, 'id'> {}
 
 class Vehiculo extends Model<VehiculoAttributes, VehiculoCreationAttributes> 
   implements VehiculoAttributes {
-  public idvehiculo!: number;
+  public id!: number;
   public cliente_id!: number;
   public version_id!: number;
   public matricula!: string;
-  public añofabricación!: number;
-  public numeromotor!: string;
+  public añoFabricacion!: number;
+  public numeroMotor!: string;
   public chasis!: string;
   public gnc!: boolean;
 
@@ -33,16 +31,17 @@ class Vehiculo extends Model<VehiculoAttributes, VehiculoCreationAttributes>
 
 Vehiculo.init(
   {
-    idvehiculo: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      field: 'idvehiculo'
     },
     cliente_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Cliente,
+        model: 'cliente',
         key: 'idcliente',
       },
     },
@@ -50,7 +49,7 @@ Vehiculo.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Version,
+        model: 'version',
         key: 'idversion',
       },
     },
@@ -58,13 +57,15 @@ Vehiculo.init(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    añofabricación: {
+    añoFabricacion: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'añofabricación'
     },
-    numeromotor: {
+    numeroMotor: {
       type: DataTypes.STRING(20),
       allowNull: false,
+      field: 'numeromotor'
     },
     chasis: {
       type: DataTypes.STRING(45),
