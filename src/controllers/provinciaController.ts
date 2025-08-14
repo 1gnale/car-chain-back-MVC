@@ -30,6 +30,7 @@ export class ProvinciaController {
       return BaseService.serverError(res, error, 'Error al obtener la provincia');
     }
   }
+  //kuscoa se la come
 
   static async createProvincia(req: Request, res: Response) {
     try {
