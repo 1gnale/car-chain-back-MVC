@@ -45,7 +45,7 @@ app.use('/api/modelos', modeloRoutes);
 app.use('/api/versiones', versionRoutes);
 app.use('/api/vehiculos', vehiculoRoutes);
 
-// Ruta de health check
+// Ruta de health check XDDDD
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
