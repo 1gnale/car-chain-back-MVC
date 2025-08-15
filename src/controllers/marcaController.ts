@@ -6,7 +6,7 @@ export class MarcaController {
   static async getAllMarcas(req: Request, res: Response) {
     try {
       const marcas = await Marca.findAll({
-        order: [["descripcion", "ASC"]],
+        order: [["nombre", "ASC"]],
       });
 
       return BaseService.success(
@@ -82,9 +82,17 @@ export class MarcaController {
         return BaseService.notFound(res, "marca no encontrada");
       }
 
-      await marca.update({ nombre, descripcion, activo });
+      const marcaModificada = await marca.update({
+        nombre,
+        descripcion,
+        activo,
+      });
 
-      return BaseService.success(res, marca, "Marca actualizada exitosamente");
+      return BaseService.success(
+        res,
+        marcaModificada,
+        "Marca actualizada exitosamente"
+      );
     } catch (error: any) {
       return BaseService.serverError(
         res,
