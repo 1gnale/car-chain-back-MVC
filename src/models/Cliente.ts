@@ -1,15 +1,18 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface ClienteAttributes {
   idClient: number;
   persona_id: number;
 }
 
-interface ClienteCreationAttributes extends Optional<ClienteAttributes, 'idClient'> {}
+interface ClienteCreationAttributes
+  extends Optional<ClienteAttributes, "idClient"> {}
 
-class Cliente extends Model<ClienteAttributes, ClienteCreationAttributes> 
-  implements ClienteAttributes {
+class Cliente
+  extends Model<ClienteAttributes, ClienteCreationAttributes>
+  implements ClienteAttributes
+{
   public idClient!: number;
   public persona_id!: number;
 
@@ -23,21 +26,21 @@ Cliente.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idcliente'
+      field: "idcliente",
     },
     persona_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'persona',
-        key: 'idpersona',
+        model: "persona",
+        key: "idpersona",
       },
     },
   },
   {
     sequelize,
-    tableName: 'cliente',
-    timestamps: true,
+    tableName: "cliente",
+    timestamps: false,
   }
 );
 

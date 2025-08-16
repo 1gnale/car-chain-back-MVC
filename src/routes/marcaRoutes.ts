@@ -10,7 +10,7 @@ router.get("/", MarcaController.getAllMarcas);
 
 router.get(
   "/:id",
-  MarcaController.getMarcaById,
+  marcaValidation.getById,
   handleValidationErrors,
   MarcaController.getMarcaById
 );

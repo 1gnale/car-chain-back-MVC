@@ -29,7 +29,7 @@ export const marcaValidation = {
       .withMessage("El ID debe ser un número entero positivo"),
     body("descripcion")
       .notEmpty()
-      .withMessage("La descripción de la provincia es requerida")
+      .withMessage("La descripción de la marca es requerida")
       .isLength({ min: 2, max: 100 })
       .withMessage("La descripción debe tener entre 2 y 100 caracteres")
       .trim(),

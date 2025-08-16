@@ -1,19 +1,43 @@
 import { Request, Response } from "express";
 import CoberturaDetalle from "../models/CoberturaDetalle";
 import { BaseService } from "../services/BaseService";
+import { Cobertura, Detalle } from "../models";
 
 export class CoberturaDetalleController {
   static async getAllCoberturasDetalle(req: Request, res: Response) {
     try {
       const coberturaDetalle = await CoberturaDetalle.findAll({
         order: [["cobertura_id", "ASC"]],
+        include: [
+          { model: Cobertura, as: "cobertura" },
+          { model: Detalle, as: "detalle" },
+        ],
       });
+
+      const coberDetalleTotal = coberturaDetalle.map((cobDet: any) => ({
+        id: cobDet.id,
+        cobertura: {
+          id: cobDet.cobertura.id_cobertura,
+          nombre: cobDet.cobertura.nombre,
+          descripcion: cobDet.cobertura.descripcion,
+          recargoPorAtraso: cobDet.cobertura.recargoPorAtraso,
+        },
+        detalle: {
+          id: cobDet.detalle.id,
+          nombre: cobDet.detalle.nombre,
+          descripcion: cobDet.detalle.descripcion,
+          porcentaje_miles: cobDet.detalle.porcentaje_miles,
+          monto_fijo: cobDet.detalle.monto_fijo,
+          activodetalle: cobDet.detalle.activo,
+        },
+        aplica: cobDet.aplica,
+      }));
 
       return BaseService.success(
         res,
-        coberturaDetalle,
+        coberDetalleTotal,
         "Coberturas_Detalle obtenidas exitosamente",
-        coberturaDetalle.length
+        coberDetalleTotal.length
       );
     } catch (error: any) {
       return BaseService.serverError(

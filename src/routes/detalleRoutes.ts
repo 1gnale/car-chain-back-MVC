@@ -10,7 +10,7 @@ router.get("/", DetalleController.getAllDetalles);
 
 router.get(
   "/:id",
-  DetalleController.getDetalleById,
+  detalleValidation.getById,
   handleValidationErrors,
   DetalleController.getDetalleById
 );

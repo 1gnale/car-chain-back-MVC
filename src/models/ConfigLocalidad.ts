@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface ConfigLocalidadAttributes {
   id: number;
@@ -11,10 +11,13 @@ interface ConfigLocalidadAttributes {
   localidad_id: number;
 }
 
-interface ConfigLocalidadCreationAttributes extends Optional<ConfigLocalidadAttributes, 'id'> {}
+interface ConfigLocalidadCreationAttributes
+  extends Optional<ConfigLocalidadAttributes, "id"> {}
 
-class ConfigLocalidad extends Model<ConfigLocalidadAttributes, ConfigLocalidadCreationAttributes> 
-  implements ConfigLocalidadAttributes {
+class ConfigLocalidad
+  extends Model<ConfigLocalidadAttributes, ConfigLocalidadCreationAttributes>
+  implements ConfigLocalidadAttributes
+{
   public id!: number;
   public nombre!: string;
   public descuento?: number;
@@ -33,46 +36,46 @@ ConfigLocalidad.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idconfiglocalidad'
+      field: "idconfiglocalidad",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombrecl'
+      field: "nombrecl",
     },
     descuento: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'descuentocl'
+      field: "descuentocl",
     },
     ganancia: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'gananciacl'
+      field: "gananciacl",
     },
     recargo: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: true,
-      field: 'recargocl'
+      field: "recargocl",
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      field: 'activocl'
+      field: "activocl",
     },
     localidad_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'localidad',
-        key: 'idLocalidad',
+        model: "localidad",
+        key: "idLocalidad",
       },
     },
   },
   {
     sequelize,
-    tableName: 'configuracionlocalidad',
-    timestamps: true,
+    tableName: "configuracionlocalidad",
+    timestamps: false,
   }
 );
 

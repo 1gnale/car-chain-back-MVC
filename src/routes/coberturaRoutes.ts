@@ -10,7 +10,7 @@ router.get("/", CoberturaController.getAllCoberturas);
 
 router.get(
   "/:id",
-  CoberturaController.getCoberturaById,
+  coberturaValidation.getById,
   handleValidationErrors,
   CoberturaController.getCoberturaById
 );

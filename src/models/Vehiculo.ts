@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface VehiculoAttributes {
   id: number;
@@ -12,10 +12,13 @@ interface VehiculoAttributes {
   gnc: boolean;
 }
 
-interface VehiculoCreationAttributes extends Optional<VehiculoAttributes, 'id'> {}
+interface VehiculoCreationAttributes
+  extends Optional<VehiculoAttributes, "id"> {}
 
-class Vehiculo extends Model<VehiculoAttributes, VehiculoCreationAttributes> 
-  implements VehiculoAttributes {
+class Vehiculo
+  extends Model<VehiculoAttributes, VehiculoCreationAttributes>
+  implements VehiculoAttributes
+{
   public id!: number;
   public cliente_id!: number;
   public version_id!: number;
@@ -35,22 +38,22 @@ Vehiculo.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idvehiculo'
+      field: "idvehiculo",
     },
     cliente_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'cliente',
-        key: 'idcliente',
+        model: "cliente",
+        key: "idcliente",
       },
     },
     version_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'version',
-        key: 'idversion',
+        model: "version",
+        key: "idversion",
       },
     },
     matricula: {
@@ -60,12 +63,12 @@ Vehiculo.init(
     añoFabricacion: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'añofabricación'
+      field: "añofabricación",
     },
     numeroMotor: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      field: 'numeromotor'
+      field: "numeromotor",
     },
     chasis: {
       type: DataTypes.STRING(45),
@@ -78,8 +81,8 @@ Vehiculo.init(
   },
   {
     sequelize,
-    tableName: 'vehiculo',
-    timestamps: true,
+    tableName: "vehiculo",
+    timestamps: false,
   }
 );
 

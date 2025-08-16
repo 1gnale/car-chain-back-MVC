@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface ConfigAntiguedadAttributes {
   id: number;
@@ -12,10 +12,13 @@ interface ConfigAntiguedadAttributes {
   activo: boolean;
 }
 
-interface ConfigAntiguedadCreationAttributes extends Optional<ConfigAntiguedadAttributes, 'id'> {}
+interface ConfigAntiguedadCreationAttributes
+  extends Optional<ConfigAntiguedadAttributes, "id"> {}
 
-class ConfigAntiguedad extends Model<ConfigAntiguedadAttributes, ConfigAntiguedadCreationAttributes> 
-  implements ConfigAntiguedadAttributes {
+class ConfigAntiguedad
+  extends Model<ConfigAntiguedadAttributes, ConfigAntiguedadCreationAttributes>
+  implements ConfigAntiguedadAttributes
+{
   public id!: number;
   public nombre!: string;
   public minima!: number;
@@ -35,48 +38,48 @@ ConfigAntiguedad.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idconfigantiguedad'
+      field: "idconfigantiguedad",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombreca'
+      field: "nombreca",
     },
     minima: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'minimaca'
+      field: "minimaca",
     },
     maxima: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'maximaca'
+      field: "maximaca",
     },
     descuento: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'descuentoca'
+      field: "descuentoca",
     },
     ganancia: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'gananciaca'
+      field: "gananciaca",
     },
     recargo: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: true,
-      field: 'recargoca'
+      field: "recargoca",
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      field: 'activoca'
+      field: "activoca",
     },
   },
   {
     sequelize,
-    tableName: 'configuracionantiguedad',
-    timestamps: true,
+    tableName: "configuracionantiguedad",
+    timestamps: false,
   }
 );
 

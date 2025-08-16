@@ -18,6 +18,11 @@ import vehiculoRoutes from "./routes/vehiculoRoutes";
 import detalleRoutes from "./routes/detalleRoutes";
 import coberturaRoutes from "./routes/coberturaRoutes";
 import coberturaDetalleRoutes from "./routes/coberturaDetalleRoutes";
+import configuracionEdadRoutes from "./routes/configuracionEdadRoutes";
+import configuracionAntiguedadRoutes from "./routes/configuracionAntiguedadRoutes";
+import configuracionLocalidadRoutes from "./routes/configuracionLocalidadRoutes";
+
+import { Cobertura, Detalle, CoberturaDetalle } from "./models";
 
 // Configurar variables de entorno
 dotenv.config();
@@ -52,6 +57,10 @@ app.use("/api/vehiculos", vehiculoRoutes);
 app.use("/api/detalle", detalleRoutes);
 app.use("/api/cobertura", coberturaRoutes);
 app.use("/api/coberturaDetalle", coberturaDetalleRoutes);
+app.use("/api/configuracionEdad", configuracionEdadRoutes);
+app.use("/api/configuracionAntiguedad", configuracionAntiguedadRoutes);
+app.use("/api/configuracionLocalidad", configuracionLocalidadRoutes);
+
 // Ruta de health check
 app.get("/health", (req, res) => {
   res.status(200).json({
@@ -94,8 +103,14 @@ const startServer = async () => {
     // Probar conexión a la base de datos
     await sequelize.authenticate();
     console.log("✅ Conexión a la base de datos establecida correctamente");
+    console.log("COBERTURA");
+    console.log(Cobertura.associations);
+    console.log("COBERTURA_DETALLE");
+    console.log(CoberturaDetalle.associations);
+    console.log("DETALLE");
+    console.log(Detalle.associations);
 
-    // Sincronizar modelos (solo en desarrollo)
+    //  Sincronizar modelos (solo en desarrollo)
     if (process.env.NODE_ENV === "development") {
       await sequelize.sync({ alter: true });
       console.log("✅ Modelos sincronizados con la base de datos");

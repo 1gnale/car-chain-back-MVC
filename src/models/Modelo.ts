@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface ModeloAttributes {
   id: number;
@@ -9,10 +9,12 @@ interface ModeloAttributes {
   activo: boolean;
 }
 
-interface ModeloCreationAttributes extends Optional<ModeloAttributes, 'id'> {}
+interface ModeloCreationAttributes extends Optional<ModeloAttributes, "id"> {}
 
-class Modelo extends Model<ModeloAttributes, ModeloCreationAttributes> 
-  implements ModeloAttributes {
+class Modelo
+  extends Model<ModeloAttributes, ModeloCreationAttributes>
+  implements ModeloAttributes
+{
   public id!: number;
   public nombre!: string;
   public descripcion!: string;
@@ -29,36 +31,36 @@ Modelo.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idmodelo'
+      field: "idmodelo",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombremodelo'
+      field: "nombremodelo",
     },
     descripcion: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'descripcionmodelo'
+      field: "descripcionmodelo",
     },
     marca_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'marca',
-        key: 'idmarca',
+        model: "marca",
+        key: "idmarca",
       },
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    tableName: 'modelo',
-    timestamps: true,
+    tableName: "modelo",
+    timestamps: false,
   }
 );
 
