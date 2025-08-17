@@ -21,6 +21,8 @@ import coberturaDetalleRoutes from "./routes/coberturaDetalleRoutes";
 import configuracionEdadRoutes from "./routes/configuracionEdadRoutes";
 import configuracionAntiguedadRoutes from "./routes/configuracionAntiguedadRoutes";
 import configuracionLocalidadRoutes from "./routes/configuracionLocalidadRoutes";
+import periodoPagoRoutes from "./routes/periodoPagoRoutes";
+import tipoContratacionRoutes from "./routes/tipoContratacionRoutes";
 
 import { Cobertura, Detalle, CoberturaDetalle } from "./models";
 
@@ -60,6 +62,8 @@ app.use("/api/coberturaDetalle", coberturaDetalleRoutes);
 app.use("/api/configuracionEdad", configuracionEdadRoutes);
 app.use("/api/configuracionAntiguedad", configuracionAntiguedadRoutes);
 app.use("/api/configuracionLocalidad", configuracionLocalidadRoutes);
+app.use("/api/periodoPago", periodoPagoRoutes);
+app.use("/api/tipoContratacion", tipoContratacionRoutes);
 
 // Ruta de health check
 app.get("/health", (req, res) => {
@@ -111,10 +115,10 @@ const startServer = async () => {
     console.log(Detalle.associations);
 
     //  Sincronizar modelos (solo en desarrollo)
-    if (process.env.NODE_ENV === "development") {
-      await sequelize.sync({ alter: true });
-      console.log("✅ Modelos sincronizados con la base de datos");
-    }
+    // if (process.env.NODE_ENV === "development") {
+    // await sequelize.sync({ alter: true });
+    //console.log("✅ Modelos sincronizados con la base de datos");
+    //}
 
     // Iniciar servidor
     app.listen(PORT, () => {
