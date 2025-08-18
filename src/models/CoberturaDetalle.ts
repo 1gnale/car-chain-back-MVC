@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface CoberturaDetalleAttributes {
   id: number;
@@ -8,10 +8,13 @@ interface CoberturaDetalleAttributes {
   aplica: boolean;
 }
 
-interface CoberturaDetalleCreationAttributes extends Optional<CoberturaDetalleAttributes, 'id'> {}
+interface CoberturaDetalleCreationAttributes
+  extends Optional<CoberturaDetalleAttributes, "id"> {}
 
-class CoberturaDetalle extends Model<CoberturaDetalleAttributes, CoberturaDetalleCreationAttributes> 
-  implements CoberturaDetalleAttributes {
+class CoberturaDetalle
+  extends Model<CoberturaDetalleAttributes, CoberturaDetalleCreationAttributes>
+  implements CoberturaDetalleAttributes
+{
   public id!: number;
   public cobertura_id!: number;
   public detalle_id!: number;
@@ -27,34 +30,34 @@ CoberturaDetalle.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idcoberturadetalle'
+      field: "idcoberturadetalle",
     },
     cobertura_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'cobertura',
-        key: 'idcobertura',
+        model: "cobertura",
+        key: "idcobertura",
       },
     },
     detalle_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'detalle',
-        key: 'iddetalle',
+        model: "detalle",
+        key: "iddetalle",
       },
     },
     aplica: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    tableName: 'coberturadetalle',
-    timestamps: true,
+    tableName: "coberturadetalle",
+    timestamps: false,
   }
 );
 

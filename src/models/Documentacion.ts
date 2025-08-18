@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface DocumentacionAttributes {
   id: number;
@@ -11,10 +11,13 @@ interface DocumentacionAttributes {
   cedulaVerde: Buffer;
 }
 
-interface DocumentacionCreationAttributes extends Optional<DocumentacionAttributes, 'id'> {}
+interface DocumentacionCreationAttributes
+  extends Optional<DocumentacionAttributes, "id"> {}
 
-class Documentacion extends Model<DocumentacionAttributes, DocumentacionCreationAttributes> 
-  implements DocumentacionAttributes {
+class Documentacion
+  extends Model<DocumentacionAttributes, DocumentacionCreationAttributes>
+  implements DocumentacionAttributes
+{
   public id!: number;
   public fotoFrontal!: Buffer;
   public fotoTrasera!: Buffer;
@@ -33,43 +36,43 @@ Documentacion.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'iddocumentacion'
+      field: "iddocumentacion",
     },
     fotoFrontal: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB("long"),
       allowNull: false,
-      field: 'fotofrontal'
+      field: "fotofrontal",
     },
     fotoTrasera: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB("long"),
       allowNull: false,
-      field: 'fototrasera'
+      field: "fototrasera",
     },
     fotoLateral1: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB("long"),
       allowNull: false,
-      field: 'fotolateraluno'
+      field: "fotolateraluno",
     },
     fotoLateral2: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB("long"),
       allowNull: false,
-      field: 'fotolateraldos'
+      field: "fotolateraldos",
     },
     fotoTecho: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB("long"),
       allowNull: false,
-      field: 'fototecho'
+      field: "fototecho",
     },
     cedulaVerde: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB("long"),
       allowNull: false,
-      field: 'cedulaverde'
+      field: "cedulaverde",
     },
   },
   {
     sequelize,
-    tableName: 'documentacion',
-    timestamps: true,
+    tableName: "documentacion",
+    timestamps: false,
   }
 );
 

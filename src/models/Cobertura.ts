@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface CoberturaAttributes {
   id_cobertura: number;
@@ -9,10 +9,13 @@ interface CoberturaAttributes {
   activo: boolean;
 }
 
-interface CoberturaCreationAttributes extends Optional<CoberturaAttributes, 'id_cobertura'> {}
+interface CoberturaCreationAttributes
+  extends Optional<CoberturaAttributes, "id_cobertura"> {}
 
-class Cobertura extends Model<CoberturaAttributes, CoberturaCreationAttributes> 
-  implements CoberturaAttributes {
+class Cobertura
+  extends Model<CoberturaAttributes, CoberturaCreationAttributes>
+  implements CoberturaAttributes
+{
   public id_cobertura!: number;
   public nombre!: string;
   public descripcion!: string;
@@ -29,33 +32,33 @@ Cobertura.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idcobertura'
+      field: "idcobertura",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombrecobertura'
+      field: "nombrecobertura",
     },
     descripcion: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      field: 'descripcioncobertura'
+      field: "descripcioncobertura",
     },
     recargoPorAtraso: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'recargoporatraso'
+      field: "recargoporatraso",
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      field: 'activocobertura'
+      field: "activocobertura",
     },
   },
   {
     sequelize,
-    tableName: 'cobertura',
-    timestamps: true,
+    tableName: "cobertura",
+    timestamps: false,
   }
 );
 

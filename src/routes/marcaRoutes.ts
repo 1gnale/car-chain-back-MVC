@@ -1,4 +1,39 @@
-import { Router } from 'express';
+import { Router } from "express";
+import { MarcaController } from "../controllers/marcaController";
+import { marcaValidation } from "../utils/validationsMarca";
+import { handleValidationErrors } from "../middleware/validation";
+
 const router = Router();
-router.get('/', (req, res) => { res.json({ message: 'Endpoints de marcas - Por implementar' }); });
+
+// Rutas para marca
+router.get("/", MarcaController.getAllMarcas);
+
+router.get(
+  "/:id",
+  marcaValidation.getById,
+  handleValidationErrors,
+  MarcaController.getMarcaById
+);
+
+router.post(
+  "/",
+  marcaValidation.create,
+  handleValidationErrors,
+  MarcaController.createMarca
+);
+
+router.put(
+  "/update/:id",
+  marcaValidation.update,
+  handleValidationErrors,
+  MarcaController.updateMarca
+);
+
+router.put(
+  "/delete/:id",
+  marcaValidation.delete,
+  handleValidationErrors,
+  MarcaController.deleteMarca
+);
+
 export default router;

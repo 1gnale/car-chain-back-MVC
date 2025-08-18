@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface ConfigEdadAttributes {
   id: number;
@@ -12,10 +12,13 @@ interface ConfigEdadAttributes {
   activo: boolean;
 }
 
-interface ConfigEdadCreationAttributes extends Optional<ConfigEdadAttributes, 'id'> {}
+interface ConfigEdadCreationAttributes
+  extends Optional<ConfigEdadAttributes, "id"> {}
 
-class ConfigEdad extends Model<ConfigEdadAttributes, ConfigEdadCreationAttributes> 
-  implements ConfigEdadAttributes {
+class ConfigEdad
+  extends Model<ConfigEdadAttributes, ConfigEdadCreationAttributes>
+  implements ConfigEdadAttributes
+{
   public id!: number;
   public nombre!: string;
   public minima!: number;
@@ -35,48 +38,48 @@ ConfigEdad.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idconfigedad'
+      field: "idconfigedad",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombrece'
+      field: "nombrece",
     },
     minima: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'minimace'
+      field: "minimace",
     },
     maxima: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'maximace'
+      field: "maximace",
     },
     descuento: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'descuentoce'
+      field: "descuentoce",
     },
     ganancia: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'gananciace'
+      field: "gananciace",
     },
     recargo: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: true,
-      field: 'recargoce'
+      field: "recargoce",
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      field: 'activoce'
+      field: "activoce",
     },
   },
   {
     sequelize,
-    tableName: 'configuracionedad',
-    timestamps: true,
+    tableName: "configuracionedad",
+    timestamps: false,
   }
 );
 

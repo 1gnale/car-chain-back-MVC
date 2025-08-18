@@ -1,11 +1,11 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 export enum TipoUsuario {
-  ADMINISTRADOR = 'ADMINISTRADOR',
-  VENDEDOR = 'VENDEDOR',
-  PERITO = 'PERITO',
-  GESTOR_DE_SINIESTROS = 'GESTOR_DE_SINIESTROS'
+  ADMINISTRADOR = "ADMINISTRADOR",
+  VENDEDOR = "VENDEDOR",
+  PERITO = "PERITO",
+  GESTOR_DE_SINIESTROS = "GESTOR_DE_SINIESTROS",
 }
 
 interface UsuarioAttributes {
@@ -16,10 +16,13 @@ interface UsuarioAttributes {
   tipoUsuario: TipoUsuario;
 }
 
-interface UsuarioCreationAttributes extends Optional<UsuarioAttributes, 'idUsuario'> {}
+interface UsuarioCreationAttributes
+  extends Optional<UsuarioAttributes, "idUsuario"> {}
 
-class Usuario extends Model<UsuarioAttributes, UsuarioCreationAttributes> 
-  implements UsuarioAttributes {
+class Usuario
+  extends Model<UsuarioAttributes, UsuarioCreationAttributes>
+  implements UsuarioAttributes
+{
   public idUsuario!: number;
   public legajo!: string;
   public persona_id!: number;
@@ -36,7 +39,7 @@ Usuario.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idusuario'
+      field: "idusuario",
     },
     legajo: {
       type: DataTypes.STRING(50),
@@ -47,25 +50,25 @@ Usuario.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'persona',
-        key: 'idpersona',
+        model: "persona",
+        key: "idpersona",
       },
     },
     estado: {
       type: DataTypes.STRING(20),
       allowNull: false,
-      defaultValue: 'ACTIVO'
+      defaultValue: "ACTIVO",
     },
     tipoUsuario: {
       type: DataTypes.ENUM(...Object.values(TipoUsuario)),
       allowNull: false,
-      field: 'tipousuario'
+      field: "tipousuario",
     },
   },
   {
     sequelize,
-    tableName: 'usuario',
-    timestamps: true,
+    tableName: "usuario",
+    timestamps: false,
   }
 );
 

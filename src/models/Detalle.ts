@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface DetalleAttributes {
   id: number;
@@ -10,10 +10,12 @@ interface DetalleAttributes {
   activo: boolean;
 }
 
-interface DetalleCreationAttributes extends Optional<DetalleAttributes, 'id'> {}
+interface DetalleCreationAttributes extends Optional<DetalleAttributes, "id"> {}
 
-class Detalle extends Model<DetalleAttributes, DetalleCreationAttributes> 
-  implements DetalleAttributes {
+class Detalle
+  extends Model<DetalleAttributes, DetalleCreationAttributes>
+  implements DetalleAttributes
+{
   public id!: number;
   public nombre!: string;
   public descripcion!: string;
@@ -31,38 +33,38 @@ Detalle.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'iddetalle'
+      field: "iddetalle",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombredetalle'
+      field: "nombredetalle",
     },
     descripcion: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      field: 'descripciondetalle'
+      field: "descripciondetalle",
     },
     porcentaje_miles: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'porcentajemiles'
+      field: "porcentajemiles",
     },
     monto_fijo: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: false,
-      field: 'montofijo'
+      field: "montofijo",
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      field: 'activodetalle'
+      field: "activodetalle",
     },
   },
   {
     sequelize,
-    tableName: 'detalle',
-    timestamps: true,
+    tableName: "detalle",
+    timestamps: false,
   }
 );
 
