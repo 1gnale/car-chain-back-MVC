@@ -114,6 +114,7 @@ const startServer = async () => {
     console.log("DETALLE");
     console.log(Detalle.associations);
 
+
     //  Sincronizar modelos (solo en desarrollo)
     // if (process.env.NODE_ENV === "development") {
     // await sequelize.sync({ alter: true });
