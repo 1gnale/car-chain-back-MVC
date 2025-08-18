@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface VersionAttributes {
   id: number;
@@ -11,10 +11,12 @@ interface VersionAttributes {
   activo: boolean;
 }
 
-interface VersionCreationAttributes extends Optional<VersionAttributes, 'id'> {}
+interface VersionCreationAttributes extends Optional<VersionAttributes, "id"> {}
 
-class Version extends Model<VersionAttributes, VersionCreationAttributes> 
-  implements VersionAttributes {
+class Version
+  extends Model<VersionAttributes, VersionCreationAttributes>
+  implements VersionAttributes
+{
   public id!: number;
   public nombre!: string;
   public descripcion!: string;
@@ -33,46 +35,46 @@ Version.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idversion'
+      field: "idversion",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombreversion'
+      field: "nombreversion",
     },
     descripcion: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'descripcionversion'
+      field: "descripcionversion",
     },
     precio_mercado: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: false,
-      field: 'preciomercado'
+      field: "preciomercado",
     },
     precio_mercado_gnc: {
       type: DataTypes.DOUBLE(10, 2),
       allowNull: false,
-      field: 'preciomercadognc'
+      field: "preciomercadognc",
     },
     modelo_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'modelo',
-        key: 'idmodelo',
+        model: "modelo",
+        key: "idmodelo",
       },
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    tableName: 'version',
-    timestamps: true,
+    tableName: "version",
+    timestamps: false,
   }
 );
 

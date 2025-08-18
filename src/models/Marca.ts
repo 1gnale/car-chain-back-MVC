@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface MarcaAttributes {
   id: number;
@@ -8,10 +8,12 @@ interface MarcaAttributes {
   activo: boolean;
 }
 
-interface MarcaCreationAttributes extends Optional<MarcaAttributes, 'id'> {}
+interface MarcaCreationAttributes extends Optional<MarcaAttributes, "id"> {}
 
-class Marca extends Model<MarcaAttributes, MarcaCreationAttributes> 
-  implements MarcaAttributes {
+class Marca
+  extends Model<MarcaAttributes, MarcaCreationAttributes>
+  implements MarcaAttributes
+{
   public id!: number;
   public nombre!: string;
   public descripcion!: string;
@@ -27,28 +29,28 @@ Marca.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idmarca'
+      field: "idmarca",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombremarca'
+      field: "nombremarca",
     },
     descripcion: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'descripcionmarca'
+      field: "descripcionmarca",
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    tableName: 'marca',
-    timestamps: true,
+    tableName: "marca",
+    timestamps: false,
   }
 );
 

@@ -1,18 +1,18 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 export enum TipoDocumento {
-  CUIT = 'CUIT',
-  CEDULA = 'CEDULA',
-  DNI = 'DNI',
-  LIBRETA_ENROLE = 'LIBRETA_ENROLE',
-  LIBRETA_CIVICA = 'LIBRETA_CIVICA',
-  PASAPORTE = 'PASAPORTE',
+  CUIT = "CUIT",
+  CEDULA = "CEDULA",
+  DNI = "DNI",
+  LIBRETA_ENROLE = "LIBRETA_ENROLE",
+  LIBRETA_CIVICA = "LIBRETA_CIVICA",
+  PASAPORTE = "PASAPORTE",
 }
 
 export enum sexo {
-  MASCULINO = 'Masculino',
-  FEMENINO = 'Femenino'
+  MASCULINO = "Masculino",
+  FEMENINO = "Femenino",
 }
 
 interface PersonaAttributes {
@@ -30,10 +30,12 @@ interface PersonaAttributes {
   contraseña: string;
 }
 
-interface PersonaCreationAttributes extends Optional<PersonaAttributes, 'id'> {}
+interface PersonaCreationAttributes extends Optional<PersonaAttributes, "id"> {}
 
-class Persona extends Model<PersonaAttributes, PersonaCreationAttributes> 
-  implements PersonaAttributes {
+class Persona
+  extends Model<PersonaAttributes, PersonaCreationAttributes>
+  implements PersonaAttributes
+{
   public id!: number;
   public localidad_id!: number;
   public nombres!: string;
@@ -57,14 +59,14 @@ Persona.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idpersona'
+      field: "idpersona",
     },
     localidad_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'localidad',
-        key: 'idLocalidad',
+        model: "localidad",
+        key: "idLocalidad",
       },
     },
     nombres: {
@@ -74,17 +76,17 @@ Persona.init(
     apellido: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'apellidos'
+      field: "apellidos",
     },
     fechaNacimiento: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      field: 'fechanacimiento'
+      field: "fechanacimiento",
     },
     tipoDocumento: {
       type: DataTypes.ENUM(...Object.values(TipoDocumento)),
       allowNull: false,
-      field: 'tipodocumento'
+      field: "tipodocumento",
     },
     documento: {
       type: DataTypes.STRING(20),
@@ -114,8 +116,8 @@ Persona.init(
   },
   {
     sequelize,
-    tableName: 'persona',
-    timestamps: true,
+    tableName: "persona",
+    timestamps: false,
   }
 );
 

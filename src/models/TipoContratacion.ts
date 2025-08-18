@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface TipoContratacionAttributes {
   id: number;
@@ -8,10 +8,13 @@ interface TipoContratacionAttributes {
   activo: boolean;
 }
 
-interface TipoContratacionCreationAttributes extends Optional<TipoContratacionAttributes, 'id'> {}
+interface TipoContratacionCreationAttributes
+  extends Optional<TipoContratacionAttributes, "id"> {}
 
-class TipoContratacion extends Model<TipoContratacionAttributes, TipoContratacionCreationAttributes> 
-  implements TipoContratacionAttributes {
+class TipoContratacion
+  extends Model<TipoContratacionAttributes, TipoContratacionCreationAttributes>
+  implements TipoContratacionAttributes
+{
   public id!: number;
   public nombre!: string;
   public cantidadMeses!: number;
@@ -27,28 +30,28 @@ TipoContratacion.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idtipocontratacion'
+      field: "idtipocontratacion",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombrecontratacion'
+      field: "nombrecontratacion",
     },
     cantidadMeses: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'cantidadmesescontratacion'
+      field: "cantidadmesescontratacion",
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    tableName: 'tipocontratacion',
-    timestamps: true,
+    tableName: "tipocontratacion",
+    timestamps: false,
   }
 );
 

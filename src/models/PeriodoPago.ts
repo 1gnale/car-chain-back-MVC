@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface PeriodoPagoAttributes {
   id: number;
@@ -9,10 +9,13 @@ interface PeriodoPagoAttributes {
   activo: boolean;
 }
 
-interface PeriodoPagoCreationAttributes extends Optional<PeriodoPagoAttributes, 'id'> {}
+interface PeriodoPagoCreationAttributes
+  extends Optional<PeriodoPagoAttributes, "id"> {}
 
-class PeriodoPago extends Model<PeriodoPagoAttributes, PeriodoPagoCreationAttributes> 
-  implements PeriodoPagoAttributes {
+class PeriodoPago
+  extends Model<PeriodoPagoAttributes, PeriodoPagoCreationAttributes>
+  implements PeriodoPagoAttributes
+{
   public id!: number;
   public nombre!: string;
   public cantidadMeses!: number;
@@ -29,33 +32,33 @@ PeriodoPago.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idperiodopago'
+      field: "idperiodopago",
     },
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'nombreperiodopago'
+      field: "nombreperiodopago",
     },
     cantidadMeses: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'cantidadmesespago'
+      field: "cantidadmesespago",
     },
     descuento: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'descuentoperiodopago'
+      field: "descuentoperiodopago",
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    tableName: 'periodopago',
-    timestamps: true,
+    tableName: "periodopago",
+    timestamps: false,
   }
 );
 

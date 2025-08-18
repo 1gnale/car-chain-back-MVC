@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface LocalidadAttributes {
   id: number;
@@ -9,10 +9,13 @@ interface LocalidadAttributes {
   activo: boolean;
 }
 
-interface LocalidadCreationAttributes extends Optional<LocalidadAttributes, 'id'> {}
+interface LocalidadCreationAttributes
+  extends Optional<LocalidadAttributes, "id"> {}
 
-class Localidad extends Model<LocalidadAttributes, LocalidadCreationAttributes> 
-  implements LocalidadAttributes {
+class Localidad
+  extends Model<LocalidadAttributes, LocalidadCreationAttributes>
+  implements LocalidadAttributes
+{
   public id!: number;
   public descripcion!: string;
   public codigoPostal!: string;
@@ -29,36 +32,36 @@ Localidad.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idLocalidad'
+      field: "idLocalidad",
     },
     descripcion: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: 'descripcionlocalidad'
+      field: "descripcionlocalidad",
     },
     codigoPostal: {
       type: DataTypes.STRING(10),
       allowNull: false,
-      field: 'codigopostal'
+      field: "codigopostal",
     },
     provincia_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'provincia',
-        key: 'idprovincia',
+        model: "provincia",
+        key: "idprovincia",
       },
     },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
     },
   },
   {
     sequelize,
-    tableName: 'localidad',
-    timestamps: true,
+    tableName: "localidad",
+    timestamps: false,
   }
 );
 

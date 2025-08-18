@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 interface CotizacionAttributes {
   id: number;
@@ -11,10 +11,13 @@ interface CotizacionAttributes {
   configuracionAntiguedad_id?: number;
 }
 
-interface CotizacionCreationAttributes extends Optional<CotizacionAttributes, 'id'> {}
+interface CotizacionCreationAttributes
+  extends Optional<CotizacionAttributes, "id"> {}
 
-class Cotizacion extends Model<CotizacionAttributes, CotizacionCreationAttributes> 
-  implements CotizacionAttributes {
+class Cotizacion
+  extends Model<CotizacionAttributes, CotizacionCreationAttributes>
+  implements CotizacionAttributes
+{
   public id!: number;
   public fechaCreacion!: Date;
   public fechaVencimiento!: Date;
@@ -33,46 +36,46 @@ Cotizacion.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idcotizacion'
+      field: "idcotizacion",
     },
     fechaCreacion: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      field: 'fechacreacioncotizacion'
+      field: "fechacreacioncotizacion",
     },
     fechaVencimiento: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      field: 'fechavencimientocotizacion'
+      field: "fechavencimientocotizacion",
     },
     vehiculo_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'vehiculo',
-        key: 'idvehiculo',
+        model: "vehiculo",
+        key: "idvehiculo",
       },
     },
     configuracionLocalidad_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'configlocalidad_id'
+      field: "configlocalidad_id",
     },
     configuracionEdad_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'configedad_id'
+      field: "configedad_id",
     },
     configuracionAntiguedad_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: 'configantiguedad_id'
+      field: "configantiguedad_id",
     },
   },
   {
     sequelize,
-    tableName: 'cotizacion',
-    timestamps: true,
+    tableName: "cotizacion",
+    timestamps: false,
   }
 );
 

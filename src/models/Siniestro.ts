@@ -1,10 +1,10 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
 
 export enum EstadoSiniestro {
-  PENDIENTE = 'PENDIENTE',
-  RECHAZADA = 'RECHAZADA',
-  APROBADA = 'APROBADA'
+  PENDIENTE = "PENDIENTE",
+  RECHAZADA = "RECHAZADA",
+  APROBADA = "APROBADA",
 }
 
 interface SiniestroAttributes {
@@ -18,10 +18,13 @@ interface SiniestroAttributes {
   fotoVehiculo: Buffer;
 }
 
-interface SiniestroCreationAttributes extends Optional<SiniestroAttributes, 'id'> {}
+interface SiniestroCreationAttributes
+  extends Optional<SiniestroAttributes, "id"> {}
 
-class Siniestro extends Model<SiniestroAttributes, SiniestroCreationAttributes> 
-  implements SiniestroAttributes {
+class Siniestro
+  extends Model<SiniestroAttributes, SiniestroCreationAttributes>
+  implements SiniestroAttributes
+{
   public id!: number;
   public fechaSiniestro!: Date;
   public horaSiniestro!: string;
@@ -41,55 +44,55 @@ Siniestro.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: 'idsiniestro'
+      field: "idsiniestro",
     },
     fechaSiniestro: {
       type: DataTypes.DATEONLY,
       allowNull: false,
-      field: 'fechasiniestro'
+      field: "fechasiniestro",
     },
     horaSiniestro: {
       type: DataTypes.TIME,
       allowNull: false,
-      field: 'horasiniestro'
+      field: "horasiniestro",
     },
     usuario_legajo: {
       type: DataTypes.STRING(50),
       allowNull: false,
       references: {
-        model: 'usuario',
-        key: 'legajo',
+        model: "usuario",
+        key: "legajo",
       },
     },
     poliza_numero: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'poliza_num',
+      field: "poliza_num",
       references: {
-        model: 'poliza',
-        key: 'numeropoliza',
+        model: "poliza",
+        key: "numeropoliza",
       },
     },
     estado: {
       type: DataTypes.ENUM(...Object.values(EstadoSiniestro)),
       allowNull: false,
-      field: 'estadosiniestro'
+      field: "estadosiniestro",
     },
     fotoDenuncia: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB("long"),
       allowNull: false,
-      field: 'fotodenuncia'
+      field: "fotodenuncia",
     },
     fotoVehiculo: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB("long"),
       allowNull: false,
-      field: 'fotovehiculo'
+      field: "fotovehiculo",
     },
   },
   {
     sequelize,
-    tableName: 'siniestro',
-    timestamps: true,
+    tableName: "siniestro",
+    timestamps: false,
   }
 );
 
