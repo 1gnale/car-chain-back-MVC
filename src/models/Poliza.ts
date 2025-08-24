@@ -19,8 +19,8 @@ interface PolizaAttributes {
   lineaContizacion_id: number;
   periodoPago_id?: number;
   tipoContratacion_id?: number;
-  precioPolzaActual: number;
-  montoAsegurado: number;
+  precioPolizaActual?: number;
+  montoAsegurado?: number;
   fechaContratacion?: Date;
   horaContratacion?: string;
   fechaVencimiento?: Date;
@@ -42,8 +42,8 @@ class Poliza
   public lineaContizacion_id!: number;
   public periodoPago_id?: number;
   public tipoContratacion_id?: number;
-  public precioPolzaActual!: number;
-  public montoAsegurado!: number;
+  public precioPolizaActual?: number;
+  public montoAsegurado?: number;
   public fechaContratacion?: Date;
   public horaContratacion?: string;
   public fechaVencimiento?: Date;
@@ -106,14 +106,14 @@ Poliza.init(
         key: "idtipocontratacion",
       },
     },
-    precioPolzaActual: {
+    precioPolizaActual: {
       type: DataTypes.DOUBLE(10, 2),
-      allowNull: false,
+      allowNull: true,
       field: "preciopolizaactual",
     },
     montoAsegurado: {
       type: DataTypes.DOUBLE(10, 2),
-      allowNull: false,
+      allowNull: true,
       field: "montoasegurado",
     },
     fechaContratacion: {

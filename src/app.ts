@@ -14,7 +14,6 @@ import clienteRoutes from "./routes/clienteRoutes";
 import marcaRoutes from "./routes/marcaRoutes";
 import modeloRoutes from "./routes/modeloRoutes";
 import versionRoutes from "./routes/versionRoutes";
-import vehiculoRoutes from "./routes/vehiculoRoutes";
 import detalleRoutes from "./routes/detalleRoutes";
 import coberturaRoutes from "./routes/coberturaRoutes";
 import coberturaDetalleRoutes from "./routes/coberturaDetalleRoutes";
@@ -23,8 +22,10 @@ import configuracionAntiguedadRoutes from "./routes/configuracionAntiguedadRoute
 import configuracionLocalidadRoutes from "./routes/configuracionLocalidadRoutes";
 import periodoPagoRoutes from "./routes/periodoPagoRoutes";
 import tipoContratacionRoutes from "./routes/tipoContratacionRoutes";
+import vehiculoCotizacionRoutes from "./routes/vehiculoCotizacionRoutes";
+import polizaRoutes from "./routes/polizaRoutes";
 
-import { Cobertura, Detalle, CoberturaDetalle } from "./models";
+import { Cobertura, Detalle, CoberturaDetalle, Cotizacion } from "./models";
 
 // Configurar variables de entorno
 dotenv.config();
@@ -55,7 +56,6 @@ app.use("/api/clientes", clienteRoutes);
 app.use("/api/marcas", marcaRoutes);
 app.use("/api/modelos", modeloRoutes);
 app.use("/api/versiones", versionRoutes);
-app.use("/api/vehiculos", vehiculoRoutes);
 app.use("/api/detalle", detalleRoutes);
 app.use("/api/cobertura", coberturaRoutes);
 app.use("/api/coberturaDetalle", coberturaDetalleRoutes);
@@ -64,6 +64,8 @@ app.use("/api/configuracionAntiguedad", configuracionAntiguedadRoutes);
 app.use("/api/configuracionLocalidad", configuracionLocalidadRoutes);
 app.use("/api/periodoPago", periodoPagoRoutes);
 app.use("/api/tipoContratacion", tipoContratacionRoutes);
+app.use("/api/vehiculoCotizacion", vehiculoCotizacionRoutes);
+app.use("/api/poliza", polizaRoutes);
 
 // Ruta de health check
 app.get("/health", (req, res) => {
@@ -107,12 +109,21 @@ const startServer = async () => {
     // Probar conexión a la base de datos
     await sequelize.authenticate();
     console.log("✅ Conexión a la base de datos establecida correctamente");
-    console.log("COBERTURA");
-    console.log(Cobertura.associations);
-    console.log("COBERTURA_DETALLE");
-    console.log(CoberturaDetalle.associations);
-    console.log("DETALLE");
-    console.log(Detalle.associations);
+    console.log("Cotizacion");
+    console.log(Cotizacion.associations);
+
+    const asociaciones = Cotizacion.associations;
+
+    for (const key in asociaciones) {
+      const asoc = asociaciones[key];
+      console.log("Asociación:", key);
+      console.log("Tipo:", asoc.associationType);
+      console.log("ForeignKey:", asoc.foreignKey);
+
+      // Atributos del modelo asociado
+      console.log("Atributos del modelo asociado:");
+      console.log(Object.keys(asoc.target.getAttributes()));
+    }
 
     //  Sincronizar modelos (solo en desarrollo)
     // if (process.env.NODE_ENV === "development") {
