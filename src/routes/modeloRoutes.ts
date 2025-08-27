@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ModeloController } from "../controllers/modeloController";
-import { modeloValidation } from "../utils/validationsmodelos";
+import { modeloValidation } from "../utils/validationsModelos";
 import { handleValidationErrors } from "../middleware/validation";
 
 const router = Router();
