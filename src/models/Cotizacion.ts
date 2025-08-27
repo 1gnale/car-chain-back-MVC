@@ -60,16 +60,28 @@ Cotizacion.init(
       type: DataTypes.INTEGER,
       allowNull: true,
       field: "configlocalidad_id",
+      references: {
+        model: "configuracionlocalidad",
+        key: "configuracionLocalidad_id",
+      },
     },
     configuracionEdad_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       field: "configedad_id",
+      references: {
+        model: "configuracionedad",
+        key: "idconfiguracionedad",
+      },
     },
     configuracionAntiguedad_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       field: "configantiguedad_id",
+      references: {
+        model: "configuracionantiguedad",
+        key: "configuracionAntiguedad_id",
+      },
     },
   },
   {

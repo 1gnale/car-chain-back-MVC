@@ -11,7 +11,7 @@ interface SiniestroAttributes {
   id: number;
   fechaSiniestro: Date;
   horaSiniestro: string;
-  usuario_legajo: string;
+  usuario_legajo?: string;
   poliza_numero: number;
   estado: EstadoSiniestro;
   fotoDenuncia: Buffer;
@@ -28,7 +28,7 @@ class Siniestro
   public id!: number;
   public fechaSiniestro!: Date;
   public horaSiniestro!: string;
-  public usuario_legajo!: string;
+  public usuario_legajo?: string;
   public poliza_numero!: number;
   public estado!: EstadoSiniestro;
   public fotoDenuncia!: Buffer;
@@ -58,7 +58,7 @@ Siniestro.init(
     },
     usuario_legajo: {
       type: DataTypes.STRING(50),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: "usuario",
         key: "legajo",

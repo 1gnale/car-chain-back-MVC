@@ -52,25 +52,13 @@ export class CoberturaDetalleController {
     try {
       const { cobertura_id, detalle_id, aplica } = req.body;
 
-      if (!cobertura_id) {
-        return BaseService.validationError(res, {
-          array: () => [
-            {
-              msg: "La cobertura_id de la Coberturas_Detalle es requerido",
-              path: "cobertura_id",
-            },
-          ],
-        } as any);
+      const cobertura = await Cobertura.findByPk(cobertura_id);
+      if (!cobertura) {
+        return BaseService.notFound(res, "cobertura no encontrado");
       }
-      if (!detalle_id) {
-        return BaseService.validationError(res, {
-          array: () => [
-            {
-              msg: "El detalle_id de la Coberturas_Detalle es requerido",
-              path: "detalle_id",
-            },
-          ],
-        } as any);
+      const detalle = await Detalle.findByPk(detalle_id);
+      if (!detalle) {
+        return BaseService.notFound(res, "detalle no encontrado");
       }
       if (aplica === undefined || aplica === null) {
         return BaseService.validationError(res, {
@@ -109,7 +97,6 @@ export class CoberturaDetalleController {
       const { cobertura_id, detalle_id, aplica } = req.body;
 
       const coberturaDetalle = await CoberturaDetalle.findByPk(id);
-
       if (!coberturaDetalle) {
         return BaseService.notFound(res, "Coberturas_Detalle no encontrado");
       }
