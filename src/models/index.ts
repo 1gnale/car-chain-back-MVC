@@ -166,7 +166,7 @@ ConfigLocalidad.hasMany(Cotizacion, {
 
 Cotizacion.belongsTo(ConfigLocalidad, {
   foreignKey: "configuracionLocalidad_id",
-  as: "configuaracionLocalidad",
+  as: "configuracionlocalidad",
 });
 
 ConfigEdad.hasMany(Cotizacion, {
@@ -176,7 +176,7 @@ ConfigEdad.hasMany(Cotizacion, {
 
 Cotizacion.belongsTo(ConfigEdad, {
   foreignKey: "configuracionEdad_id",
-  as: "configudacionEdad",
+  as: "configuracionedad",
 });
 
 ConfigAntiguedad.hasMany(Cotizacion, {
@@ -186,7 +186,7 @@ ConfigAntiguedad.hasMany(Cotizacion, {
 
 Cotizacion.belongsTo(ConfigAntiguedad, {
   foreignKey: "configuracionAntiguedad_id",
-  as: "configuracionAntiguedad",
+  as: "configuracionantiguedad",
 });
 
 // Relaciones de LineaCotizacion
@@ -212,13 +212,13 @@ LineaCotizacion.belongsTo(Cobertura, {
 
 // Relaciones de Poliza
 LineaCotizacion.hasOne(Poliza, {
-  foreignKey: "lineaContizacion_id",
+  foreignKey: "lineaCotizacion_id",
   as: "poliza",
 });
 
 Poliza.belongsTo(LineaCotizacion, {
-  foreignKey: "lineaContizacion_id",
-  as: "lineaContizacion",
+  foreignKey: "lineaCotizacion_id",
+  as: "lineaCotizacion",
 });
 
 Documentacion.hasOne(Poliza, {

@@ -3,9 +3,9 @@ import sequelize from "../config/database";
 
 // Enum para los estados de revisión
 export enum EstadoRevision {
-  PENDIENTE = "Pendiente",
-  RECHAZADA = "Rechazada",
-  APROBADA = "Aprobada",
+  PENDIENTE = "PENDIENTE",
+  RECHAZADA = "RECHAZADA",
+  APROBADA = "APROBADA",
 }
 
 interface RevisionAttributes {

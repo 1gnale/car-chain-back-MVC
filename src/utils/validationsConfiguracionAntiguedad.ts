@@ -24,20 +24,20 @@ export const configAntiguedadValidation = {
     body("descuento")
       .notEmpty()
       .withMessage("El descuento de la Configuracion Antiguedad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("El descuento debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("El descuento debe ser mayor a 0")
       .trim(),
     body("ganancia")
       .notEmpty()
       .withMessage("La ganancia de la Configuracion Antiguedad es requerida")
-      .isFloat({ min: 1 })
-      .withMessage("La ganancia debe ser mayor a 1")
+      .isFloat({ min: 0 })
+      .withMessage("La ganancia debe ser mayor a 0")
       .trim(),
     body("recargo")
       .notEmpty()
       .withMessage("El recargo de la Configuracion Antiguedad es requerida")
-      .isFloat({ min: 1 })
-      .withMessage("El recargo debe ser mayor a 1")
+      .isFloat({ min: 0 })
+      .withMessage("El recargo debe ser mayor a 0")
       .trim(),
   ],
   getByAge: [
@@ -79,20 +79,20 @@ export const configAntiguedadValidation = {
     body("descuento")
       .notEmpty()
       .withMessage("El descuento de la Configuracion Antiguedad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("El descuento debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("El descuento debe ser mayor a 0")
       .trim(),
     body("ganancia")
       .notEmpty()
       .withMessage("La ganancia de la Configuracion Antiguedad es requerida")
-      .isFloat({ min: 1 })
-      .withMessage("La ganancia debe ser mayor a 1")
+      .isFloat({ min: 0 })
+      .withMessage("La ganancia debe ser mayor a 0")
       .trim(),
     body("recargo")
       .notEmpty()
       .withMessage("El recargo de la Configuracion Antiguedad es requerida")
-      .isFloat({ min: 1 })
-      .withMessage("El recargo debe ser mayor a 1")
+      .isFloat({ min: 0 })
+      .withMessage("El recargo debe ser mayor a 0")
       .trim(),
     body("activo")
       .notEmpty()

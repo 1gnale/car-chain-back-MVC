@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Marca from "../models/Marca";
 import { BaseService } from "../services/BaseService";
+import { Modelo, Version } from "../models";
 
 export class MarcaController {
   static async getAllMarcas(req: Request, res: Response) {
@@ -88,6 +89,20 @@ export class MarcaController {
         activo,
       });
 
+      if (marca.activo) {
+        // Baja lógica de modelos de esa marca
+        await Modelo.update({ activo: true }, { where: { marca_id: id } });
+
+        // Baja lógica de versiones de cada modelo de esa marca
+        const modelos = await Modelo.findAll({ where: { marca_id: id } });
+        const modeloIds = modelos.map((m) => m.id);
+
+        await Version.update(
+          { activo: true },
+          { where: { modelo_id: modeloIds } }
+        );
+      }
+
       return BaseService.success(
         res,
         marcaModificada,
@@ -113,6 +128,18 @@ export class MarcaController {
       }
 
       const marcaEliminada = await marca.update({ activo: false });
+
+      // Baja lógica de modelos de esa marca
+      await Modelo.update({ activo: false }, { where: { marca_id: id } });
+
+      // Baja lógica de versiones de cada modelo de esa marca
+      const modelos = await Modelo.findAll({ where: { marca_id: id } });
+      const modeloIds = modelos.map((m) => m.id);
+
+      await Version.update(
+        { activo: false },
+        { where: { modelo_id: modeloIds } }
+      );
 
       return BaseService.success(
         res,
