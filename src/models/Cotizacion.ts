@@ -62,7 +62,7 @@ Cotizacion.init(
       field: "configlocalidad_id",
       references: {
         model: "configuracionlocalidad",
-        key: "configuracionLocalidad_id",
+        key: "idconfiglocalidad",
       },
     },
     configuracionEdad_id: {
@@ -71,7 +71,7 @@ Cotizacion.init(
       field: "configedad_id",
       references: {
         model: "configuracionedad",
-        key: "idconfiguracionedad",
+        key: "idconfigedad",
       },
     },
     configuracionAntiguedad_id: {
@@ -80,7 +80,7 @@ Cotizacion.init(
       field: "configantiguedad_id",
       references: {
         model: "configuracionantiguedad",
-        key: "configuracionAntiguedad_id",
+        key: "idconfigantiguedad",
       },
     },
   },

@@ -24,8 +24,7 @@ import periodoPagoRoutes from "./routes/periodoPagoRoutes";
 import tipoContratacionRoutes from "./routes/tipoContratacionRoutes";
 import vehiculoCotizacionRoutes from "./routes/vehiculoCotizacionRoutes";
 import polizaRoutes from "./routes/polizaRoutes";
-
-import { Cobertura, Detalle, CoberturaDetalle, Cotizacion } from "./models";
+import pagoRoutes from "./routes/pagoRoutes";
 
 // Configurar variables de entorno
 dotenv.config();
@@ -37,7 +36,8 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: [process.env.CORS_ORIGIN || "http://localhost:5173"], // habilitá los dos
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
@@ -66,6 +66,7 @@ app.use("/api/periodoPago", periodoPagoRoutes);
 app.use("/api/tipoContratacion", tipoContratacionRoutes);
 app.use("/api/vehiculoCotizacion", vehiculoCotizacionRoutes);
 app.use("/api/poliza", polizaRoutes);
+app.use("/api/pago", pagoRoutes);
 
 // Ruta de health check
 app.get("/health", (req, res) => {
@@ -108,28 +109,12 @@ const startServer = async () => {
   try {
     // Probar conexión a la base de datos
     await sequelize.authenticate();
-    console.log("✅ Conexión a la base de datos establecida correctamente");
-    console.log("Cotizacion");
-    console.log(Cotizacion.associations);
-
-    const asociaciones = Cotizacion.associations;
-
-    for (const key in asociaciones) {
-      const asoc = asociaciones[key];
-      console.log("Asociación:", key);
-      console.log("Tipo:", asoc.associationType);
-      console.log("ForeignKey:", asoc.foreignKey);
-
-      // Atributos del modelo asociado
-      console.log("Atributos del modelo asociado:");
-      console.log(Object.keys(asoc.target.getAttributes()));
-    }
 
     //  Sincronizar modelos (solo en desarrollo)
-    // if (process.env.NODE_ENV === "development") {
-    // await sequelize.sync({ alter: true });
-    //console.log("✅ Modelos sincronizados con la base de datos");
-    //}
+    /* if (process.env.NODE_ENV === "development") {
+      await sequelize.sync({ alter: false });
+      console.log("✅ Modelos sincronizados con la base de datos");
+    }*/
 
     // Iniciar servidor
     app.listen(PORT, () => {
