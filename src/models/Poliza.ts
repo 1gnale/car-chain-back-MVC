@@ -16,7 +16,7 @@ interface PolizaAttributes {
   numero_poliza: number;
   usuario_legajo?: string;
   documentacion_id: number;
-  lineaContizacion_id: number;
+  lineaCotizacion_id: number;
   periodoPago_id?: number;
   tipoContratacion_id?: number;
   precioPolizaActual?: number;
@@ -25,6 +25,8 @@ interface PolizaAttributes {
   horaContratacion?: string;
   fechaVencimiento?: Date;
   fechaCancelacion?: Date;
+  fechaDePago?: Date;
+  hashContrato?: string;
   renovacionAutomatica: boolean;
   estadoPoliza: EstadoPoliza;
 }
@@ -39,7 +41,7 @@ class Poliza
   public numero_poliza!: number;
   public usuario_legajo?: string;
   public documentacion_id!: number;
-  public lineaContizacion_id!: number;
+  public lineaCotizacion_id!: number;
   public periodoPago_id?: number;
   public tipoContratacion_id?: number;
   public precioPolizaActual?: number;
@@ -48,6 +50,9 @@ class Poliza
   public horaContratacion?: string;
   public fechaVencimiento?: Date;
   public fechaCancelacion?: Date;
+  public fechaDePago?: Date;
+
+  public hashContrato?: string;
   public renovacionAutomatica!: boolean;
   public estadoPoliza!: EstadoPoliza;
 
@@ -79,7 +84,7 @@ Poliza.init(
         key: "iddocumentacion",
       },
     },
-    lineaContizacion_id: {
+    lineaCotizacion_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       field: "lineacotizacion_id",
@@ -135,6 +140,16 @@ Poliza.init(
       type: DataTypes.DATEONLY,
       allowNull: true,
       field: "fec_canc_poliza",
+    },
+    fechaDePago: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+      field: "fec_pago_poliza",
+    },
+    hashContrato: {
+      type: DataTypes.STRING(200),
+      allowNull: true,
+      field: "hash_contrato",
     },
     renovacionAutomatica: {
       type: DataTypes.BOOLEAN,

@@ -32,11 +32,11 @@ export const PolizaValidation = {
         }
         return true;
       }),
-    body("lineaContizacion_id")
+    body("lineaCotizacion_id")
       .notEmpty()
-      .withMessage("El lineaContizacion_id es obligatorio")
+      .withMessage("El lineaCotizacion_id es obligatorio")
       .isInt()
-      .withMessage("El lineaContizacion_id debe ser un número entero")
+      .withMessage("El lineaCotizacion_id debe ser un número entero")
       .custom(async (value) => {
         const lineaCotizacion = await LineaCotizacion.findByPk(value);
         if (!lineaCotizacion) {

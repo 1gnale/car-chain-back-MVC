@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import PeriodoPago from "../models/PeriodoPago";
 import { BaseService } from "../services/BaseService";
+
 import {
   Cliente,
   Cobertura,
@@ -23,6 +24,9 @@ import {
 import Poliza, { EstadoPoliza } from "../models/Poliza";
 import { EstadoSiniestro } from "../models/Siniestro";
 import { EstadoRevision } from "../models/Revision";
+
+import cron from "node-cron";
+import { Op } from "sequelize";
 
 export class PolizaController {
   // HU 9.2 y HU 10 --- El backend debe ser capaz de guardar la documentación de la póliza
@@ -144,10 +148,10 @@ export class PolizaController {
   // HU 9.2 y HU 10  --- El backend debe ser capaz de guardar la póliza con estado "Pendiente"
   static async createPoliza(req: Request, res: Response) {
     try {
-      const { documentacion_id, lineaContizacion_id } = req.body;
+      const { documentacion_id, lineaCotizacion_id } = req.body;
 
       const lineaCotizacion = await LineaCotizacion.findByPk(
-        lineaContizacion_id
+        lineaCotizacion_id
       );
       if (!lineaCotizacion) {
         return BaseService.notFound(res, "lineaCotizacion no encontrado");
@@ -155,7 +159,7 @@ export class PolizaController {
 
       const nuevaPoliza = await Poliza.create({
         documentacion_id,
-        lineaContizacion_id,
+        lineaCotizacion_id,
         renovacionAutomatica: false,
         estadoPoliza: EstadoPoliza.PENDIENTE,
       });
@@ -326,7 +330,7 @@ export class PolizaController {
       }
 
       const lineaCotizacion = await LineaCotizacion.findByPk(
-        poliza.lineaContizacion_id
+        poliza.lineaCotizacion_id
       );
       if (!lineaCotizacion) {
         return BaseService.notFound(res, "lineaCotizacion no encontrada");
@@ -478,12 +482,12 @@ export class PolizaController {
                 },
               },
             },
-            cobertura: {
-              id_cobertura: cobertura.id_cobertura,
-              nombre: cobertura.nombre,
-              descripcion: cobertura.descripcion,
-              recargoPorAtraso: cobertura.recargoPorAtraso,
-            },
+          },
+          cobertura: {
+            id_cobertura: cobertura.id_cobertura,
+            nombre: cobertura.nombre,
+            descripcion: cobertura.descripcion,
+            recargoPorAtraso: cobertura.recargoPorAtraso,
           },
         },
       };
@@ -1099,7 +1103,7 @@ export class PolizaController {
       }
 
       const lineaCotizacion = await LineaCotizacion.findByPk(
-        poliza.lineaContizacion_id
+        poliza.lineaCotizacion_id
       );
       if (!lineaCotizacion) {
         return BaseService.notFound(res, "lineaCotizacion no encontrada");
@@ -1308,3 +1312,21 @@ export class PolizaController {
     }
   }
 }
+
+/// FUNCION QUE ACTUALIZA LOS ESTADOS TODOS LOS DIAS A LAS 00.
+// Tarea que corre todos los días a las 00:00
+cron.schedule("0 0 * * *", async () => {
+  const hoy = new Date();
+
+  await Poliza.update(
+    { estadoPoliza: EstadoPoliza.IMPAGA },
+    {
+      where: {
+        fechaDePago: { [Op.lt]: hoy },
+        estadoPoliza: EstadoPoliza.VIGENTE,
+      },
+    }
+  );
+
+  console.log("Estados de pólizas actualizados:", hoy);
+});

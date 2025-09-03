@@ -1,0 +1,319 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "nuevoEstado",
+        "type": "string"
+      }
+    ],
+    "name": "cambiarEstado",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "nuevaFecha",
+        "type": "string"
+      }
+    ],
+    "name": "cambiarFechaVencimiento",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "nuevoEstado",
+        "type": "string"
+      }
+    ],
+    "name": "EstadoModificado",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "nuevaFecha",
+        "type": "string"
+      }
+    ],
+    "name": "FechaVencimientoModificada",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "aseguradora",
+        "type": "address"
+      }
+    ],
+    "name": "PolizaRegistrada",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "nombre",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "documento",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "estado",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "fechaVencimiento",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "matriculaVehiculo",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "hashDatos",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "firma",
+        "type": "bytes"
+      }
+    ],
+    "name": "registrarPoliza",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "aseguradora",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "hash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "firma",
+        "type": "bytes"
+      }
+    ],
+    "name": "firmaEsValida",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      }
+    ],
+    "name": "obtenerPoliza",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "nombre",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "documento",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "numeroPoliza",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "estado",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "fechaVencimiento",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "matriculaVehiculo",
+            "type": "string"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "hashDatos",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "firma",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct PolizasVehiculares.Poliza",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "polizas",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "nombre",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "documento",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "estado",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "fechaVencimiento",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "matriculaVehiculo",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "hashDatos",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "firma",
+        "type": "bytes"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "numeroPoliza",
+        "type": "string"
+      }
+    ],
+    "name": "validarExistencia",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
