@@ -48,6 +48,52 @@ export class CoberturaDetalleController {
     }
   }
 
+  static async getCoberturasDetalleById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const coberturaDetalle = await CoberturaDetalle.findAll({
+        order: [["cobertura_id", "ASC"]],
+        include: [
+          { model: Cobertura, as: "cobertura", where: { id_cobertura: id } },
+
+          { model: Detalle, as: "detalle" },
+        ],
+      });
+
+      const coberDetalleTotal = coberturaDetalle.map((cobDet: any) => ({
+        id: cobDet.id,
+        cobertura: {
+          id: cobDet.cobertura.id_cobertura,
+          nombre: cobDet.cobertura.nombre,
+          descripcion: cobDet.cobertura.descripcion,
+          recargoPorAtraso: cobDet.cobertura.recargoPorAtraso,
+        },
+        detalle: {
+          id: cobDet.detalle.id,
+          nombre: cobDet.detalle.nombre,
+          descripcion: cobDet.detalle.descripcion,
+          porcentaje_miles: cobDet.detalle.porcentaje_miles,
+          monto_fijo: cobDet.detalle.monto_fijo,
+          activodetalle: cobDet.detalle.activo,
+        },
+        aplica: cobDet.aplica,
+      }));
+
+      return BaseService.success(
+        res,
+        coberDetalleTotal,
+        "Coberturas_Detalle de la cobertura obtenidas exitosamente",
+        coberDetalleTotal.length
+      );
+    } catch (error: any) {
+      return BaseService.serverError(
+        res,
+        error,
+        "Error al obtener las Coberturas_Detalle"
+      );
+    }
+  }
+
   static async createCoberturasDetalle(req: Request, res: Response) {
     try {
       const { cobertura_id, detalle_id, aplica } = req.body;

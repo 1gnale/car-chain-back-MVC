@@ -51,6 +51,13 @@ export const coberturaDetalleValidation = {
       .toBoolean(),
   ],
 
+  // Validación para obtener por ID
+  getById: [
+    param("id")
+      .isInt({ min: 1 })
+      .withMessage("El ID debe ser un número entero positivo"),
+  ],
+
   // Validación para modificar
   update: [
     param("id")
