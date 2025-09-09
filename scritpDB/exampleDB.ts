@@ -252,22 +252,19 @@ class SimpleDataSeeder {
     
     const usuarios = [
       {
-        legajo: 'LEG001',
-        estado: 'ACTIVO',
         tipoUsuario: 'ADMINISTRADOR' as any,
-        persona_id: personas[0].id
+        persona_id: personas[0].id,
+        activo: true
       },
       {
-        legajo: 'LEG002',
-        estado: 'ACTIVO',
         tipoUsuario: 'VENDEDOR' as any,
-        persona_id: personas[1].id
+        persona_id: personas[1].id,
+        activo: true
       },
       {
-        legajo: 'LEG003',
-        estado: 'ACTIVO',
         tipoUsuario: 'VENDEDOR' as any,
-        persona_id: personas[2].id
+        persona_id: personas[2].id,
+        activo: true
       }
     ];
 

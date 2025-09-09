@@ -9,24 +9,22 @@ export enum TipoUsuario {
 }
 
 interface UsuarioAttributes {
-  idUsuario: number;
-  legajo: string;
+  legajo: number;
   persona_id: number;
-  estado: string;
+  activo: boolean;
   tipoUsuario: TipoUsuario;
 }
 
 interface UsuarioCreationAttributes
-  extends Optional<UsuarioAttributes, "idUsuario"> {}
+  extends Optional<UsuarioAttributes, "legajo"> {}
 
 class Usuario
   extends Model<UsuarioAttributes, UsuarioCreationAttributes>
   implements UsuarioAttributes
 {
-  public idUsuario!: number;
-  public legajo!: string;
+  public legajo!: number;
   public persona_id!: number;
-  public estado!: string;
+  public activo!: boolean;
   public tipoUsuario!: TipoUsuario;
 
   public readonly createdAt!: Date;
@@ -35,16 +33,12 @@ class Usuario
 
 Usuario.init(
   {
-    idUsuario: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-      field: "idusuario",
-    },
     legajo: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
+      primaryKey: true,
+      autoIncrement: true,
     },
     persona_id: {
       type: DataTypes.INTEGER,
@@ -54,10 +48,10 @@ Usuario.init(
         key: "idpersona",
       },
     },
-    estado: {
-      type: DataTypes.STRING(20),
+    activo: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: "ACTIVO",
+      defaultValue: true,
     },
     tipoUsuario: {
       type: DataTypes.ENUM(...Object.values(TipoUsuario)),

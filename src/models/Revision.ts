@@ -13,7 +13,7 @@ interface RevisionAttributes {
   fecha: Date;
   hora: string;
   estado: EstadoRevision;
-  usuario_legajo: string;
+  usuario_legajo: number;
   poliza_numero: number;
 }
 
@@ -28,7 +28,7 @@ class Revision
   public fecha!: Date;
   public hora!: string;
   public estado!: EstadoRevision;
-  public usuario_legajo!: string;
+  public usuario_legajo!: number;
   public poliza_numero!: number;
 
   public readonly createdAt!: Date;
@@ -59,7 +59,7 @@ Revision.init(
       defaultValue: EstadoRevision.PENDIENTE,
     },
     usuario_legajo: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: "usuario",

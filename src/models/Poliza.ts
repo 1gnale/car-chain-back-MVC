@@ -14,7 +14,7 @@ export enum EstadoPoliza {
 
 interface PolizaAttributes {
   numero_poliza: number;
-  usuario_legajo?: string;
+  usuario_legajo?: number;
   documentacion_id: number;
   lineaCotizacion_id: number;
   periodoPago_id?: number;
@@ -39,7 +39,7 @@ class Poliza
   implements PolizaAttributes
 {
   public numero_poliza!: number;
-  public usuario_legajo?: string;
+  public usuario_legajo?: number;
   public documentacion_id!: number;
   public lineaCotizacion_id!: number;
   public periodoPago_id?: number;
@@ -69,7 +69,7 @@ Poliza.init(
       field: "numeropoliza",
     },
     usuario_legajo: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: "usuario",

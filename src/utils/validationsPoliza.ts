@@ -74,7 +74,7 @@ export const PolizaValidation = {
       .custom(async (value) => {
         const usuario = await Usuario.findByPk(value);
         if (!usuario) {
-          throw new Error("La usuario indicada no existe");
+          throw new Error("El usuario indicado no existe");
         }
         return true;
       }),
@@ -95,7 +95,7 @@ export const PolizaValidation = {
       .custom(async (value) => {
         const usuario = await Usuario.findByPk(value);
         if (!usuario) {
-          throw new Error("La usuario indicada no existe");
+          throw new Error("El usuario indicado no existe");
         }
         return true;
       }),
