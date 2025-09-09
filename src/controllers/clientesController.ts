@@ -10,42 +10,12 @@ const createPersona = async (personaData: any) => {
 export class ClientesController {
     static async getAllClientes(req: Request, res: Response) {
         try {
-            const { page, limit, search, tipoDocumento, localidad_id } = req.query;
-            
-            // Configurar paginación si se proporciona
-            const pagination: any = {};
-            if (page && limit) {
-                const pageNum = parseInt(page as string);
-                const limitNum = parseInt(limit as string);
-                pagination.limit = limitNum;
-                pagination.offset = (pageNum - 1) * limitNum;
-            }
-
-            // Configurar filtros para la persona
-            const personaWhereClause: any = {};
-            if (search) {
-                personaWhereClause[Op.or] = [
-                    { nombres: { [Op.like]: `%${search}%` } },
-                    { apellido: { [Op.like]: `%${search}%` } },
-                    { correo: { [Op.like]: `%${search}%` } },
-                    { documento: { [Op.like]: `%${search}%` } }
-                ];
-            }
-            if (tipoDocumento) {
-                personaWhereClause.tipoDocumento = tipoDocumento;
-            }
-            if (localidad_id) {
-                personaWhereClause.localidad_id = localidad_id;
-            }
-
             const clientes = await Cliente.findAll({
-                include: [{ 
-                    model: Persona, 
+                include: [{
+                    model: Persona,
                     as: 'persona',
-                    where: Object.keys(personaWhereClause).length > 0 ? personaWhereClause : undefined
                 }],
                 order: [['idClient', 'ASC']],
-                ...pagination
             });
 
             return BaseService.success(
@@ -63,7 +33,7 @@ export class ClientesController {
     static async createCliente(req: Request, res: Response) {
         try {
             const { personaData } = req.body;
-            
+
             // Verificar si ya existe una persona con el mismo documento o correo
             const existingPersona = await Persona.findOne({
                 where: {
@@ -129,7 +99,7 @@ export class ClientesController {
             const cliente = await Cliente.findOne({
                 include: [{ model: Persona, as: 'persona', where: { correo: email } }]
             });
-            
+
             if (!cliente) {
                 return BaseService.notFound(res, "Cliente no encontrado");
             }
