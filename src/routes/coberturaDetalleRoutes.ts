@@ -8,6 +8,13 @@ const router = Router();
 // Rutas para marca
 router.get("/", CoberturaDetalleController.getAllCoberturasDetalle);
 
+router.get(
+  "/coberturasDetalleById/:id",
+  coberturaDetalleValidation.getById,
+  handleValidationErrors,
+  CoberturaDetalleController.getCoberturasDetalleById
+);
+
 router.post(
   "/",
   coberturaDetalleValidation.create,

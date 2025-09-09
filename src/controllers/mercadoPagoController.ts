@@ -170,10 +170,7 @@ export class MercadoPagoController {
       const mercadopago = new MercadoPagoConfig({
         accessToken: process.env.MP_ACCESS_TOKEN!,
       });
-      console.log(
-        "LINK-----------------------------------------------------------------"
-      );
-      console.log(process.env.CORS_ORIGI);
+
       const preference = await new Preference(mercadopago).create({
         body: {
           items: [
@@ -225,7 +222,10 @@ export class MercadoPagoController {
         preference.auto_return = "approved";
       }
 
-      nuevoPago.mp_preference_id = preference.id;
+      await nuevoPago.update({
+        mp_preference_id: preference.id,
+        mp_external_reference: preference.external_reference,
+      });
 
       res.json({ init_point: preference.init_point });
     } catch (error) {
@@ -398,25 +398,19 @@ export class MercadoPagoController {
       }
 
       // Actualizar la póliza
-      await Poliza.update(
-        {
-          tipoContratacion_id: Number(idTipoContratacion),
-          periodoPago_id: Number(idPeriodoPago),
-          fechaContratacion: new Date(),
-          fechaDePago: sumarMeses(periodoPago.cantidadMeses),
-          fechaVencimiento: sumarMeses(tipoContratacion.cantidadMeses),
-          estadoPoliza: EstadoPoliza.VIGENTE,
-        },
-        { where: { numero_poliza: Number(numero_poliza) } }
-      );
+      await poliza.update({
+        tipoContratacion_id: Number(idTipoContratacion),
+        periodoPago_id: Number(idPeriodoPago),
+        fechaContratacion: new Date(),
+        fechaDePago: sumarMeses(periodoPago.cantidadMeses),
+        fechaVencimiento: sumarMeses(tipoContratacion.cantidadMeses),
+        estadoPoliza: EstadoPoliza.VIGENTE,
+      });
 
       // Actualizar el pago
-      await Pago.update(
-        {
-          mp_status: "APROBADO",
-        },
-        { where: { id: Number(pagoId) } }
-      );
+      await pago.update({
+        mp_status: "APROBADO",
+      });
 
       console.log(
         `✅ Primer pago procesado exitosamente - Póliza: ${numero_poliza}, Pago: ${pagoId}`
@@ -572,6 +566,11 @@ export class MercadoPagoController {
         hora: new Date().toTimeString().split(" ")[0],
         poliza_numero: poliza_numero,
         mp_preference_id: "-",
+        mp_payment_id: "-",
+        mp_status_detail: "-",
+        mp_external_reference: "-",
+        mp_payment_method_id: "-",
+        mp_payment_type_id: "-",
         mp_status: "Pendiente",
       });
 
@@ -629,7 +628,10 @@ export class MercadoPagoController {
         preference.auto_return = "approved";
       }
 
-      nuevoPago.mp_preference_id = preference.id;
+      await nuevoPago.update({
+        mp_preference_id: preference.id,
+        mp_external_reference: preference.external_reference,
+      });
 
       res.json({ init_point: preference.init_point });
     } catch (error) {

@@ -51,7 +51,6 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/provincias", provinciaRoutes);
 app.use("/api/localidades", localidadRoutes);
 app.use("/api/personas", personaRoutes);
-app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/clientes", clienteRoutes);
 app.use("/api/marcas", marcaRoutes);
 app.use("/api/modelos", modeloRoutes);
@@ -67,6 +66,7 @@ app.use("/api/tipoContratacion", tipoContratacionRoutes);
 app.use("/api/vehiculoCotizacion", vehiculoCotizacionRoutes);
 app.use("/api/poliza", polizaRoutes);
 app.use("/api/pago", pagoRoutes);
+app.use("/api/usuarios", usuarioRoutes);
 
 // Ruta de health check
 app.get("/health", (req, res) => {
