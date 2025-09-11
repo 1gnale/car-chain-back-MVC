@@ -33,14 +33,40 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares de seguridad
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+
 app.use(
   cors({
-    origin: [process.env.CORS_ORIGIN || "http://localhost:5173"], // habilitá los dos
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: [
+      process.env.CORS_ORIGIN || "http://localhost:5173",
+      "http://localhost:3000",
+      "http://127.0.0.1:5173",
+      "http://127.0.0.1:3000"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With", 
+      "Content-Type", 
+      "Accept",
+      "Authorization",
+      "Cache-Control"
+    ],
     credentials: true,
+    optionsSuccessStatus: 200 // Para soportar navegadores legacy
   })
 );
+
+// Manejar peticiones OPTIONS (preflight) explícitamente
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.status(200).send();
+});
 
 // Middlewares de logging y parsing
 app.use(morgan("combined"));

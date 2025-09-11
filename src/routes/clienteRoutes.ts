@@ -29,4 +29,10 @@ router.put('/update-cliente/:email',
   ClientesController.updateCliente
 );
 
+router.get("/get-client-existence/:email", 
+  clientesValidation.getByEmail, 
+  handleValidationErrors, 
+  ClientesController.checkClienteExistence
+);
+
 export default router;

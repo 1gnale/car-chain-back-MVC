@@ -152,4 +152,19 @@ export class ClientesController {
             return BaseService.serverError(res, error, "Error al actualizar el cliente");
         }
     }
+
+    static async checkClienteExistence(req: Request, res: Response) {
+        try {
+            const { email } = req.params;
+            const cliente = await Cliente.findOne({
+                include: [{ model: Persona, as: 'persona', where: { correo: email } }]
+            });
+            if (!cliente) {
+                return BaseService.success(res, false, "Cliente no encontrado");
+            }
+            return BaseService.success(res, true, "Cliente encontrado");
+        } catch (error: any) {
+            return BaseService.serverError(res, error, "Error al obtener el cliente");
+        }
+    }
 }
