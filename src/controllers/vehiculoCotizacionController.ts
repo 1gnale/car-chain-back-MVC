@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { BaseService } from "../services/BaseService";
+import cron from "node-cron";
+import { Op } from "sequelize";
 import {
   Cliente,
   Cobertura,
@@ -224,6 +226,7 @@ export class vehiculoCotizacionController {
         configuracionLocalidad_id,
         configuracionEdad_id,
         configuracionAntiguedad_id,
+        activo: true,
       });
 
       return BaseService.created(
@@ -327,6 +330,7 @@ export class vehiculoCotizacionController {
         modelo: cotizacion.vehiculo.version.modelo.nombre,
         version: cotizacion.vehiculo.version.nombre,
         fechaVencimiento: cotizacion.fechaVencimiento,
+        estado: cotizacion.activo,
       }));
 
       return BaseService.success(res, finalCotizaciones);
@@ -544,10 +548,25 @@ export class vehiculoCotizacionController {
           },
         },
       }));
-
       return BaseService.success(res, finalLineasCotizacion);
     } catch (error: any) {
       return BaseService.serverError(res, error, "Error al obtener la linea");
     }
   }
 }
+
+cron.schedule("0 0 * * *", async () => {
+  const hoy = new Date();
+
+  await Cotizacion.update(
+    { activo: false },
+    {
+      where: {
+        fechaVencimiento: { [Op.lt]: hoy },
+        activo: true,
+      },
+    }
+  );
+
+  console.log("Estados de cotizaciones actualizadas:", hoy);
+});

@@ -9,6 +9,7 @@ interface CotizacionAttributes {
   configuracionLocalidad_id?: number;
   configuracionEdad_id?: number;
   configuracionAntiguedad_id?: number;
+  activo?: boolean;
 }
 
 interface CotizacionCreationAttributes
@@ -25,6 +26,7 @@ class Cotizacion
   public configuracionLocalidad_id?: number;
   public configuracionEdad_id?: number;
   public configuracionAntiguedad_id?: number;
+  public activo?: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -82,6 +84,11 @@ Cotizacion.init(
         model: "configuracionantiguedad",
         key: "idconfigantiguedad",
       },
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      field: "activocotizacion",
     },
   },
   {

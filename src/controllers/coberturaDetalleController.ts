@@ -21,6 +21,7 @@ export class CoberturaDetalleController {
           nombre: cobDet.cobertura.nombre,
           descripcion: cobDet.cobertura.descripcion,
           recargoPorAtraso: cobDet.cobertura.recargoPorAtraso,
+          activo: cobDet.cobertura.activo,
         },
         detalle: {
           id: cobDet.detalle.id,
@@ -28,7 +29,7 @@ export class CoberturaDetalleController {
           descripcion: cobDet.detalle.descripcion,
           porcentaje_miles: cobDet.detalle.porcentaje_miles,
           monto_fijo: cobDet.detalle.monto_fijo,
-          activodetalle: cobDet.detalle.activo,
+          activo: cobDet.detalle.activo,
         },
         aplica: cobDet.aplica,
       }));

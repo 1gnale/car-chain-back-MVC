@@ -136,7 +136,6 @@ const startServer = async () => {
     // Probar conexión a la base de datos
     await sequelize.authenticate();
 
-
     //  Sincronizar modelos (solo en desarrollo)
     /* if (process.env.NODE_ENV === "development") {
       await sequelize.sync({ alter: false });
