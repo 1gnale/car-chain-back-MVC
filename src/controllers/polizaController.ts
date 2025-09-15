@@ -470,7 +470,6 @@ export class PolizaController {
                 correo: persona.correo,
                 telefono: persona.telefono,
                 sexo: persona.sexo,
-                contraseña: persona.contraseña,
                 localidad: {
                   id: localidad.id,
                   descripcion: localidad.descripcion,
@@ -1250,7 +1249,6 @@ export class PolizaController {
                   correo: persona.correo,
                   telefono: persona.telefono,
                   sexo: persona.sexo,
-                  contraseña: persona.contraseña,
                   localidad: {
                     id: localidad.id,
                     descripcion: localidad.descripcion,

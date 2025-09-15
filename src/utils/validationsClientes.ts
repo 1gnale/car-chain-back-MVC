@@ -1,200 +1,216 @@
-import { body, param, query } from 'express-validator';
+import { body, param, query } from "express-validator";
 
 export const clientesValidation = {
   // Validación para crear cliente
   create: [
     // Validaciones para personaData
-    body('personaData.nombres')
+    body("personaData.nombres")
       .notEmpty()
-      .withMessage('Los nombres son requeridos')
+      .withMessage("Los nombres son requeridos")
       .isLength({ min: 2, max: 50 })
-      .withMessage('Los nombres deben tener entre 2 y 50 caracteres')
+      .withMessage("Los nombres deben tener entre 2 y 50 caracteres")
       .trim(),
-    
-    body('personaData.apellido')
+
+    body("personaData.apellido")
       .notEmpty()
-      .withMessage('El apellido es requerido')
+      .withMessage("El apellido es requerido")
       .isLength({ min: 2, max: 50 })
-      .withMessage('El apellido debe tener entre 2 y 50 caracteres')
+      .withMessage("El apellido debe tener entre 2 y 50 caracteres")
       .trim(),
-    
-    body('personaData.fechaNacimiento')
+
+    body("personaData.fechaNacimiento")
       .isISO8601()
-      .withMessage('La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)')
+      .withMessage(
+        "La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)"
+      )
       .custom((value) => {
         const fecha = new Date(value);
         const hoy = new Date();
         const edad = hoy.getFullYear() - fecha.getFullYear();
         if (edad < 18 || edad > 100) {
-          throw new Error('La edad debe estar entre 18 y 100 años');
+          throw new Error("La edad debe estar entre 18 y 100 años");
         }
         return true;
       }),
-    
-    body('personaData.tipoDocumento')
-      .isIn(['CUIT', 'CEDULA', 'DNI', 'LIBRETA_ENROLE', 'LIBRETA_CIVICA', 'PASAPORTE'])
-      .withMessage('Tipo de documento inválido'),
-    
-    body('personaData.documento')
+
+    body("personaData.tipoDocumento")
+      .isIn([
+        "CUIT",
+        "CEDULA",
+        "DNI",
+        "LIBRETA_ENROLE",
+        "LIBRETA_CIVICA",
+        "PASAPORTE",
+      ])
+      .withMessage("Tipo de documento inválido"),
+
+    body("personaData.documento")
       .notEmpty()
-      .withMessage('El documento es requerido')
+      .withMessage("El documento es requerido")
       .isLength({ min: 7, max: 20 })
-      .withMessage('El documento debe tener entre 7 y 20 caracteres')
+      .withMessage("El documento debe tener entre 7 y 20 caracteres")
       .trim(),
-    
-    body('personaData.domicilio')
+
+    body("personaData.domicilio")
       .notEmpty()
-      .withMessage('El domicilio es requerido')
+      .withMessage("El domicilio es requerido")
       .isLength({ min: 5, max: 100 })
-      .withMessage('El domicilio debe tener entre 5 y 100 caracteres')
+      .withMessage("El domicilio debe tener entre 5 y 100 caracteres")
       .trim(),
-    
-    body('personaData.correo')
+
+    body("personaData.correo")
       .isEmail()
-      .withMessage('El correo electrónico debe ser válido')
+      .withMessage("El correo electrónico debe ser válido")
       .isLength({ max: 255 })
-      .withMessage('El correo no puede exceder 255 caracteres')
+      .withMessage("El correo no puede exceder 255 caracteres")
       .normalizeEmail(),
-    
-    body('personaData.telefono')
+
+    body("personaData.telefono")
       .notEmpty()
-      .withMessage('El teléfono es requerido')
+      .withMessage("El teléfono es requerido")
       .isLength({ min: 8, max: 20 })
-      .withMessage('El teléfono debe tener entre 8 y 20 caracteres')
+      .withMessage("El teléfono debe tener entre 8 y 20 caracteres")
       .matches(/^[+\d\s\-()]+$/)
-      .withMessage('El teléfono contiene caracteres inválidos'),
-    
-    body('personaData.sexo')
-      .isIn(['Masculino', 'Femenino'])
-      .withMessage('El sexo debe ser Masculino o Femenino'),
-    
-    body('personaData.contraseña')
-      .isLength({ min: 6, max: 50 })
-      .withMessage('La contraseña debe tener entre 6 y 50 caracteres'),
-    
-    body('personaData.localidad_id')
+      .withMessage("El teléfono contiene caracteres inválidos"),
+
+    body("personaData.sexo")
+      .isIn(["Masculino", "Femenino"])
+      .withMessage("El sexo debe ser Masculino o Femenino"),
+
+    body("personaData.localidad_id")
       .isInt({ min: 1 })
-      .withMessage('El ID de localidad debe ser un número entero positivo')
+      .withMessage("El ID de localidad debe ser un número entero positivo"),
   ],
 
   // Validación para obtener cliente por email
   getByEmail: [
-    param('email')
+    param("email")
       .isEmail()
-      .withMessage('El email debe ser válido')
-      .normalizeEmail()
+      .withMessage("El email debe ser válido")
+      .normalizeEmail(),
   ],
 
   // Validación para actualizar cliente
   update: [
-    param('email')
+    param("email")
       .isEmail()
-      .withMessage('El email debe ser válido')
+      .withMessage("El email debe ser válido")
       .normalizeEmail(),
-    
+
     // Validaciones opcionales para personaData (solo si se proporciona)
-    body('personaData.nombres')
+    body("personaData.nombres")
       .optional()
       .isLength({ min: 2, max: 50 })
-      .withMessage('Los nombres deben tener entre 2 y 50 caracteres')
+      .withMessage("Los nombres deben tener entre 2 y 50 caracteres")
       .trim(),
-    
-    body('personaData.apellido')
+
+    body("personaData.apellido")
       .optional()
       .isLength({ min: 2, max: 50 })
-      .withMessage('El apellido debe tener entre 2 y 50 caracteres')
+      .withMessage("El apellido debe tener entre 2 y 50 caracteres")
       .trim(),
-    
-    body('personaData.fechaNacimiento')
+
+    body("personaData.fechaNacimiento")
       .optional()
       .isISO8601()
-      .withMessage('La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)')
+      .withMessage(
+        "La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)"
+      )
       .custom((value) => {
         if (value) {
           const fecha = new Date(value);
           const hoy = new Date();
           const edad = hoy.getFullYear() - fecha.getFullYear();
           if (edad < 18 || edad > 100) {
-            throw new Error('La edad debe estar entre 18 y 100 años');
+            throw new Error("La edad debe estar entre 18 y 100 años");
           }
         }
         return true;
       }),
-    
-    body('personaData.tipoDocumento')
+
+    body("personaData.tipoDocumento")
       .optional()
-      .isIn(['CUIT', 'CEDULA', 'DNI', 'LIBRETA_ENROLE', 'LIBRETA_CIVICA', 'PASAPORTE'])
-      .withMessage('Tipo de documento inválido'),
-    
-    body('personaData.documento')
+      .isIn([
+        "CUIT",
+        "CEDULA",
+        "DNI",
+        "LIBRETA_ENROLE",
+        "LIBRETA_CIVICA",
+        "PASAPORTE",
+      ])
+      .withMessage("Tipo de documento inválido"),
+
+    body("personaData.documento")
       .optional()
       .isLength({ min: 7, max: 20 })
-      .withMessage('El documento debe tener entre 7 y 20 caracteres')
+      .withMessage("El documento debe tener entre 7 y 20 caracteres")
       .trim(),
-    
-    body('personaData.domicilio')
+
+    body("personaData.domicilio")
       .optional()
       .isLength({ min: 5, max: 100 })
-      .withMessage('El domicilio debe tener entre 5 y 100 caracteres')
+      .withMessage("El domicilio debe tener entre 5 y 100 caracteres")
       .trim(),
-    
-    body('personaData.correo')
+
+    body("personaData.correo")
       .optional()
       .isEmail()
-      .withMessage('El correo electrónico debe ser válido')
+      .withMessage("El correo electrónico debe ser válido")
       .isLength({ max: 255 })
-      .withMessage('El correo no puede exceder 255 caracteres')
+      .withMessage("El correo no puede exceder 255 caracteres")
       .normalizeEmail(),
-    
-    body('personaData.telefono')
+
+    body("personaData.telefono")
       .optional()
       .isLength({ min: 8, max: 20 })
-      .withMessage('El teléfono debe tener entre 8 y 20 caracteres')
+      .withMessage("El teléfono debe tener entre 8 y 20 caracteres")
       .matches(/^[+\d\s\-()]+$/)
-      .withMessage('El teléfono contiene caracteres inválidos'),
-    
-    body('personaData.sexo')
+      .withMessage("El teléfono contiene caracteres inválidos"),
+
+    body("personaData.sexo")
       .optional()
-      .isIn(['Masculino', 'Femenino'])
-      .withMessage('El sexo debe ser Masculino o Femenino'),
-    
-    body('personaData.contraseña')
-      .optional()
-      .isLength({ min: 6, max: 50 })
-      .withMessage('La contraseña debe tener entre 6 y 50 caracteres'),
-    
-    body('personaData.localidad_id')
+      .isIn(["Masculino", "Femenino"])
+      .withMessage("El sexo debe ser Masculino o Femenino"),
+
+    body("personaData.localidad_id")
       .optional()
       .isInt({ min: 1 })
-      .withMessage('El ID de localidad debe ser un número entero positivo')
+      .withMessage("El ID de localidad debe ser un número entero positivo"),
   ],
 
   // Validación para consultas con paginación y filtros
   getAll: [
-    query('page')
+    query("page")
       .optional()
       .isInt({ min: 1 })
-      .withMessage('La página debe ser un número entero positivo'),
-    
-    query('limit')
+      .withMessage("La página debe ser un número entero positivo"),
+
+    query("limit")
       .optional()
       .isInt({ min: 1, max: 100 })
-      .withMessage('El límite debe ser un número entre 1 y 100'),
-    
-    query('search')
+      .withMessage("El límite debe ser un número entre 1 y 100"),
+
+    query("search")
       .optional()
       .isLength({ min: 1, max: 100 })
-      .withMessage('El término de búsqueda debe tener entre 1 y 100 caracteres')
+      .withMessage("El término de búsqueda debe tener entre 1 y 100 caracteres")
       .trim(),
-    
-    query('tipoDocumento')
+
+    query("tipoDocumento")
       .optional()
-      .isIn(['CUIT', 'CEDULA', 'DNI', 'LIBRETA_ENROLE', 'LIBRETA_CIVICA', 'PASAPORTE'])
-      .withMessage('Tipo de documento inválido para filtro'),
-    
-    query('localidad_id')
+      .isIn([
+        "CUIT",
+        "CEDULA",
+        "DNI",
+        "LIBRETA_ENROLE",
+        "LIBRETA_CIVICA",
+        "PASAPORTE",
+      ])
+      .withMessage("Tipo de documento inválido para filtro"),
+
+    query("localidad_id")
       .optional()
       .isInt({ min: 1 })
-      .withMessage('El ID de localidad debe ser un número entero positivo')
-  ]
+      .withMessage("El ID de localidad debe ser un número entero positivo"),
+  ],
 };
