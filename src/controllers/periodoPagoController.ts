@@ -6,7 +6,7 @@ export class PeriodoPagoController {
   static async getAllPeriodoPago(req: Request, res: Response) {
     try {
       const periodoPago = await PeriodoPago.findAll({
-        order: [["nombre", "ASC"]],
+        order: [["cantidadMeses", "ASC"]],
       });
 
       return BaseService.success(

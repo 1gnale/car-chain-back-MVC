@@ -344,11 +344,11 @@ export class vehiculoCotizacionController {
     try {
       const { cotizacion_id } = req.params;
       const lineasCotizacion = await LineaCotizacion.findAll({
+        where: { cotizacion_id: cotizacion_id },
         include: [
           {
             model: Cotizacion,
             as: "cotizacion",
-            where: { id: cotizacion_id },
             include: [
               {
                 model: Vehiculo,
@@ -426,8 +426,10 @@ export class vehiculoCotizacionController {
           },
         ],
       });
+      console.log("lineasCotizacion");
+      console.log(lineasCotizacion);
 
-      if (!lineasCotizacion) {
+      if (lineasCotizacion.length === 0) {
         return BaseService.notFound(res, "cotizaciones no encontradas");
       }
 
@@ -439,10 +441,11 @@ export class vehiculoCotizacionController {
           fechaCreacion: LinCot.cotizacion.fechaCreacion,
           fechaVencimiento: LinCot.cotizacion.fechaVencimiento,
           vehiculo: {
+            id: LinCot.cotizacion.vehiculo.id,
             chasis: LinCot.cotizacion.vehiculo.chasis,
             matricula: LinCot.cotizacion.vehiculo.matricula,
-            año_fabricacion: LinCot.cotizacion.vehiculo.año_fabricacion,
-            numero_motor: LinCot.cotizacion.vehiculo.numero_motor,
+            añoFabricacion: LinCot.cotizacion.vehiculo.año_fabricacion,
+            numeroMotor: LinCot.cotizacion.vehiculo.numeroMotor,
             gnc: LinCot.cotizacion.vehiculo.gnc,
             version: {
               id: LinCot.cotizacion.vehiculo.version.id,
@@ -466,9 +469,9 @@ export class vehiculoCotizacionController {
               },
             },
             cliente: {
-              idClient: LinCot.cotizacion.vehiculo.cliente.id,
+              idClient: LinCot.cotizacion.vehiculo.cliente.idClient,
               id: LinCot.cotizacion.vehiculo.cliente.persona.id,
-              nombres: LinCot.cotizacion.vehiculo.cliente.persona.nombre,
+              nombres: LinCot.cotizacion.vehiculo.cliente.persona.nombres,
               apellido: LinCot.cotizacion.vehiculo.cliente.persona.apellido,
               fechaNacimiento:
                 LinCot.cotizacion.vehiculo.cliente.persona.fechaNacimiento,
@@ -479,7 +482,6 @@ export class vehiculoCotizacionController {
               correo: LinCot.cotizacion.vehiculo.cliente.persona.correo,
               telefono: LinCot.cotizacion.vehiculo.cliente.persona.telefono,
               sexo: LinCot.cotizacion.vehiculo.cliente.persona.sexo,
-              contraseña: LinCot.cotizacion.vehiculo.cliente.persona.contraseña,
               localidad: {
                 id: LinCot.cotizacion.vehiculo.cliente.persona.localidad.id,
                 descripcion:
@@ -498,54 +500,12 @@ export class vehiculoCotizacionController {
               },
             },
           },
-          configuracionLocalidad: {
-            id: LinCot.cotizacion.configuracionlocalidad.id,
-            nombre: LinCot.cotizacion.configuracionlocalidad.nombre,
-            descuento: LinCot.cotizacion.configuracionlocalidad.descuento,
-            ganancia: LinCot.cotizacion.configuracionlocalidad.ganancia,
-            recargo: LinCot.cotizacion.configuracionlocalidad.recargo,
-            activo: LinCot.cotizacion.configuracionlocalidad.activo,
-            localidad: {
-              id: LinCot.cotizacion.configuracionlocalidad.localidad.id,
-              descripcion:
-                LinCot.cotizacion.configuracionlocalidad.localidad.descripcion,
-              codigoPostal:
-                LinCot.cotizacion.configuracionlocalidad.localidad.codigoPostal,
-              provincia: {
-                id: LinCot.cotizacion.configuracionlocalidad.localidad.provincia
-                  .id,
-                descripcion:
-                  LinCot.cotizacion.configuracionlocalidad.localidad.provincia
-                    .descripcion,
-              },
-            },
-            configuracionEdad: {
-              id: LinCot.cotizacion.configuracionedad.id,
-              nombre: LinCot.cotizacion.configuracionedad.nombre,
-              minima: LinCot.cotizacion.configuracionedad.minima,
-              maxima: LinCot.cotizacion.configuracionedad.maxima,
-              descuento: LinCot.cotizacion.configuracionedad.descuento,
-              ganancia: LinCot.cotizacion.configuracionedad.ganancia,
-              recargo: LinCot.cotizacion.configuracionedad.recargo,
-              activo: LinCot.cotizacion.configuracionedad.activo,
-            },
-            configuracionAntiguedad: {
-              id: LinCot.cotizacion.configuracionantiguedad.id,
-              nombre: LinCot.cotizacion.configuracionantiguedad.nombre,
-              minima: LinCot.cotizacion.configuracionantiguedad.minima,
-              maxima: LinCot.cotizacion.configuracionantiguedad.maxima,
-              descuento: LinCot.cotizacion.configuracionantiguedad.descuento,
-              ganancia: LinCot.cotizacion.configuracionantiguedad.ganancia,
-              recargo: LinCot.cotizacion.configuracionantiguedad.recargo,
-              activo: LinCot.cotizacion.configuracionantiguedad.activo,
-            },
-          },
-          cobertura: {
-            id_cobertura: LinCot.cobertura.id,
-            nombre: LinCot.cobertura.nombre,
-            descripcion: LinCot.cobertura.descripcion,
-            recargoPorAtraso: LinCot.cobertura.recargoPorAtraso,
-          },
+        },
+        cobertura: {
+          id: LinCot.cobertura.id_cobertura,
+          nombre: LinCot.cobertura.nombre,
+          descripcion: LinCot.cobertura.descripcion,
+          recargoPorAtraso: LinCot.cobertura.recargoPorAtraso,
         },
       }));
       return BaseService.success(res, finalLineasCotizacion);

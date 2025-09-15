@@ -27,7 +27,6 @@ interface PersonaAttributes {
   correo: string;
   telefono: string;
   sexo: string;
-  contraseña: string;
 }
 
 interface PersonaCreationAttributes extends Optional<PersonaAttributes, "id"> {}
@@ -47,7 +46,6 @@ class Persona
   public correo!: string;
   public telefono!: string;
   public sexo!: string;
-  public contraseña!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -107,10 +105,6 @@ Persona.init(
     },
     sexo: {
       type: DataTypes.ENUM(...Object.values(sexo)),
-      allowNull: false,
-    },
-    contraseña: {
-      type: DataTypes.STRING(50),
       allowNull: false,
     },
   },

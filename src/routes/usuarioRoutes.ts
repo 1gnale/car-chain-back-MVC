@@ -5,33 +5,45 @@ import { handleValidationErrors } from "../middleware/validation";
 
 const router = Router();
 
-router.get("/", 
-  usuariosValidation.getAll, 
-  handleValidationErrors, 
+router.get(
+  "/",
+  usuariosValidation.getAll,
+  handleValidationErrors,
   UsuariosController.getAllUsuarios
 );
 
-router.post("/create-user", 
-  usuariosValidation.create, 
-  handleValidationErrors, 
+router.post(
+  "/create-user",
+  usuariosValidation.create,
+  handleValidationErrors,
   UsuariosController.createUsuario
 );
 
-router.put("/update-user-state/:legajo", 
-  usuariosValidation.updateState, 
-  handleValidationErrors, 
+router.put(
+  "/update-user-state/:legajo",
+  usuariosValidation.updateState,
+  handleValidationErrors,
   UsuariosController.updateUsuarioState
 );
 
-router.get("/get-user-by-id/:legajo", 
-  usuariosValidation.getById, 
-  handleValidationErrors, 
+router.get(
+  "/get-user-by-id/:legajo",
+  usuariosValidation.getById,
+  handleValidationErrors,
   UsuariosController.getUserById
 );
 
-router.put("/update-user/:legajo", 
-  usuariosValidation.update, 
-  handleValidationErrors, 
+router.get(
+  "/get-user-by-email/:mail",
+  usuariosValidation.getByMail,
+  handleValidationErrors,
+  UsuariosController.getUserByMail
+);
+
+router.put(
+  "/update-user/:legajo",
+  usuariosValidation.update,
+  handleValidationErrors,
   UsuariosController.updateUser
 );
 

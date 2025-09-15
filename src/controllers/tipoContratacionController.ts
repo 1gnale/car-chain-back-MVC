@@ -6,7 +6,7 @@ export class tipoContratacionController {
   static async getAllTipoContratacion(req: Request, res: Response) {
     try {
       const tipoContratacion = await TipoContratacion.findAll({
-        order: [["nombre", "ASC"]],
+        order: [["cantidadMeses", "ASC"]],
       });
 
       return BaseService.success(
