@@ -25,6 +25,8 @@ import tipoContratacionRoutes from "./routes/tipoContratacionRoutes";
 import vehiculoCotizacionRoutes from "./routes/vehiculoCotizacionRoutes";
 import polizaRoutes from "./routes/polizaRoutes";
 import pagoRoutes from "./routes/pagoRoutes";
+import tiposDocumentoRoutes from "./routes/tiposDocumentoRoutes";
+import tiposUsuarioRoutes from "./routes/tiposUsuarioRoutes";
 
 // Configurar variables de entorno
 dotenv.config();
@@ -33,11 +35,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares de seguridad
-app.use(
-  helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
-);
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 
 app.use(
   cors({
@@ -45,34 +45,28 @@ app.use(
       process.env.CORS_ORIGIN || "http://localhost:5173",
       "http://localhost:3000",
       "http://127.0.0.1:5173",
-      "http://127.0.0.1:3000",
+      "http://127.0.0.1:3000"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: [
       "Origin",
-      "X-Requested-With",
-      "Content-Type",
+      "X-Requested-With", 
+      "Content-Type", 
       "Accept",
       "Authorization",
-      "Cache-Control",
+      "Cache-Control"
     ],
     credentials: true,
-    optionsSuccessStatus: 200, // Para soportar navegadores legacy
+    optionsSuccessStatus: 200 // Para soportar navegadores legacy
   })
 );
 
 // Manejar peticiones OPTIONS (preflight) explícitamente
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control');
+  res.header('Access-Control-Allow-Credentials', 'true');
   res.status(200).send();
 });
 
@@ -101,6 +95,8 @@ app.use("/api/vehiculoCotizacion", vehiculoCotizacionRoutes);
 app.use("/api/poliza", polizaRoutes);
 app.use("/api/pago", pagoRoutes);
 app.use("/api/usuarios", usuarioRoutes);
+app.use("/api/tipos-documento", tiposDocumentoRoutes);
+app.use("/api/tipos-usuario", tiposUsuarioRoutes);
 
 // Ruta de health check
 app.get("/health", (req, res) => {
@@ -145,11 +141,11 @@ const startServer = async () => {
     await sequelize.authenticate();
 
     //  Sincronizar modelos (solo en desarrollo)
-    /*   if (process.env.NODE_ENV === "development") {
+    /* if (process.env.NODE_ENV === "development") {
       await sequelize.sync({ alter: false });
       console.log("✅ Modelos sincronizados con la base de datos");
-    }
-*/
+    }*/
+
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);
