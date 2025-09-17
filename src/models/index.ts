@@ -160,12 +160,12 @@ Cotizacion.belongsTo(Vehiculo, {
 });
 
 ConfigLocalidad.hasMany(Cotizacion, {
-  foreignKey: "idconfiglocalidad",
+  foreignKey: "configuracionLocalidad_id",
   as: "cotizaciones",
 });
 
 Cotizacion.belongsTo(ConfigLocalidad, {
-  foreignKey: "idconfiglocalidad",
+  foreignKey: "configuracionLocalidad_id",
   as: "configuracionlocalidad",
 });
 

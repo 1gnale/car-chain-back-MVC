@@ -483,7 +483,7 @@ export class PolizaController {
             },
           },
           cobertura: {
-            id_cobertura: cobertura.id_cobertura,
+            id: cobertura.id,
             nombre: cobertura.nombre,
             descripcion: cobertura.descripcion,
             recargoPorAtraso: cobertura.recargoPorAtraso,
@@ -618,7 +618,13 @@ export class PolizaController {
   // HU 18.1/18.2/18.3/18.4 --- El backend debe ser capaz de devolver una lista de todas las polizas del cliente (Datos de poliza a traer: N° Poliza, cobertura, fecha de contratacion, hora de contracion, estado).
   static async getAllPolizasByClientID(req: Request, res: Response) {
     try {
-      const { idClient } = req.params;
+      const { mail } = req.params;
+
+      const cliente = await Cliente.findOne({
+        include: [
+          { model: Persona, as: "persona", where: { correo: mail } },
+        ],
+      });
 
       const polizas = await Poliza.findAll({
         include: [
@@ -671,7 +677,7 @@ export class PolizaController {
             ],
           },
         ],
-        where: { "$lineaCotizacion.cotizacion.vehiculo.cliente_id$": idClient },
+        where: { "$lineaCotizacion.cotizacion.vehiculo.cliente_id$": cliente?.idClient },
       });
 
       if (!polizas) {
@@ -1261,7 +1267,7 @@ export class PolizaController {
                 },
               },
               cobertura: {
-                id_cobertura: cobertura.id_cobertura,
+                id: cobertura.id,
                 nombre: cobertura.nombre,
                 descripcion: cobertura.descripcion,
                 recargoPorAtraso: cobertura.recargoPorAtraso,

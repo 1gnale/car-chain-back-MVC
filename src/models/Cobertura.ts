@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
 
 interface CoberturaAttributes {
-  id_cobertura: number;
+  id: number;
   nombre: string;
   descripcion: string;
   recargoPorAtraso: number;
@@ -10,13 +10,13 @@ interface CoberturaAttributes {
 }
 
 interface CoberturaCreationAttributes
-  extends Optional<CoberturaAttributes, "id_cobertura"> {}
+  extends Optional<CoberturaAttributes, "id"> {}
 
 class Cobertura
   extends Model<CoberturaAttributes, CoberturaCreationAttributes>
   implements CoberturaAttributes
 {
-  public id_cobertura!: number;
+  public id!: number;
   public nombre!: string;
   public descripcion!: string;
   public recargoPorAtraso!: number;
@@ -28,7 +28,7 @@ class Cobertura
 
 Cobertura.init(
   {
-    id_cobertura: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
