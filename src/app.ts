@@ -35,9 +35,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares de seguridad
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 
 app.use(
   cors({
@@ -45,28 +47,34 @@ app.use(
       process.env.CORS_ORIGIN || "http://localhost:5173",
       "http://localhost:3000",
       "http://127.0.0.1:5173",
-      "http://127.0.0.1:3000"
+      "http://127.0.0.1:3000",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: [
       "Origin",
-      "X-Requested-With", 
-      "Content-Type", 
+      "X-Requested-With",
+      "Content-Type",
       "Accept",
       "Authorization",
-      "Cache-Control"
+      "Cache-Control",
     ],
     credentials: true,
-    optionsSuccessStatus: 200 // Para soportar navegadores legacy
+    optionsSuccessStatus: 200, // Para soportar navegadores legacy
   })
 );
 
 // Manejar peticiones OPTIONS (preflight) explícitamente
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control');
-  res.header('Access-Control-Allow-Credentials', 'true');
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
   res.status(200).send();
 });
 
@@ -141,11 +149,11 @@ const startServer = async () => {
     await sequelize.authenticate();
 
     //  Sincronizar modelos (solo en desarrollo)
-    /* if (process.env.NODE_ENV === "development") {
+    /*  if (process.env.NODE_ENV === "development") {
       await sequelize.sync({ alter: false });
       console.log("✅ Modelos sincronizados con la base de datos");
-    }*/
-
+    }
+*/
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);

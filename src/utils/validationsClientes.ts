@@ -18,20 +18,15 @@ export const clientesValidation = {
       .withMessage("El apellido debe tener entre 2 y 50 caracteres")
       .trim(),
 
-    body("personaData.fechaNacimiento")
-      .isISO8601()
-      .withMessage(
-        "La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)"
-      )
-      .custom((value) => {
-        const fecha = new Date(value);
-        const hoy = new Date();
-        const edad = hoy.getFullYear() - fecha.getFullYear();
-        if (edad < 18 || edad > 100) {
-          throw new Error("La edad debe estar entre 18 y 100 años");
-        }
-        return true;
-      }),
+    body("personaData.fechaNacimiento").custom((value) => {
+      const fecha = new Date(value);
+      const hoy = new Date();
+      const edad = hoy.getFullYear() - fecha.getFullYear();
+      if (edad < 18 || edad > 100) {
+        throw new Error("La edad debe estar entre 18 y 100 años");
+      }
+      return true;
+    }),
 
     body("personaData.tipoDocumento")
       .isIn([
@@ -47,15 +42,15 @@ export const clientesValidation = {
     body("personaData.documento")
       .notEmpty()
       .withMessage("El documento es requerido")
-      .isLength({ min: 7, max: 20 })
-      .withMessage("El documento debe tener entre 7 y 20 caracteres")
+      .isLength({ min: 2, max: 11 })
+      .withMessage("El documento debe tener entre 2 y 11 caracteres")
       .trim(),
 
     body("personaData.domicilio")
       .notEmpty()
       .withMessage("El domicilio es requerido")
-      .isLength({ min: 5, max: 100 })
-      .withMessage("El domicilio debe tener entre 5 y 100 caracteres")
+      .isLength({ min: 2, max: 100 })
+      .withMessage("El domicilio debe tener entre 2 y 100 caracteres")
       .trim(),
 
     body("personaData.correo")
@@ -68,8 +63,8 @@ export const clientesValidation = {
     body("personaData.telefono")
       .notEmpty()
       .withMessage("El teléfono es requerido")
-      .isLength({ min: 8, max: 20 })
-      .withMessage("El teléfono debe tener entre 8 y 20 caracteres")
+      .isLength({ min: 5, max: 20 })
+      .withMessage("El teléfono debe tener entre 5 y 20 caracteres")
       .matches(/^[+\d\s\-()]+$/)
       .withMessage("El teléfono contiene caracteres inválidos"),
 
@@ -112,10 +107,6 @@ export const clientesValidation = {
 
     body("personaData.fechaNacimiento")
       .optional()
-      .isISO8601()
-      .withMessage(
-        "La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)"
-      )
       .custom((value) => {
         if (value) {
           const fecha = new Date(value);
@@ -142,14 +133,14 @@ export const clientesValidation = {
 
     body("personaData.documento")
       .optional()
-      .isLength({ min: 7, max: 20 })
-      .withMessage("El documento debe tener entre 7 y 20 caracteres")
+      .isLength({ min: 2, max: 11 })
+      .withMessage("El documento debe tener entre 2 y 1 caracteres")
       .trim(),
 
     body("personaData.domicilio")
       .optional()
-      .isLength({ min: 5, max: 100 })
-      .withMessage("El domicilio debe tener entre 5 y 100 caracteres")
+      .isLength({ min: 2, max: 100 })
+      .withMessage("El domicilio debe tener entre 2 y 100 caracteres")
       .trim(),
 
     body("personaData.correo")
@@ -162,8 +153,8 @@ export const clientesValidation = {
 
     body("personaData.telefono")
       .optional()
-      .isLength({ min: 8, max: 20 })
-      .withMessage("El teléfono debe tener entre 8 y 20 caracteres")
+      .isLength({ min: 5, max: 20 })
+      .withMessage("El teléfono debe tener entre 5 y 20 caracteres")
       .matches(/^[+\d\s\-()]+$/)
       .withMessage("El teléfono contiene caracteres inválidos"),
 
