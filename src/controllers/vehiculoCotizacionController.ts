@@ -83,7 +83,7 @@ export class vehiculoCotizacionController {
   static async createVehicle(req: Request, res: Response) {
     try {
       const {
-        cliente_id,
+        mail,
         version_id,
         matricula,
         añoFabricacion,
@@ -92,13 +92,11 @@ export class vehiculoCotizacionController {
         gnc,
       } = req.body;
 
-      const cliente = await Cliente.findByPk(cliente_id);
+      const cliente = await Cliente.findOne({
+        include: [{ model: Persona, as: "persona", where: { correo: mail } }],
+      });
       if (!cliente) {
         return BaseService.notFound(res, "cliente no encontrado");
-      }
-      const version = await Cliente.findByPk(version_id);
-      if (!version) {
-        return BaseService.notFound(res, "version no encontrado");
       }
       if (!matricula) {
         return BaseService.validationError(res, {
@@ -157,7 +155,7 @@ export class vehiculoCotizacionController {
 
       if (!vehiculoDb) {
         const vehiculo = await Vehiculo.create({
-          cliente_id,
+          cliente_id: cliente.idClient,
           version_id,
           matricula,
           añoFabricacion,
@@ -219,6 +217,16 @@ export class vehiculoCotizacionController {
         } as any);
       }
 
+      // Debug: verificar qué datos están llegando
+      console.log("Datos recibidos para cotización:", {
+        fechaCreacion,
+        fechaVencimiento,
+        vehiculo_id,
+        configuracionLocalidad_id,
+        configuracionEdad_id,
+        configuracionAntiguedad_id,
+      });
+
       const nuevaCotizacion = await Cotizacion.create({
         fechaCreacion,
         fechaVencimiento,
@@ -228,6 +236,8 @@ export class vehiculoCotizacionController {
         configuracionAntiguedad_id,
         activo: true,
       });
+
+      console.log("Cotización creada:", nuevaCotizacion.toJSON());
 
       return BaseService.created(
         res,
@@ -280,7 +290,14 @@ export class vehiculoCotizacionController {
   // HU10 --- El backend debe ser capaz de devolver una lista de todas las cotizaciones del cliente.
   static async getCotizacionesByClientId(req: Request, res: Response) {
     try {
-      const { idClient } = req.params;
+      const { mail } = req.params;
+      const cliente = await Cliente.findOne({
+        include: [{ model: Persona, as: "persona", where: { correo: mail } }],
+      });
+      if (!cliente) {
+        return BaseService.notFound(res, "cliente no encontrado");
+      }
+      const idClient = cliente.idClient;
       const cotizaciones = await Cotizacion.findAll({
         include: [
           {
@@ -502,7 +519,7 @@ export class vehiculoCotizacionController {
           },
         },
         cobertura: {
-          id: LinCot.cobertura.id_cobertura,
+          id: LinCot.cobertura.id,
           nombre: LinCot.cobertura.nombre,
           descripcion: LinCot.cobertura.descripcion,
           recargoPorAtraso: LinCot.cobertura.recargoPorAtraso,

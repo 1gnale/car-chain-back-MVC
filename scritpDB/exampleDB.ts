@@ -21,6 +21,9 @@ import Documentacion from "../src/models/Documentacion";
 import Cotizacion from "../src/models/Cotizacion";
 import LineaCotizacion from "../src/models/LineaCotizacion";
 import Poliza from "../src/models/Poliza";
+import ConfigEdad from "../src/models/ConfigEdad";
+import ConfigLocalidad from "../src/models/ConfigLocalidad";
+import ConfigAntiguedad from "../src/models/ConfigAntiguedad";
 
 dotenv.config();
 
@@ -477,27 +480,21 @@ class SimpleDataSeeder {
 
     const coberturas = [
       {
-        nombre: "Responsabilidad Civil",
-        descripcion: "Cobertura por daños a terceros",
-        recargoPorAtraso: 0.05,
+        nombre: "Cobertura Básica",
+        descripcion: "Cubre daños menores",
+        recargoPorAtraso: 2.5,
         activo: true,
       },
       {
-        nombre: "Todo Riesgo",
-        descripcion: "Cobertura completa del vehículo",
-        recargoPorAtraso: 0.08,
+        nombre: "Cobertura Intermedia",
+        descripcion: "Cubre daños importantes excepto destrucción total",
+        recargoPorAtraso: 3.5,
         activo: true,
       },
       {
-        nombre: "Robo e Incendio",
-        descripcion: "Cobertura contra robo e incendio",
-        recargoPorAtraso: 0.06,
-        activo: true,
-      },
-      {
-        nombre: "Granizo",
-        descripcion: "Cobertura contra granizo",
-        recargoPorAtraso: 0.03,
+        nombre: "Cobertura Total",
+        descripcion: "Cubre todo tipo de daños",
+        recargoPorAtraso: 5.0,
         activo: true,
       },
     ];
@@ -512,32 +509,81 @@ class SimpleDataSeeder {
 
     const detalles = [
       {
-        nombre: "Paquete Básico",
-        descripcion: "Paquete de cobertura básica",
-        porcentaje_miles: 0.5,
-        monto_fijo: 5000.0,
+        nombre: "Responsable Civil hasta $23.000.000",
+        descripcion: "Te cubrimos hasta 23 millones de pesos",
+        porcentaje_miles: 0,
+        monto_fijo: 23000000,
         activo: true,
       },
       {
-        nombre: "Paquete Completo",
-        descripcion: "Paquete de cobertura completa",
-        porcentaje_miles: 0.8,
-        monto_fijo: 8500.0,
+        nombre: "Pérdida Total por Incendio",
+        descripcion: "Cobertura ante incendios totales",
+        porcentaje_miles: 2,
+        monto_fijo: 0,
         activo: true,
       },
       {
-        nombre: "Paquete Premium",
-        descripcion: "Paquete de cobertura premium",
-        porcentaje_miles: 1.2,
-        monto_fijo: 12000.0,
+        nombre: "Robo o Hurto Total",
+        descripcion: "Te protegemos en caso de robo o hurto total",
+        porcentaje_miles: 3,
+        monto_fijo: 0,
         activo: true,
       },
       {
-        nombre: "Granizo Adicional",
-        descripcion: "Cobertura adicional contra granizo",
-        porcentaje_miles: 0.25,
-        monto_fijo: 2500.0,
+        nombre: "Destrucción Total por Accidente",
+        descripcion: "Cubre destrucción total por accidente",
+        porcentaje_miles: 4,
+        monto_fijo: 0,
         activo: true,
+      },
+      {
+        nombre: "Responsabilidad Civil hacia terceros",
+        descripcion: "Incluye responsabilidad civil",
+        porcentaje_miles: 5,
+        monto_fijo: 0,
+        activo: true,
+      },
+      {
+        nombre: "Daños Parciales por Accidente",
+        descripcion: "Cubre daños parciales por accidente",
+        porcentaje_miles: 6,
+        monto_fijo: 0,
+        activo: true,
+      },
+      {
+        nombre: "Daños Parciales por Granizo",
+        descripcion: "Cubre daños parciales por granizo",
+        porcentaje_miles: 7,
+        monto_fijo: 0,
+        activo: true,
+      },
+      {
+        nombre: "Robo o Hurto Parcial",
+        descripcion: "Cubre robo o hurto parcial",
+        porcentaje_miles: 8,
+        monto_fijo: 0,
+        activo: true,
+      },
+      {
+        nombre: "Cristales Laterales",
+        descripcion: "Cobertura de cristales laterales",
+        porcentaje_miles: 9,
+        monto_fijo: 0,
+        activo: true,
+      },
+      {
+        nombre: "Parabrisas y Luneta",
+        descripcion: "Cobertura de parabrisas y luneta",
+        porcentaje_miles: 10,
+        monto_fijo: 0,
+        activo: true,
+      },
+      {
+        nombre: "Parabrisas y Luneta2",
+        descripcion: "Cobertura de parabrisas y luneta",
+        porcentaje_miles: 10,
+        monto_fijo: 0,
+        activo: false,
       },
     ];
 
@@ -557,30 +603,173 @@ class SimpleDataSeeder {
     );
 
     const relaciones = [
+      // Cobertura Básica (id: 1)
       {
-        cobertura_id: coberturas[0].id_cobertura,
-        detalle_id: detalles[0].id,
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[0].id, // Responsable Civil hasta $23.000.000
         aplica: true,
       },
       {
-        cobertura_id: coberturas[1].id_cobertura,
-        detalle_id: detalles[1].id,
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[1].id, // Pérdida Total por Incendio
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[2].id, // Robo o Hurto Total
         aplica: true,
       },
       {
-        cobertura_id: coberturas[1].id_cobertura,
-        detalle_id: detalles[2].id,
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[3].id, // Destrucción Total por Accidente
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[4].id, // Responsabilidad Civil hacia terceros
         aplica: true,
       },
       {
-        cobertura_id: coberturas[2].id_cobertura,
-        detalle_id: detalles[1].id,
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[5].id, // Daños Parciales por Accidente
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[6].id, // Daños Parciales por Granizo
         aplica: true,
       },
       {
-        cobertura_id: coberturas[3].id_cobertura,
-        detalle_id: detalles[3].id,
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[7].id, // Robo o Hurto Parcial
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[8].id, // Cristales Laterales
         aplica: true,
+      },
+      {
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[9].id, // Parabrisas y Luneta
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+        detalle_id: detalles[10].id, // Parabrisas y Luneta2
+        aplica: false,
+      },
+      // Cobertura Intermedia (id: 2)
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[0].id, // Responsable Civil hasta $23.000.000
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[1].id, // Pérdida Total por Incendio
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[2].id, // Robo o Hurto Total
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[3].id, // Destrucción Total por Accidente
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[4].id, // Responsabilidad Civil hacia terceros
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[5].id, // Daños Parciales por Accidente
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[6].id, // Daños Parciales por Granizo
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[7].id, // Robo o Hurto Parcial
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[8].id, // Cristales Laterales
+        aplica: false,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[9].id, // Parabrisas y Luneta
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+        detalle_id: detalles[10].id, // Parabrisas y Luneta2
+        aplica: false,
+      },
+      // Cobertura Total (id: 3)
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[0].id, // Responsable Civil hasta $23.000.000
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[1].id, // Pérdida Total por Incendio
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[2].id, // Robo o Hurto Total
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[3].id, // Destrucción Total por Accidente
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[4].id, // Responsabilidad Civil hacia terceros
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[5].id, // Daños Parciales por Accidente
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[6].id, // Daños Parciales por Granizo
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[7].id, // Robo o Hurto Parcial
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[8].id, // Cristales Laterales
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[9].id, // Parabrisas y Luneta
+        aplica: true,
+      },
+      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+        detalle_id: detalles[10].id, // Parabrisas y Luneta2
+        aplica: false,
       },
     ];
 
@@ -601,6 +790,182 @@ class SimpleDataSeeder {
 
     const created = await TipoContratacion.bulkCreate(tipos);
     console.log(`✅ ${created.length} tipos de contratación creados`);
+    return created;
+  }
+
+  private async seedConfiguracionesEdad() {
+    console.log("👶 Creando configuraciones de edad...");
+
+    const configuraciones = [
+      {
+        nombre: "Jóvenes",
+        minima: 18,
+        maxima: 25,
+        descuento: 0.0,
+        ganancia: 2.0,
+        recargo: 15.0,
+        activo: true,
+      },
+      {
+        nombre: "Adultos Jóvenes",
+        minima: 26,
+        maxima: 35,
+        descuento: 2.5,
+        ganancia: 4.0,
+        recargo: 8.0,
+        activo: true,
+      },
+      {
+        nombre: "Adultos",
+        minima: 36,
+        maxima: 50,
+        descuento: 5.0,
+        ganancia: 5.0,
+        recargo: 3.0,
+        activo: true,
+      },
+      {
+        nombre: "Mayores",
+        minima: 51,
+        maxima: 70,
+        descuento: 7.5,
+        ganancia: 6.0,
+        recargo: 1.0,
+        activo: true,
+      },
+      {
+        nombre: "Tercera Edad",
+        minima: 71,
+        maxima: 85,
+        descuento: 3.0,
+        ganancia: 3.0,
+        recargo: 10.0,
+        activo: true,
+      },
+    ];
+
+    const created = await ConfigEdad.bulkCreate(configuraciones);
+    console.log(`✅ ${created.length} configuraciones de edad creadas`);
+    return created;
+  }
+
+  private async seedConfiguracionesLocalidad() {
+    console.log("🏙️ Creando configuraciones de localidad...");
+
+    // Obtener las localidades que acabamos de crear
+    const localidades = await Localidad.findAll();
+    console.log(`Found ${localidades.length} localidades for reference`);
+
+    const configuraciones = [
+      {
+        nombre: "La Plata",
+        descuento: 1.0,
+        ganancia: 10.0,
+        recargo: 1.5,
+        activo: true,
+        localidad_id: localidades[0].id, // La Plata
+      },
+      {
+        nombre: "Mar del Plata",
+        descuento: 2.0,
+        ganancia: 8.0,
+        recargo: 2.0,
+        activo: true,
+        localidad_id: localidades[1].id, // Mar del Plata
+      },
+      {
+        nombre: "Córdoba Capital",
+        descuento: 1.5,
+        ganancia: 9.0,
+        recargo: 1.8,
+        activo: true,
+        localidad_id: localidades[2].id, // Córdoba Capital
+      },
+      {
+        nombre: "Rosario",
+        descuento: 2.5,
+        ganancia: 7.5,
+        recargo: 2.2,
+        activo: true,
+        localidad_id: localidades[3].id, // Rosario
+      },
+      {
+        nombre: "Palermo",
+        descuento: 0.5,
+        ganancia: 12.0,
+        recargo: 3.0,
+        activo: true,
+        localidad_id: localidades[4].id, // Palermo (CABA)
+      },
+    ];
+
+    const created = await ConfigLocalidad.bulkCreate(configuraciones);
+    console.log(`✅ ${created.length} configuraciones de localidad creadas`);
+    return created;
+  }
+
+  private async seedConfiguracionesAntiguedad() {
+    console.log("📅 Creando configuraciones de antigüedad...");
+
+    const configuraciones = [
+      {
+        nombre: "Vehículo Nuevo",
+        minima: 0,
+        maxima: 1,
+        descuento: 5.0,
+        ganancia: 15.0,
+        recargo: 0.0,
+        activo: true,
+      },
+      {
+        nombre: "Cuando es usado",
+        minima: 4,
+        maxima: 6,
+        descuento: 1.0,
+        ganancia: 20.0,
+        recargo: 100.0,
+        activo: true,
+      },
+      {
+        nombre: "Semi-nuevo",
+        minima: 2,
+        maxima: 3,
+        descuento: 3.0,
+        ganancia: 18.0,
+        recargo: 5.0,
+        activo: true,
+      },
+      {
+        nombre: "Usado estándar",
+        minima: 7,
+        maxima: 10,
+        descuento: 0.0,
+        ganancia: 25.0,
+        recargo: 150.0,
+        activo: true,
+      },
+      {
+        nombre: "Muy usado",
+        minima: 11,
+        maxima: 15,
+        descuento: 0.0,
+        ganancia: 30.0,
+        recargo: 200.0,
+        activo: true,
+      },
+      {
+        nombre: "Antiguo",
+        minima: 16,
+        maxima: 25,
+        descuento: 0.0,
+        ganancia: 35.0,
+        recargo: 300.0,
+        activo: false, // Desactivado por alto riesgo
+      },
+    ];
+
+    const created = await ConfigAntiguedad.bulkCreate(configuraciones);
+    console.log(`✅ ${created.length} configuraciones de antigüedad creadas`);
     return created;
   }
 
@@ -741,33 +1106,56 @@ class SimpleDataSeeder {
       `Found ${cotizaciones.length} cotizaciones and ${coberturas.length} coberturas for reference`
     );
 
-    const lineas = [
-      {
+    // Debug: Verificar que tenemos suficientes datos
+    if (cotizaciones.length < 5) {
+      console.log(`⚠️  Solo se encontraron ${cotizaciones.length} cotizaciones, se esperaban 5`);
+    }
+    if (coberturas.length < 3) {
+      console.log(`⚠️  Solo se encontraron ${coberturas.length} coberturas, se esperaban 3`);
+    }
+
+    // Verificar que todos los elementos existen antes de usar sus IDs
+    const lineas = [];
+    
+    if (cotizaciones[0] && coberturas[0]) {
+      lineas.push({
         monto: 15000.0,
         cotizacion_id: cotizaciones[0].id,
-        cobertura_id: coberturas[0].id_cobertura,
-      },
-      {
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+      });
+    }
+    
+    if (cotizaciones[1] && coberturas[1]) {
+      lineas.push({
         monto: 25000.0,
         cotizacion_id: cotizaciones[1].id,
-        cobertura_id: coberturas[1].id_cobertura,
-      },
-      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+      });
+    }
+    
+    if (cotizaciones[2] && coberturas[2]) {
+      lineas.push({
         monto: 20000.0,
         cotizacion_id: cotizaciones[2].id,
-        cobertura_id: coberturas[2].id_cobertura,
-      },
-      {
+        cobertura_id: coberturas[2].id, // Cobertura Total
+      });
+    }
+    
+    if (cotizaciones[3] && coberturas[1]) {
+      lineas.push({
         monto: 18000.0,
         cotizacion_id: cotizaciones[3].id,
-        cobertura_id: coberturas[1].id_cobertura,
-      },
-      {
+        cobertura_id: coberturas[1].id, // Cobertura Intermedia
+      });
+    }
+    
+    if (cotizaciones[4] && coberturas[0]) {
+      lineas.push({
         monto: 22000.0,
         cotizacion_id: cotizaciones[4].id,
-        cobertura_id: coberturas[3].id_cobertura,
-      },
-    ];
+        cobertura_id: coberturas[0].id, // Cobertura Básica
+      });
+    }
 
     const created = await LineaCotizacion.bulkCreate(lineas);
     console.log(`✅ ${created.length} líneas de cotización creadas`);
@@ -968,6 +1356,9 @@ class SimpleDataSeeder {
       const detalles = await this.seedDetalles();
       const coberturaDetalles = await this.seedCoberturaDetalles();
       const tiposContratacion = await this.seedTiposContratacion();
+      const configuracionesEdad = await this.seedConfiguracionesEdad();
+      const configuracionesLocalidad = await this.seedConfiguracionesLocalidad();
+      const configuracionesAntiguedad = await this.seedConfiguracionesAntiguedad();
       const periodosPago = await this.seedPeriodosPago();
 
       // Crear dependencias para pólizas
@@ -995,7 +1386,8 @@ class SimpleDataSeeder {
       console.log(`📋 Detalles: ${detalles.length}`);
       console.log(`🔗 Relaciones Cob-Det: ${coberturaDetalles.length}`);
       console.log(`📝 Tipos Contratación: ${tiposContratacion.length}`);
-      console.log(`💳 Períodos Pago: ${periodosPago.length}`);
+      console.log(`� Config. Edad: ${configuracionesEdad.length}`);
+      console.log(`�💳 Períodos Pago: ${periodosPago.length}`);
       console.log(`📄 Documentación: ${documentacion.length}`);
       console.log(`💰 Cotizaciones: ${cotizaciones.length}`);
       console.log(`📋 Líneas Cotización: ${lineasCotizacion.length}`);

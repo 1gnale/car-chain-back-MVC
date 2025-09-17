@@ -7,6 +7,7 @@ import {
   ConfigLocalidad,
   Cotizacion,
   LineaCotizacion,
+  Persona,
   Vehiculo,
   Version,
 } from "../models";
@@ -14,11 +15,13 @@ import {
 export const VehiculoCotizacionValidation = {
   // HU9.1 --- El backend debe ser capaz de guardar los datos del vehiculo
   createVehicle: [
-    body("cliente_id")
-      .isInt({ min: 1 })
-      .withMessage("El ID del cliente debe ser un número entero positivo")
+    body("mail")
+      .isEmail()
+      .withMessage("El correo del cliente debe ser un correo válido")
       .custom(async (value) => {
-        const cliente = await Cliente.findByPk(value);
+        const cliente = await Cliente.findOne({
+          include: [{ model: Persona, as: "persona", where: { correo: value } }],
+        });
         if (!cliente) {
           throw new Error("El cliente indicada no existe");
         }
@@ -66,7 +69,14 @@ export const VehiculoCotizacionValidation = {
       .notEmpty()
       .withMessage("El Matricula es obligatoria")
       .isLength({ min: 6, max: 50 })
-      .withMessage("La matricula debe tener mas de 6 caracteres"),
+      .withMessage("La matricula debe tener mas de 6 caracteres")
+      .custom(async (value) => {
+        const vehiculo = await Vehiculo.findOne({ where: { matricula: value } });
+        if (vehiculo) {
+          throw new Error("Ya existe un vehiculo con esa matricula");
+        }
+        return true;
+      }),
   ],
 
   update: [
@@ -202,9 +212,9 @@ export const VehiculoCotizacionValidation = {
 
   // HU10 --- El backend debe ser capaz de devolver una lista de todas las cotizaciones del cliente.
   getCotizacionesByClientId: [
-    param("idClient")
-      .isInt({ min: 1 })
-      .withMessage("El ID debe ser un número entero positivo"),
+    param("mail")
+      .isEmail()
+      .withMessage("El mail debe ser un correo electrónico válido"),
   ],
 
   getLineasCotizacionByCotizacionId: [

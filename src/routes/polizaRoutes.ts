@@ -60,7 +60,7 @@ router.post(
 );
 // HU 18.1/18.2/18.3/18.4 --- El backend debe ser capaz de devolver una lista de todas las polizas del cliente (Datos de poliza a traer: N° Poliza, cobertura, fecha de contratacion, hora de contracion, estado).
 router.get(
-  "/getAllPolizasByClientId/:idClient",
+  "/getAllPolizasByClientId/:mail",
   PolizaValidation.getAllPolizasByClientID,
   handleValidationErrors,
   PolizaController.getAllPolizasByClientID

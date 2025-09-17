@@ -17,7 +17,7 @@ export class CoberturaDetalleController {
       const coberDetalleTotal = coberturaDetalle.map((cobDet: any) => ({
         id: cobDet.id,
         cobertura: {
-          id: cobDet.cobertura.id_cobertura,
+          id: cobDet.cobertura.id,
           nombre: cobDet.cobertura.nombre,
           descripcion: cobDet.cobertura.descripcion,
           recargoPorAtraso: cobDet.cobertura.recargoPorAtraso,
@@ -55,7 +55,7 @@ export class CoberturaDetalleController {
       const coberturaDetalle = await CoberturaDetalle.findAll({
         order: [["cobertura_id", "ASC"]],
         include: [
-          { model: Cobertura, as: "cobertura", where: { id_cobertura: id } },
+          { model: Cobertura, as: "cobertura", where: { id: id } },
 
           { model: Detalle, as: "detalle" },
         ],
@@ -64,7 +64,7 @@ export class CoberturaDetalleController {
       const coberDetalleTotal = coberturaDetalle.map((cobDet: any) => ({
         id: cobDet.id,
         cobertura: {
-          id: cobDet.cobertura.id_cobertura,
+          id: cobDet.cobertura.id,
           nombre: cobDet.cobertura.nombre,
           descripcion: cobDet.cobertura.descripcion,
           recargoPorAtraso: cobDet.cobertura.recargoPorAtraso,

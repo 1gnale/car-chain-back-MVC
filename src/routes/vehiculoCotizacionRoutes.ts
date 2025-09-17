@@ -39,7 +39,7 @@ router.post(
 
 // HU10 --- El backend debe ser capaz de devolver una lista de todas las cotizaciones del cliente.
 router.get(
-  "/getCotizacion/:idClient",
+  "/getCotizacion/:mail",
   VehiculoCotizacionValidation.getCotizacionesByClientId,
   handleValidationErrors,
   vehiculoCotizacionController.getCotizacionesByClientId
