@@ -1,6 +1,6 @@
 import { BaseService } from "../services/BaseService";
 import { Request, Response } from "express";
-import { Cliente, Persona } from "../models";
+import { Cliente, Localidad, Persona, Provincia } from "../models";
 import { Op } from "sequelize";
 
 const createPersona = async (personaData: any) => {
@@ -89,12 +89,56 @@ export class ClientesController {
     try {
       const { email } = req.params;
       const cliente = await Cliente.findOne({
-        include: [{ model: Persona, as: "persona", where: { correo: email } }],
+        include: [
+          {
+            model: Persona,
+            as: "persona",
+            where: { correo: email },
+            include: [
+              {
+                model: Localidad,
+                as: "localidad",
+                include: [{ model: Provincia, as: "provincia" }],
+              },
+            ],
+          },
+        ],
       });
+
       if (!cliente) {
         return BaseService.notFound(res, "Cliente no encontrado");
       }
-      return BaseService.success(res, cliente, "Cliente obtenido exitosamente");
+
+      const persona = await Persona.findByPk(cliente.persona_id);
+      if (!persona) {
+        return BaseService.notFound(res, "persona no encontrado");
+      }
+      const localidad = await Localidad.findByPk(persona.localidad_id, {
+        include: [{ model: Provincia, as: "provincia" }],
+      });
+      if (!localidad) {
+        return BaseService.notFound(res, "localidad no encontrado");
+      }
+
+      const clienteObj = {
+        idClient: cliente.idClient,
+        id: persona.id,
+        nombres: persona.nombres,
+        apellido: persona.apellido,
+        fechaNacimiento: persona.fechaNacimiento,
+        tipoDocumento: persona.tipoDocumento,
+        documento: persona.documento,
+        domicilio: persona.domicilio,
+        correo: persona.correo,
+        telefono: persona.telefono,
+        sexo: persona.sexo,
+        localidad: localidad,
+      };
+      return BaseService.success(
+        res,
+        clienteObj,
+        "Cliente obtenido exitosamente"
+      );
     } catch (error: any) {
       return BaseService.serverError(res, error, "Error al obtener el cliente");
     }

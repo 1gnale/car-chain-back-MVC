@@ -343,11 +343,8 @@ export class vehiculoCotizacionController {
       const finalCotizaciones = cotizaciones.map((cotizacion: any) => ({
         id: cotizacion.id,
         fechaCreacion: cotizacion.fechaCreacion,
-        marca: cotizacion.vehiculo.version.modelo.marca.nombre,
-        modelo: cotizacion.vehiculo.version.modelo.nombre,
-        version: cotizacion.vehiculo.version.nombre,
         fechaVencimiento: cotizacion.fechaVencimiento,
-        estado: cotizacion.activo,
+        activo: cotizacion.activo,
       }));
 
       return BaseService.success(res, finalCotizaciones);
