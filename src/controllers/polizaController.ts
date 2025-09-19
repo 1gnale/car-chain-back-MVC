@@ -58,21 +58,9 @@ export class PolizaController {
           } as any);
         }
 
-        // Validar que sea base64
-        const base64Regex =
-          /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-        if (!base64Regex.test(value)) {
-          return BaseService.validationError(res, {
-            array: () => [
-              {
-                msg: `El campo ${key} debe ser una cadena base64 válida`,
-                path: key,
-              },
-            ],
-          } as any);
-        }
+        let base64Data = value;
 
-        // Validar que corresponda a imagen (si viene con encabezado data:image)
+        // Si viene con encabezado tipo data:image/...
         if (value.startsWith("data:")) {
           if (!value.startsWith("data:image/")) {
             return BaseService.validationError(res, {
@@ -81,6 +69,31 @@ export class PolizaController {
               ],
             } as any);
           }
+
+          // Cortar el encabezado y quedarnos con la parte después de la coma
+          const parts = value.split(",");
+          if (parts.length !== 2) {
+            return BaseService.validationError(res, {
+              array: () => [
+                { msg: `El campo ${key} tiene un formato inválido`, path: key },
+              ],
+            } as any);
+          }
+          base64Data = parts[1];
+        }
+
+        // Validar que la parte base64 sea válida
+        const base64Regex =
+          /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+        if (!base64Regex.test(base64Data)) {
+          return BaseService.validationError(res, {
+            array: () => [
+              {
+                msg: `El campo ${key} debe ser una cadena base64 válida`,
+                path: key,
+              },
+            ],
+          } as any);
         }
       }
 
@@ -621,9 +634,7 @@ export class PolizaController {
       const { mail } = req.params;
 
       const cliente = await Cliente.findOne({
-        include: [
-          { model: Persona, as: "persona", where: { correo: mail } },
-        ],
+        include: [{ model: Persona, as: "persona", where: { correo: mail } }],
       });
 
       const polizas = await Poliza.findAll({
@@ -650,22 +661,6 @@ export class PolizaController {
                           },
                         ],
                       },
-                      {
-                        model: Version,
-                        as: "version",
-                        include: [
-                          {
-                            model: Modelo,
-                            as: "modelo",
-                            include: [
-                              {
-                                model: Marca,
-                                as: "marca",
-                              },
-                            ],
-                          },
-                        ],
-                      },
                     ],
                   },
                 ],
@@ -677,7 +672,9 @@ export class PolizaController {
             ],
           },
         ],
-        where: { "$lineaCotizacion.cotizacion.vehiculo.cliente_id$": cliente?.idClient },
+        where: {
+          "$lineaCotizacion.cotizacion.vehiculo.cliente_id$": cliente?.idClient,
+        },
       });
 
       if (!polizas) {
@@ -685,11 +682,13 @@ export class PolizaController {
       }
 
       const finalPoliza = polizas.map((poliza: any) => ({
-        numeroPoliza: poliza.numero_poliza,
-        cobertura: poliza.lineaCotizacion.cobertura.nombre,
+        numero_poliza: poliza.numero_poliza,
+        lineaCotizacion: {
+          id: poliza.lineaCotizacion.id,
+          cobertura: poliza.lineaCotizacion.cobertura,
+        },
         fechaContratacion: poliza.fechaContratacion,
-        horaContratacion: poliza.horaContratacion,
-        estado: poliza.EstadoPoliza,
+        estadoPoliza: poliza.estadoPoliza,
       }));
 
       return BaseService.success(
