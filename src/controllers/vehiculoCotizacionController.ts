@@ -19,9 +19,8 @@ import {
   Vehiculo,
   Version,
 } from "../models";
-import { Model } from "sequelize";
-import { version } from "os";
 
+import { Sequelize } from "sequelize";
 export class vehiculoCotizacionController {
   //HU9.1  --- El backend debe verificar que no haya una poliza o cotizacion con la matricula del vehiculo ingresado.
   static async verifyVehicle(req: Request, res: Response) {
@@ -298,65 +297,27 @@ export class vehiculoCotizacionController {
         return BaseService.notFound(res, "cliente no encontrado");
       }
       const idClient = cliente.idClient;
-      // Primero, obtén los IDs de cotizaciones que están en una poliza
-      const cotizacionesEnPoliza = await LineaCotizacion.findAll({
-        attributes: ["cotizacion_id"],
-        include: [
-          {
-            model: Poliza,
-            as: "poliza",
-            required: true, // Solo líneas que están en una poliza
-          },
-        ],
-      });
-      const cotizacionIdsEnPoliza = cotizacionesEnPoliza.map(
-        (lc: any) => lc.cotizacion_id
-      );
-
-      // Ahora, excluye esos IDs en tu consulta principal
       const cotizaciones = await Cotizacion.findAll({
         include: [
           {
             model: Vehiculo,
             as: "vehiculo",
-            include: [
-              {
-                model: Cliente,
-                as: "cliente",
-                include: [
-                  {
-                    model: Persona,
-                    as: "persona",
-                  },
-                ],
-              },
-              {
-                model: Version,
-                as: "version",
-                include: [
-                  {
-                    model: Modelo,
-                    as: "modelo",
-                    include: [
-                      {
-                        model: Marca,
-                        as: "marca",
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
+            where: { cliente_id: idClient }, // filtro cliente
+            attributes: [],
           },
         ],
         where: {
-          "$vehiculo.cliente_id$": idClient,
-          id: { [Op.notIn]: cotizacionIdsEnPoliza },
+          id: {
+            [Op.notIn]: Sequelize.literal(
+              `(SELECT lc.cotizacion_id
+          FROM lineacotizacion lc
+          INNER JOIN poliza p ON p.lineacotizacion_id = lc.idlineacotizacion
+          WHERE lc.cotizacion_id IS NOT NULL)`
+            ),
+          },
         },
+        order: [["fechacreacioncotizacion", "DESC"]],
       });
-      if (!cotizaciones) {
-        return BaseService.notFound(res, "cotizaciones no encontradas");
-      }
 
       const finalCotizaciones = cotizaciones.map((cotizacion: any) => ({
         id: cotizacion.id,
