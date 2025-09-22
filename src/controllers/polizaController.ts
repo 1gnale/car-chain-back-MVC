@@ -27,7 +27,39 @@ import { EstadoRevision } from "../models/Revision";
 
 import cron from "node-cron";
 import { Op } from "sequelize";
+import * as fs from "fs";
+import * as path from "path";
 
+/**
+ * Convierte los buffers de la documentación en URLs base64 para visualización en el frontend.
+ * @param documentacion El objeto con buffers de imágenes.
+ * @returns Un objeto con las imágenes en formato base64.
+ */
+export function bufferToBase64Images(documentacion: any) {
+  const fileFields = [
+    "fotoFrontal",
+    "fotoTrasera",
+    "fotoLateral1",
+    "fotoLateral2",
+    "fotoTecho",
+    "cedulaVerde",
+  ];
+
+  const result: Record<string, string | null> = {};
+
+  for (const field of fileFields) {
+    if (documentacion[field]) {
+      // Puedes ajustar el mime type si usas PNG u otro formato
+      result[field] = `data:image/jpeg;base64,${documentacion[field].toString(
+        "base64"
+      )}`;
+    } else {
+      result[field] = null;
+    }
+  }
+
+  return result;
+}
 export class PolizaController {
   // HU 9.2 y HU 10 --- El backend debe ser capaz de guardar la documentación de la póliza
   static async createDocumentacion(req: Request, res: Response) {
@@ -404,12 +436,14 @@ export class PolizaController {
         return BaseService.notFound(res, "documentacion no encontrada");
       }
 
+      const base64Images = bufferToBase64Images(documentacion);
+
       const usuario = await Usuario.findByPk(poliza.usuario_legajo);
 
       const personaUsuario = await Persona.findByPk(usuario?.persona_id);
 
       const finalPoliza = {
-        numeroPoliza: poliza.numero_poliza,
+        numero_poliza: poliza.numero_poliza,
         precioPolizaActual: poliza.precioPolizaActual,
         montoAsegurado: poliza.montoAsegurado,
         fechaContratacion: poliza.fechaContratacion,
@@ -432,16 +466,16 @@ export class PolizaController {
         },
         documentacion: {
           id: documentacion.id,
-          fotoFrontal: documentacion.fotoFrontal,
-          fotoTrasera: documentacion.fotoTrasera,
-          fotoLateral1: documentacion.fotoLateral1,
-          fotoLateral2: documentacion.fotoLateral2,
-          fotoTecho: documentacion.fotoTecho,
-          cedulaVerde: documentacion.cedulaVerde,
+          fotoFrontal: base64Images.fotoFrontal,
+          fotoTrasera: base64Images.fotoTrasera,
+          fotoLateral1: base64Images.fotoLateral1,
+          fotoLateral2: base64Images.fotoLateral2,
+          fotoTecho: base64Images.fotoTecho,
+          cedulaVerde: base64Images.cedulaVerde,
         },
         periodoPago: periodoPago,
         tipoContratacion: tipoContratacion,
-        LineaCotizacion: {
+        lineaCotizacion: {
           id: lineaCotizacion.id,
           monto: lineaCotizacion.monto,
           cotizacion: {
@@ -451,8 +485,8 @@ export class PolizaController {
             vehiculo: {
               chasis: vehiculo.chasis,
               matricula: vehiculo.matricula,
-              año_fabricacion: vehiculo.añoFabricacion,
-              numero_motor: vehiculo.numeroMotor,
+              añoFabricacion: vehiculo.añoFabricacion,
+              numeroMotor: vehiculo.numeroMotor,
               gnc: vehiculo.gnc,
               version: {
                 id: version.id,
@@ -1223,7 +1257,7 @@ export class PolizaController {
                 chasis: vehiculo.chasis,
                 matricula: vehiculo.matricula,
                 año_fabricacion: vehiculo.añoFabricacion,
-                numero_motor: vehiculo.numeroMotor,
+                numeroMotor: vehiculo.numeroMotor,
                 gnc: vehiculo.gnc,
                 version: {
                   id: version.id,

@@ -298,6 +298,22 @@ export class vehiculoCotizacionController {
         return BaseService.notFound(res, "cliente no encontrado");
       }
       const idClient = cliente.idClient;
+      // Primero, obtén los IDs de cotizaciones que están en una poliza
+      const cotizacionesEnPoliza = await LineaCotizacion.findAll({
+        attributes: ["cotizacion_id"],
+        include: [
+          {
+            model: Poliza,
+            as: "poliza",
+            required: true, // Solo líneas que están en una poliza
+          },
+        ],
+      });
+      const cotizacionIdsEnPoliza = cotizacionesEnPoliza.map(
+        (lc: any) => lc.cotizacion_id
+      );
+
+      // Ahora, excluye esos IDs en tu consulta principal
       const cotizaciones = await Cotizacion.findAll({
         include: [
           {
@@ -333,9 +349,11 @@ export class vehiculoCotizacionController {
             ],
           },
         ],
-        where: { "$vehiculo.cliente_id$": idClient },
+        where: {
+          "$vehiculo.cliente_id$": idClient,
+          id: { [Op.notIn]: cotizacionIdsEnPoliza },
+        },
       });
-
       if (!cotizaciones) {
         return BaseService.notFound(res, "cotizaciones no encontradas");
       }
