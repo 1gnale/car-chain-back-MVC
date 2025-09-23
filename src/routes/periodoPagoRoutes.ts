@@ -5,7 +5,6 @@ import { handleValidationErrors } from "../middleware/validation";
 
 const router = Router();
 
-// Rutas para marca
 router.get("/", PeriodoPagoController.getAllPeriodoPago);
 
 router.get(

@@ -148,10 +148,10 @@ export class MercadoPagoController {
       const poliza = await Poliza.findByPk(poliza_numero);
 
       if (!poliza) {
-        return BaseService.notFound(res, "Poliza no encontrada");
+        return BaseService.serverError(res, "Poliza no encontrada");
       }
       if (poliza.estadoPoliza != EstadoPoliza.APROBADA) {
-        return BaseService.notFound(
+        return BaseService.serverError(
           res,
           "El primer pago solo puede realizarse en una poliza Aprobada"
         );
@@ -550,10 +550,10 @@ export class MercadoPagoController {
       const poliza = await Poliza.findByPk(poliza_numero);
 
       if (!poliza) {
-        return BaseService.notFound(res, "Poliza no encontrada");
+        return BaseService.serverError(res, "Poliza no encontrada");
       }
       if (poliza.estadoPoliza != EstadoPoliza.APROBADA) {
-        return BaseService.notFound(
+        return BaseService.serverError(
           res,
           "El primer pago solo puede realizarse en una poliza Aprobada"
         );
@@ -566,17 +566,13 @@ export class MercadoPagoController {
         hora: new Date().toTimeString().split(" ")[0],
         poliza_numero: poliza_numero,
         mp_preference_id: "-",
-        mp_payment_id: "-",
-        mp_status_detail: "-",
-        mp_external_reference: "-",
-        mp_payment_method_id: "-",
-        mp_payment_type_id: "-",
         mp_status: "Pendiente",
       });
 
       const mercadopago = new MercadoPagoConfig({
         accessToken: process.env.MP_ACCESS_TOKEN!,
       });
+
       const preference = await new Preference(mercadopago).create({
         body: {
           items: [
@@ -607,7 +603,7 @@ export class MercadoPagoController {
           },
 
           back_urls: {
-            success: "https://www.youtube.com/watch?v=EVkzvPqzYRk",
+            success: `${process.env.CORS_ORIGIN}/`,
             pending:
               "https://www.youtube.com/watch?v=NyVYXRD1Ans&list=RDdXfzorLUMzA&index=3",
             failure:
@@ -658,7 +654,7 @@ export class MercadoPagoController {
       const pago = await Pago.findByPk(pagoId);
 
       if (!pago) {
-        return BaseService.notFound(res, "pago no encontrado");
+        return BaseService.serverError(res, "pago no encontrado");
       }
 
       const periodoPago = await PeriodoPago.findByPk(poliza.periodoPago_id);
