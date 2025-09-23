@@ -88,7 +88,7 @@ app.use("/api/provincias", provinciaRoutes);
 app.use("/api/localidades", localidadRoutes);
 app.use("/api/personas", personaRoutes);
 app.use("/api/clientes", clienteRoutes);
-app.use("/api/marcas", marcaRoutes);
+app.use("/api/marcas", marcaRoutes); 
 app.use("/api/modelos", modeloRoutes);
 app.use("/api/versiones", versionRoutes);
 app.use("/api/detalle", detalleRoutes);
