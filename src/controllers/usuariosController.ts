@@ -110,9 +110,9 @@ export class UsuariosController {
       });
 
       if (existingPersona == null) {
-        const existingPersona: Persona = await createPersona(personaData);
+        const newPerson: Persona = await createPersona(personaData);
         const nuevoUsuario = await Usuario.create({
-          persona_id: existingPersona.id,
+          persona_id: newPerson.id,
           activo: true,
           tipoUsuario,
         });
@@ -128,17 +128,17 @@ export class UsuariosController {
 
         // Obtener el usuario completo con la información de la persona
         const usuarioCompleto = {
-          id: existingPersona.id,
+          id: newPerson.id,
           legajo: nuevoUsuario?.legajo,
-          nombres: existingPersona.nombres,
-          apellido: existingPersona.apellido,
-          fechaNacimiento: existingPersona.fechaNacimiento,
-          tipoDocumento: existingPersona.tipoDocumento,
-          documento: existingPersona.documento,
-          domicilio: existingPersona.domicilio,
-          correo: existingPersona.correo,
-          telefono: existingPersona.telefono,
-          sexo: existingPersona.sexo,
+          nombres: newPerson.nombres,
+          apellido: newPerson.apellido,
+          fechaNacimiento: newPerson.fechaNacimiento,
+          tipoDocumento: newPerson.tipoDocumento,
+          documento: newPerson.documento,
+          domicilio: newPerson.domicilio,
+          correo: newPerson.correo,
+          telefono: newPerson.telefono,
+          sexo: newPerson.sexo,
           tipoUsuario: nuevoUsuario.tipoUsuario,
           activo: nuevoUsuario.activo,
           localidad: {
@@ -206,7 +206,7 @@ export class UsuariosController {
         return BaseService.created(
           res,
           usuarioCompleto,
-          "Usuario creado exitosamente"
+          "Persona y usuario creado exitosamente"
         );
       }
     } catch (error: any) {
