@@ -32,16 +32,45 @@ export class UsuariosController {
 
       const usuarios = await Usuario.findAll({
         where: whereClause,
-        include: [{ model: Persona, as: "persona" }],
+        include: [
+          {
+            model: Persona,
+            as: "persona",
+            include: [
+              {
+                model: Localidad,
+                as: "localidad",
+                include: [{ model: Provincia, as: "provincia" }],
+              },
+            ],
+          },
+        ],
         order: [["legajo", "ASC"]],
         ...pagination,
       });
 
+      const usuariosTotal = usuarios.map((us: any) => ({
+        id: us.persona_id,
+        legajo: us.legajo,
+        nombres: us.persona.nombres,
+        apellido: us.persona.apellido,
+        fechaNacimiento: us.persona.fechaNacimiento,
+        tipoDocumento: us.persona.tipoDocumento,
+        documento: us.persona.documento,
+        domicilio: us.persona.domicilio,
+        correo: us.persona.correo,
+        telefono: us.persona.telefono,
+        sexo: us.persona.sexo,
+        tipoUsuario: us.tipoUsuario,
+        activo: us.activo,
+        localidad: us.persona.localidad,
+      }));
+
       return BaseService.success(
         res,
-        usuarios,
+        usuariosTotal,
         "Usuarios obtenidos exitosamente",
-        usuarios.length
+        usuariosTotal.length
       );
     } catch (error: any) {
       return BaseService.serverError(
@@ -66,34 +95,39 @@ export class UsuariosController {
         },
       });
 
-      if (existingPersona) {
-        return BaseService.validationError(res, {
-          array: () => [
-            {
-              msg: "Ya existe una persona con el mismo documento o correo electrónico",
-              path: "personaData",
-            },
-          ],
-        } as any);
+      if (existingPersona == null) {
+        const existingPersona: Persona = await createPersona(personaData);
+        const nuevoUsuario = await Usuario.create({
+          persona_id: existingPersona.id,
+          activo: true,
+          tipoUsuario,
+        });
+        // Obtener el usuario completo con la información de la persona
+        const usuarioCompleto = await Usuario.findByPk(nuevoUsuario.legajo, {
+          include: [{ model: Persona, as: "persona" }],
+        });
+        return BaseService.created(
+          res,
+          usuarioCompleto,
+          "Usuario creado exitosamente"
+        );
+      } else {
+        const nuevoUsuario = await Usuario.create({
+          persona_id: existingPersona.id,
+          activo: true,
+          tipoUsuario,
+        });
+        // Obtener el usuario completo con la información de la persona
+        const usuarioCompleto = await Usuario.findByPk(nuevoUsuario.legajo, {
+          include: [{ model: Persona, as: "persona" }],
+        });
+
+        return BaseService.created(
+          res,
+          usuarioCompleto,
+          "Usuario creado exitosamente"
+        );
       }
-
-      const persona: Persona = await createPersona(personaData);
-      const nuevoUsuario = await Usuario.create({
-        persona_id: persona.id,
-        activo: true,
-        tipoUsuario,
-      });
-
-      // Obtener el usuario completo con la información de la persona
-      const usuarioCompleto = await Usuario.findByPk(nuevoUsuario.legajo, {
-        include: [{ model: Persona, as: "persona" }],
-      });
-
-      return BaseService.created(
-        res,
-        usuarioCompleto,
-        "Usuario creado exitosamente"
-      );
     } catch (error: any) {
       return BaseService.serverError(res, error, "Error al crear el usuario");
     }
@@ -138,17 +172,25 @@ export class UsuariosController {
     }
   }
 
-  static async getUserByMail(req: Request, res: Response) {
+  static async getPersonByMail(req: Request, res: Response) {
     try {
       const { mail } = req.params;
-      const usuario = await Usuario.findOne({
-        include: [{ model: Persona, as: "persona", where: { correo: mail } }],
+      const persona = await Persona.findOne({
+        where: { correo: mail }, // 👈 acá debe ir el filtro del correo
+        include: [
+          {
+            model: Localidad,
+            as: "localidad",
+            include: [
+              {
+                model: Provincia,
+                as: "provincia",
+              },
+            ],
+          },
+        ],
       });
 
-      if (!usuario) {
-        return BaseService.notFound(res, "Usuario no encontrado");
-      }
-      const persona = await Persona.findByPk(usuario.persona_id);
       if (!persona) {
         return BaseService.notFound(res, "persona no encontrado");
       }
@@ -160,38 +202,32 @@ export class UsuariosController {
       if (!provincia) {
         return BaseService.notFound(res, "provincia no encontrado");
       }
-      const finalUser = {
-        legajo: usuario.legajo,
-        activo: usuario.activo,
-        tipoUsuario: usuario.tipoUsuario,
-        persona: {
-          id: usuario.persona_id,
-          nombres: persona.nombres,
-          apellido: persona.apellido,
-          fechaNacimiento: persona.fechaNacimiento,
-          tipoDocumento: persona.tipoDocumento,
-          documento: persona.documento,
-          domicilio: persona.domicilio,
-          correo: persona.correo,
-          telefono: persona.telefono,
-          sexo: persona.sexo,
-          localidad: {
-            id: localidad.id,
-            descripcion: localidad.descripcion,
-            codigoPostal: localidad.codigoPostal,
-            activo: localidad.activo,
-            provincia: {
-              id: provincia.id,
-              descripcion: provincia.descripcion,
-              activo: provincia.activo,
-            },
+      const finalPerson = {
+        nombres: persona.nombres,
+        apellido: persona.apellido,
+        fechaNacimiento: persona.fechaNacimiento,
+        tipoDocumento: persona.tipoDocumento,
+        documento: persona.documento,
+        domicilio: persona.domicilio,
+        correo: persona.correo,
+        telefono: persona.telefono,
+        sexo: persona.sexo,
+        localidad: {
+          id: localidad.id,
+          descripcion: localidad.descripcion,
+          codigoPostal: localidad.codigoPostal,
+          activo: localidad.activo,
+          provincia: {
+            id: provincia.id,
+            descripcion: provincia.descripcion,
+            activo: provincia.activo,
           },
         },
       };
       return BaseService.success(
         res,
-        finalUser,
-        "Usuario obtenido exitosamente"
+        finalPerson,
+        "Persona obtenido exitosamente"
       );
     } catch (error: any) {
       return BaseService.serverError(res, error, "Error al obtener el usuario");

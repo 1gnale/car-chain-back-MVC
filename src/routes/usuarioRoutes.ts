@@ -34,10 +34,10 @@ router.get(
 );
 
 router.get(
-  "/get-user-by-email/:mail",
+  "/get-person-by-email/:mail",
   usuariosValidation.getByMail,
   handleValidationErrors,
-  UsuariosController.getUserByMail
+  UsuariosController.getPersonByMail
 );
 
 router.put(
