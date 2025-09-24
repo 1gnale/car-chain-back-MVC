@@ -18,21 +18,6 @@ export const usuariosValidation = {
       .withMessage("El apellido debe tener entre 2 y 50 caracteres")
       .trim(),
 
-    body("personaData.fechaNacimiento")
-      .isISO8601()
-      .withMessage(
-        "La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)"
-      )
-      .custom((value) => {
-        const fecha = new Date(value);
-        const hoy = new Date();
-        const edad = hoy.getFullYear() - fecha.getFullYear();
-        if (edad < 18 || edad > 100) {
-          throw new Error("La edad debe estar entre 18 y 100 años");
-        }
-        return true;
-      }),
-
     body("personaData.tipoDocumento")
       .isIn([
         "CUIT",
@@ -127,24 +112,6 @@ export const usuariosValidation = {
       .isLength({ min: 2, max: 50 })
       .withMessage("El apellido debe tener entre 2 y 50 caracteres")
       .trim(),
-
-    body("personaData.fechaNacimiento")
-      .optional()
-      .isISO8601()
-      .withMessage(
-        "La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)"
-      )
-      .custom((value) => {
-        if (value) {
-          const fecha = new Date(value);
-          const hoy = new Date();
-          const edad = hoy.getFullYear() - fecha.getFullYear();
-          if (edad < 18 || edad > 100) {
-            throw new Error("La edad debe estar entre 18 y 100 años");
-          }
-        }
-        return true;
-      }),
 
     body("personaData.tipoDocumento")
       .optional()

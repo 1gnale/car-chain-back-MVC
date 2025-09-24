@@ -401,6 +401,7 @@ export class MercadoPagoController {
       await poliza.update({
         tipoContratacion_id: Number(idTipoContratacion),
         periodoPago_id: Number(idPeriodoPago),
+        precioPolizaActual: pago.total,
         fechaContratacion: new Date(),
         fechaDePago: sumarMeses(periodoPago.cantidadMeses),
         fechaVencimiento: sumarMeses(tipoContratacion.cantidadMeses),
@@ -552,13 +553,14 @@ export class MercadoPagoController {
       if (!poliza) {
         return BaseService.notFound(res, "Poliza no encontrada");
       }
-      if (poliza.estadoPoliza != EstadoPoliza.APROBADA) {
+      if (poliza.estadoPoliza != EstadoPoliza.IMPAGA) {
         return BaseService.notFound(
           res,
-          "El primer pago solo puede realizarse en una poliza Aprobada"
+          "El primer pago solo puede realizarse en una poliza impaga"
         );
       }
 
+      // Crear registro de pago pendiente en la base de datos
       // Crear registro de pago pendiente en la base de datos
       const nuevoPago = await Pago.create({
         total: parseFloat(total),
@@ -566,11 +568,6 @@ export class MercadoPagoController {
         hora: new Date().toTimeString().split(" ")[0],
         poliza_numero: poliza_numero,
         mp_preference_id: "-",
-        mp_payment_id: "-",
-        mp_status_detail: "-",
-        mp_external_reference: "-",
-        mp_payment_method_id: "-",
-        mp_payment_type_id: "-",
         mp_status: "Pendiente",
       });
 
