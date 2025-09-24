@@ -105,10 +105,7 @@ export class UsuariosController {
       // Verificar si ya existe una persona con el mismo documento o correo
       const existingPersona = await Persona.findOne({
         where: {
-          [Op.or]: [
-            { documento: personaData.documento },
-            { correo: personaData.correo },
-          ],
+          [Op.or]: [{ correo: personaData.correo }],
         },
       });
 
