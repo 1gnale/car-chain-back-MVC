@@ -85,6 +85,23 @@ export class UsuariosController {
     try {
       const { personaData, tipoUsuario } = req.body;
 
+      const existingUsuario = await Usuario.findOne({
+        include: [
+          {
+            model: Persona,
+            as: "persona",
+            where: { correo: personaData.correo }, // buscamos en persona
+          },
+        ],
+      });
+
+      if (existingUsuario) {
+        return BaseService.serverError(
+          res,
+          "Ya hay un usuario asignado a este correo"
+        );
+      }
+
       // Verificar si ya existe una persona con el mismo documento o correo
       const existingPersona = await Persona.findOne({
         where: {
@@ -102,10 +119,44 @@ export class UsuariosController {
           activo: true,
           tipoUsuario,
         });
+
+        const localidad = await Localidad.findByPk(personaData.localidad_id);
+        if (!localidad) {
+          return BaseService.serverError(res, "Localidad no encontrada");
+        }
+        const provincia = await Provincia.findByPk(localidad.provincia_id);
+        if (!provincia) {
+          return BaseService.serverError(res, "Provincia no encontrada");
+        }
+
         // Obtener el usuario completo con la información de la persona
-        const usuarioCompleto = await Usuario.findByPk(nuevoUsuario.legajo, {
-          include: [{ model: Persona, as: "persona" }],
-        });
+        const usuarioCompleto = {
+          id: existingPersona.id,
+          legajo: nuevoUsuario?.legajo,
+          nombres: existingPersona.nombres,
+          apellido: existingPersona.apellido,
+          fechaNacimiento: existingPersona.fechaNacimiento,
+          tipoDocumento: existingPersona.tipoDocumento,
+          documento: existingPersona.documento,
+          domicilio: existingPersona.domicilio,
+          correo: existingPersona.correo,
+          telefono: existingPersona.telefono,
+          sexo: existingPersona.sexo,
+          tipoUsuario: nuevoUsuario.tipoUsuario,
+          activo: nuevoUsuario.activo,
+          localidad: {
+            id: localidad.id,
+            descripcion: localidad.descripcion,
+            codigoPostal: localidad.codigoPostal,
+            provincia_id: localidad.provincia_id,
+            activo: localidad.activo,
+            provincia: {
+              id: provincia.id,
+              descripcion: provincia.descripcion,
+              activo: provincia.activo,
+            },
+          },
+        };
         return BaseService.created(
           res,
           usuarioCompleto,
@@ -118,10 +169,43 @@ export class UsuariosController {
           tipoUsuario,
         });
         // Obtener el usuario completo con la información de la persona
-        const usuarioCompleto = await Usuario.findByPk(nuevoUsuario.legajo, {
-          include: [{ model: Persona, as: "persona" }],
-        });
+        const localidad = await Localidad.findByPk(personaData.localidad_id);
+        if (!localidad) {
+          return BaseService.serverError(res, "Localidad no encontrada");
+        }
+        const provincia = await Provincia.findByPk(localidad.provincia_id);
+        if (!provincia) {
+          return BaseService.serverError(res, "Provincia no encontrada");
+        }
 
+        // Obtener el usuario completo con la información de la persona
+        const usuarioCompleto = {
+          id: existingPersona.id,
+          legajo: nuevoUsuario?.legajo,
+          nombres: existingPersona.nombres,
+          apellido: existingPersona.apellido,
+          fechaNacimiento: existingPersona.fechaNacimiento,
+          tipoDocumento: existingPersona.tipoDocumento,
+          documento: existingPersona.documento,
+          domicilio: existingPersona.domicilio,
+          correo: existingPersona.correo,
+          telefono: existingPersona.telefono,
+          sexo: existingPersona.sexo,
+          tipoUsuario: nuevoUsuario.tipoUsuario,
+          activo: nuevoUsuario.activo,
+          localidad: {
+            id: localidad.id,
+            descripcion: localidad.descripcion,
+            codigoPostal: localidad.codigoPostal,
+            provincia_id: localidad.provincia_id,
+            activo: localidad.activo,
+            provincia: {
+              id: provincia.id,
+              descripcion: provincia.descripcion,
+              activo: provincia.activo,
+            },
+          },
+        };
         return BaseService.created(
           res,
           usuarioCompleto,
