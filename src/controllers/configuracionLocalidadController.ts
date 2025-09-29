@@ -60,7 +60,7 @@ export class ConfiguracionLocalidadController {
 
   static async createConfiguracionLocalidad(req: Request, res: Response) {
     try {
-      const { nombre, descuento, ganancia, recargo, localidad_id } = req.body;
+      const { nombre, descuento, ganancia, recargo, localidad } = req.body;
 
       if (!nombre) {
         return BaseService.validationError(res, {
@@ -122,12 +122,13 @@ export class ConfiguracionLocalidadController {
           ],
         } as any);
       }
-      if (!localidad_id) {
+      const localidadDB = await Localidad.findByPk(localidad.id);
+      if (!localidadDB) {
         return BaseService.validationError(res, {
           array: () => [
             {
-              msg: "La localidad_id de la ConfiguracionLocalidad es requerida",
-              path: "localidad_id",
+              msg: "La localidad de la ConfiguracionLocalidad es requerida",
+              path: "localidad",
             },
           ],
         } as any);
@@ -135,8 +136,9 @@ export class ConfiguracionLocalidadController {
       // Validar que no existan configuraciones activas con la misma localidad
       const overlap = await ConfiguracionLocalidad.findOne({
         where: {
-          activo: true, // si tenés un campo activa = true/false
-          [Op.and]: [{ localidad_id: { [Op.eq]: localidad_id } }],
+          activo: true, // solo si está activa
+          localidad_id: { [Op.eq]: localidadDB.id },
+          //id: { [Op.ne]: configuracionLocalidad.id }, // excluye a sí mismo
         },
       });
 
@@ -150,7 +152,7 @@ export class ConfiguracionLocalidadController {
           ],
         } as any);
       }
-
+      const localidad_id = localidad.id;
       const configuracionLocalidad = await ConfiguracionLocalidad.create({
         nombre,
         descuento,
@@ -311,7 +313,7 @@ export class ConfiguracionLocalidadController {
   static async updateConfiguracionLocalidad(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { nombre, descuento, ganancia, recargo, localidad_id, activo } =
+      const { nombre, descuento, ganancia, recargo, localidad, activo } =
         req.body;
 
       const configuracionLocalidad = await ConfiguracionLocalidad.findByPk(id);
@@ -325,10 +327,23 @@ export class ConfiguracionLocalidadController {
 
       // Validar que no existan configuraciones activas con solapamiento
       if (activo) {
+        const localidadDB = await Localidad.findByPk(localidad.id);
+        if (!localidadDB) {
+          return BaseService.validationError(res, {
+            array: () => [
+              {
+                msg: "La localidad de la ConfiguracionLocalidad es requerida",
+                path: "localidad",
+              },
+            ],
+          } as any);
+        }
+        // Validar que no existan configuraciones activas con la misma localidad
         const overlap = await ConfiguracionLocalidad.findOne({
           where: {
-            activo: true, // si tenés un campo activa = true/false
-            [Op.and]: [{ localidad_id: { [Op.eq]: localidad_id } }],
+            activo: true, // solo si está activa
+            localidad_id: { [Op.eq]: localidadDB.id },
+            id: { [Op.ne]: configuracionLocalidad.id }, // excluye a sí mismo
           },
         });
 
@@ -336,14 +351,14 @@ export class ConfiguracionLocalidadController {
           return BaseService.validationError(res, {
             array: () => [
               {
-                msg: "La localidad se solapa con otra configuración activa",
-                path: "localidad_id",
+                msg: "La Localidad se solapa con otra configuración activa",
+                path: "Localidad",
               },
             ],
           } as any);
         }
       }
-
+      const localidad_id = localidad.id;
       const configuracionLocalidadModificada =
         await configuracionLocalidad.update({
           nombre,

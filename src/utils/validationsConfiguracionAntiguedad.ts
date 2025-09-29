@@ -18,8 +18,8 @@ export const configAntiguedadValidation = {
     body("maxima")
       .notEmpty()
       .withMessage("La maxima de la Configuracion Antiguedad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("La maxima debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("La maxima debe ser mayor a 0")
       .trim(),
     body("descuento")
       .notEmpty()
@@ -42,7 +42,7 @@ export const configAntiguedadValidation = {
   ],
   getByAge: [
     param("age")
-      .isInt({ min: 0 })
+      .isInt({ min: 1 })
       .withMessage("La antiguedad debe ser un número entero positivo"),
   ],
   // Validación para obtener por ID
@@ -55,7 +55,7 @@ export const configAntiguedadValidation = {
   // Validación para modificar
   update: [
     param("id")
-      .isInt({ min: 1 })
+      .isInt({ min: 0 })
       .withMessage("El ID debe ser un número entero positivo"),
 
     body("nombre")
@@ -73,8 +73,8 @@ export const configAntiguedadValidation = {
     body("maxima")
       .notEmpty()
       .withMessage("La maxima de la Configuracion Antiguedad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("La maxima debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("La maxima debe ser mayor a 0")
       .trim(),
     body("descuento")
       .notEmpty()

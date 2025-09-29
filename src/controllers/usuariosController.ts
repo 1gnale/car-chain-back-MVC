@@ -86,11 +86,14 @@ export class UsuariosController {
       const { personaData, tipoUsuario } = req.body;
 
       const existingUsuario = await Usuario.findOne({
+        where: {
+          activo: true,
+        },
         include: [
           {
             model: Persona,
             as: "persona",
-            where: { correo: personaData.correo }, // buscamos en persona
+            where: { correo: personaData.correo }, // condición en Persona
           },
         ],
       });
@@ -98,7 +101,7 @@ export class UsuariosController {
       if (existingUsuario) {
         return BaseService.serverError(
           res,
-          "Ya hay un usuario asignado a este correo"
+          "Ya hay un usuario activo asignado a este correo"
         );
       }
 
@@ -217,12 +220,12 @@ export class UsuariosController {
   static async updateUsuarioState(req: Request, res: Response) {
     try {
       const { legajo } = req.params;
-      const { state } = req.body;
+      const { activo } = req.body;
       const usuario = await Usuario.findByPk(legajo);
       if (!usuario) {
         return BaseService.notFound(res, "Usuario no encontrado");
       }
-      usuario.activo = state;
+      usuario.activo = activo;
       await usuario.save();
       return BaseService.success(
         res,
@@ -320,6 +323,28 @@ export class UsuariosController {
       const { legajo } = req.params;
       const { personaData, tipoUsuario, activo } = req.body;
 
+      if (activo) {
+        const existingUsuario = await Usuario.findOne({
+          where: {
+            activo: true, // sigue siendo activo
+            legajo: { [Op.ne]: legajo }, // distinto del legajo recibido
+          },
+          include: [
+            {
+              model: Persona,
+              as: "persona",
+              where: { correo: personaData.correo }, // correo a verificar
+            },
+          ],
+        });
+        if (existingUsuario) {
+          return BaseService.notFound(
+            res,
+            "No puedes activar este usuario porque ya hay un usuario activo con ese correo"
+          );
+        }
+      }
+
       const usuario = await Usuario.findByPk(legajo, {
         include: [{ model: Persona, as: "persona" }],
       });
@@ -363,23 +388,63 @@ export class UsuariosController {
         if (persona) {
           await persona.update(personaData);
         }
+
+        // Actualizar datos del usuario
+        if (tipoUsuario !== undefined) usuario.tipoUsuario = tipoUsuario;
+        if (activo !== undefined) usuario.activo = activo;
+        await usuario.save();
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        console.log(usuario);
+        // Obtener el usuario actualizado con la información de la persona
+        const usuarioActualizado = await Usuario.findByPk(legajo, {
+          include: [{ model: Persona, as: "persona" }],
+        });
+
+        // Obtener el usuario completo con la información de la persona
+        const localidad = await Localidad.findByPk(personaData.localidad_id);
+        if (!localidad) {
+          return BaseService.serverError(res, "Localidad no encontrada");
+        }
+        const provincia = await Provincia.findByPk(localidad.provincia_id);
+        if (!provincia) {
+          return BaseService.serverError(res, "Provincia no encontrada");
+        }
+        const usuarioCompleto = {
+          id: personaData.id,
+          legajo: usuarioActualizado?.legajo,
+          nombres: personaData.nombres,
+          apellido: personaData.apellido,
+          fechaNacimiento: personaData.fechaNacimiento,
+          tipoDocumento: personaData.tipoDocumento,
+          documento: personaData.documento,
+          domicilio: personaData.domicilio,
+          correo: personaData.correo,
+          telefono: personaData.telefono,
+          sexo: personaData.sexo,
+          tipoUsuario: usuarioActualizado?.tipoUsuario,
+          activo: usuarioActualizado?.activo,
+          localidad: {
+            id: localidad.id,
+            descripcion: localidad.descripcion,
+            codigoPostal: localidad.codigoPostal,
+            provincia_id: localidad.provincia_id,
+            activo: localidad.activo,
+            provincia: {
+              id: provincia.id,
+              descripcion: provincia.descripcion,
+              activo: provincia.activo,
+            },
+          },
+        };
+        console.log("usuarioCompleto");
+        console.log(usuarioCompleto);
+
+        return BaseService.success(
+          res,
+          usuarioCompleto,
+          "Usuario actualizado exitosamente"
+        );
       }
-
-      // Actualizar datos del usuario
-      if (tipoUsuario !== undefined) usuario.tipoUsuario = tipoUsuario;
-      if (activo !== undefined) usuario.activo = activo;
-      await usuario.save();
-
-      // Obtener el usuario actualizado con la información de la persona
-      const usuarioActualizado = await Usuario.findByPk(legajo, {
-        include: [{ model: Persona, as: "persona" }],
-      });
-
-      return BaseService.success(
-        res,
-        usuarioActualizado,
-        "Usuario actualizado exitosamente"
-      );
     } catch (error: any) {
       return BaseService.serverError(
         res,

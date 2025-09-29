@@ -35,7 +35,7 @@ import * as path from "path";
  * @param documentacion El objeto con buffers de imágenes.
  * @returns Un objeto con las imágenes en formato base64.
  */
-export function bufferToBase64Images(documentacion: any) {
+export function bufferToBase64ImagesDocumentation(documentacion: any) {
   const fileFields = [
     "fotoFrontal",
     "fotoTrasera",
@@ -60,6 +60,26 @@ export function bufferToBase64Images(documentacion: any) {
 
   return result;
 }
+
+export function bufferToBase64ImagesSiniestro(siniestro: any) {
+  const fileFields = ["fotoDenuncia", "fotoVehiculo"];
+
+  const result: Record<string, string | null> = {};
+
+  for (const field of fileFields) {
+    if (siniestro[field]) {
+      // Puedes ajustar el mime type si usas PNG u otro formato
+      result[field] = `data:image/jpeg;base64,${siniestro[field].toString(
+        "base64"
+      )}`;
+    } else {
+      result[field] = null;
+    }
+  }
+
+  return result;
+}
+
 export class PolizaController {
   // HU 9.2 y HU 10 --- El backend debe ser capaz de guardar la documentación de la póliza
   static async createDocumentacion(req: Request, res: Response) {
@@ -436,7 +456,7 @@ export class PolizaController {
         return BaseService.notFound(res, "documentacion no encontrada");
       }
 
-      const base64Images = bufferToBase64Images(documentacion);
+      const base64Images = bufferToBase64ImagesDocumentation(documentacion);
 
       const usuario = await Usuario.findByPk(poliza.usuario_legajo);
 
@@ -788,7 +808,7 @@ export class PolizaController {
           fotoDenuncia,
           fotoVehiculo,
         };
-        // Validación: campos requeridos
+        // Validación: base64Img requeridos
         for (const [key, value] of Object.entries(campos)) {
           if (!value) {
             return BaseService.validationError(res, {
@@ -796,20 +816,9 @@ export class PolizaController {
             } as any);
           }
 
-          // Validar que sea base64
-          const base64Regex =
-            /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-          if (!base64Regex.test(value)) {
-            return BaseService.validationError(res, {
-              array: () => [
-                {
-                  msg: `El campo ${key} debe ser una cadena base64 válida`,
-                  path: key,
-                },
-              ],
-            } as any);
-          }
-          // Validar que corresponda a imagen (si viene con encabezado data:image)
+          let base64Data = value;
+
+          // Si viene con encabezado tipo data:image/...
           if (value.startsWith("data:")) {
             if (!value.startsWith("data:image/")) {
               return BaseService.validationError(res, {
@@ -821,6 +830,34 @@ export class PolizaController {
                 ],
               } as any);
             }
+
+            // Cortar el encabezado y quedarnos con la parte después de la coma
+            const parts = value.split(",");
+            if (parts.length !== 2) {
+              return BaseService.validationError(res, {
+                array: () => [
+                  {
+                    msg: `El campo ${key} tiene un formato inválido`,
+                    path: key,
+                  },
+                ],
+              } as any);
+            }
+            base64Data = parts[1];
+          }
+
+          // Validar que la parte base64 sea válida
+          const base64Regex =
+            /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+          if (!base64Regex.test(base64Data)) {
+            return BaseService.validationError(res, {
+              array: () => [
+                {
+                  msg: `El campo ${key} debe ser una cadena base64 válida`,
+                  path: key,
+                },
+              ],
+            } as any);
           }
         }
 
@@ -918,8 +955,8 @@ export class PolizaController {
 
       const finalSiniestro = siniestros.map((siniestro: any) => ({
         id: siniestro.id,
-        fecha: siniestro.fechaSiniestro,
-        hora: siniestro.horaSiniestro,
+        fechaSiniestro: siniestro.fechaSiniestro,
+        horaSiniestro: siniestro.horaSiniestro,
         estado: siniestro.estado,
       }));
       const finalRevision = revisiones.map((revision: any) => ({
@@ -956,13 +993,20 @@ export class PolizaController {
       if (!siniesto) {
         return BaseService.notFound(res, "siniesto no encontrada");
       }
+
+      const imgSiniestro = {
+        fotoDenuncia: siniesto.fotoDenuncia,
+        fotoVehiculo: siniesto.fotoVehiculo,
+      };
+      const imgSiniestro64 = bufferToBase64ImagesSiniestro(imgSiniestro);
+
       const finalSiniestro = {
         id: siniesto.id,
-        fecha: siniesto.fechaSiniestro,
-        hora: siniesto.horaSiniestro,
+        fechaSiniestro: siniesto.fechaSiniestro,
+        horaSiniestro: siniesto.horaSiniestro,
         estado: siniesto.estado,
-        denuncia: siniesto.fotoDenuncia,
-        vehiculo: siniesto.fotoVehiculo,
+        fotoDenuncia: imgSiniestro64.fotoDenuncia,
+        fotoVehiculo: imgSiniestro64.fotoVehiculo,
       };
 
       return BaseService.success(res, finalSiniestro);

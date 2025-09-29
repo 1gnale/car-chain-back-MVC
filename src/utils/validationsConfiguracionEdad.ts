@@ -12,20 +12,20 @@ export const configEdadValidation = {
     body("minima")
       .notEmpty()
       .withMessage("El minima de la Configuracion Edad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("El minima debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("El minima debe ser mayor a 0")
       .trim(),
     body("maxima")
       .notEmpty()
       .withMessage("La maxima de la Configuracion Edad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("La maxima debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("La maxima debe ser mayor a 0")
       .trim(),
     body("descuento")
       .notEmpty()
       .withMessage("El descuento de la Configuracion Edad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("El descuento debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("El descuento debe ser mayor a 0")
       .trim(),
     body("ganancia")
       .notEmpty()
@@ -55,7 +55,7 @@ export const configEdadValidation = {
   // Validación para modificar
   update: [
     param("id")
-      .isInt({ min: 1 })
+      .isInt({ min: 0 })
       .withMessage("El ID debe ser un número entero positivo"),
 
     body("nombre")
@@ -67,14 +67,14 @@ export const configEdadValidation = {
     body("minima")
       .notEmpty()
       .withMessage("El minima de la Configuracion Edad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("El minima debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("El minima debe ser mayor a 0")
       .trim(),
     body("maxima")
       .notEmpty()
       .withMessage("La maxima de la Configuracion Edad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("La maxima debe ser mayor a 1")
+      .isInt({ min: 0 })
+      .withMessage("La maxima debe ser mayor a 0")
       .trim(),
     body("descuento")
       .notEmpty()
