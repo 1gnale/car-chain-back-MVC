@@ -124,9 +124,15 @@ export class CoberturaDetalleController {
         aplica,
       });
 
+      const coberDetail = {
+        cobertura: cobertura,
+        detalle: detalle,
+        aplica: aplica,
+      };
+
       return BaseService.created(
         res,
-        nuevaCoberturaDetalle,
+        coberDetail,
         "Coberturas_Detalle creada exitosamente"
       );
     } catch (error: any) {
@@ -145,7 +151,24 @@ export class CoberturaDetalleController {
 
       const coberturaDetalle = await CoberturaDetalle.findByPk(id);
       if (!coberturaDetalle) {
-        return BaseService.notFound(res, "Coberturas_Detalle no encontrado");
+        const cobertura = await Cobertura.findByPk(cobertura_id);
+        if (!cobertura) {
+          return BaseService.notFound(res, "cobertura no encontrado");
+        }
+        const detalle = await Detalle.findByPk(detalle_id);
+        if (!detalle) {
+          return BaseService.notFound(res, "detalle no encontrado");
+        }
+        const nuevaCoberturaDetalle = await CoberturaDetalle.create({
+          cobertura_id,
+          detalle_id,
+          aplica,
+        });
+        return BaseService.success(
+          res,
+          nuevaCoberturaDetalle,
+          "Coberturas_Detalle creada exitosamente"
+        );
       }
 
       const coberturaModificada = await coberturaDetalle.update({

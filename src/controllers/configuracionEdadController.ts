@@ -216,29 +216,11 @@ export class ConfiguracionEdadController {
       if (activo) {
         const overlap = await ConfiguracionEdad.findOne({
           where: {
-            activo: true, // si tenés un campo activa = true/false
-            [Op.or]: [
-              {
-                // caso: la mínima nueva cae dentro de un rango existente
-                [Op.and]: [
-                  { minima: { [Op.lte]: minima } },
-                  { maxima: { [Op.gte]: minima } },
-                ],
-              },
-              {
-                // caso: la máxima nueva cae dentro de un rango existente
-                [Op.and]: [
-                  { minima: { [Op.lte]: maxima } },
-                  { maxima: { [Op.gte]: maxima } },
-                ],
-              },
-              {
-                // caso: el rango nuevo envuelve completamente a otro rango
-                [Op.and]: [
-                  { minima: { [Op.gte]: minima } },
-                  { maxima: { [Op.lte]: maxima } },
-                ],
-              },
+            id: { [Op.ne]: id }, // excluye la misma config
+            activo: true,
+            [Op.and]: [
+              { minima: { [Op.lte]: maxima } }, // nueva mínima <= existente máxima
+              { maxima: { [Op.gte]: minima } }, // nueva máxima >= existente mínima
             ],
           },
         });

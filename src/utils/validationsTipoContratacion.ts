@@ -12,8 +12,8 @@ export const TipoContratacionValidation = {
     body("cantidadMeses")
       .notEmpty()
       .withMessage("La Cantidad de Meses del TipoContratacion es requerida")
-      .isInt({ min: 1, max: 24 })
-      .withMessage("La Cantidad de Meses debe tener entre 1 y 24")
+      .isInt({ min: 1 })
+      .withMessage("La Cantidad de Meses debe tener minimo 1")
       .trim(),
   ],
 
@@ -36,8 +36,8 @@ export const TipoContratacionValidation = {
     body("cantidadMeses")
       .notEmpty()
       .withMessage("La cantidad deMeses del TipoContratacion es requerida")
-      .isInt({ min: 1, max: 12 })
-      .withMessage("La cantidad de Meses debe tener entre 1 y 12")
+      .isInt({ min: 1 })
+      .withMessage("La cantidad de Meses debe ser mayot a 1")
       .trim(),
     body("activo")
       .notEmpty()

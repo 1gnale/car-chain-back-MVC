@@ -16,13 +16,11 @@ export const modeloValidation = {
       .isLength({ min: 2, max: 50 })
       .withMessage("El nombre del modelo debe tener entre 2 y 50 caracteres")
       .trim(),
-    body("marca_id")
+    body("marca")
       .notEmpty()
       .withMessage("La marca es requerida")
-      .isInt()
-      .withMessage("La marca debe ser un número entero")
       .custom(async (value) => {
-        const marca = await Marca.findByPk(value);
+        const marca = await Marca.findByPk(value.id);
         if (!marca) {
           throw new Error("La marca indicada no existe");
         }
@@ -47,13 +45,11 @@ export const modeloValidation = {
       .isLength({ min: 2, max: 50 })
       .withMessage("El nombre del modelo debe tener entre 2 y 50 caracteres")
       .trim(),
-    body("marca_id")
+    body("marca")
       .notEmpty()
       .withMessage("La marca es requerida")
-      .isInt()
-      .withMessage("La marca debe ser un número entero")
       .custom(async (value) => {
-        const marca = await Marca.findByPk(value);
+        const marca = await Marca.findByPk(value.id);
         if (!marca) {
           throw new Error("La marca indicada no existe");
         }

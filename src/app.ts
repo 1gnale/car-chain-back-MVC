@@ -27,6 +27,7 @@ import polizaRoutes from "./routes/polizaRoutes";
 import pagoRoutes from "./routes/pagoRoutes";
 import tiposDocumentoRoutes from "./routes/tiposDocumentoRoutes";
 import tiposUsuarioRoutes from "./routes/tiposUsuarioRoutes";
+import dashboardRoutes from "./routes/dashboardRoutes";
 
 // Configurar variables de entorno
 dotenv.config();
@@ -88,7 +89,7 @@ app.use("/api/provincias", provinciaRoutes);
 app.use("/api/localidades", localidadRoutes);
 app.use("/api/personas", personaRoutes);
 app.use("/api/clientes", clienteRoutes);
-app.use("/api/marcas", marcaRoutes); 
+app.use("/api/marcas", marcaRoutes);
 app.use("/api/modelos", modeloRoutes);
 app.use("/api/versiones", versionRoutes);
 app.use("/api/detalle", detalleRoutes);
@@ -105,6 +106,7 @@ app.use("/api/pago", pagoRoutes);
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/tipos-documento", tiposDocumentoRoutes);
 app.use("/api/tipos-usuario", tiposUsuarioRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Ruta de health check
 app.get("/health", (req, res) => {

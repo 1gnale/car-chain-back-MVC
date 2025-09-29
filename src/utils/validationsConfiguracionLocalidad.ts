@@ -28,18 +28,6 @@ export const configLocalidadValidation = {
       .isFloat({ min: 0 })
       .withMessage("El recargo debe ser mayor a 0")
       .trim(),
-    body("localidad_id")
-      .notEmpty()
-      .withMessage("La localidad_id de la Configuracion Localidad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("La localidad_id debe ser mayor a 1")
-      .custom(async (value) => {
-        const localidad = await Localidad.findByPk(value);
-        if (!localidad) {
-          throw new Error("La localidad indicada no existe");
-        }
-        return true;
-      }),
   ],
 
   // Validación para obtener por ID
@@ -83,18 +71,6 @@ export const configLocalidadValidation = {
       .isFloat({ min: 0 })
       .withMessage("El recargo debe ser mayor a 0")
       .trim(),
-    body("localidad_id")
-      .notEmpty()
-      .withMessage("La localidad_id de la Configuracion Localidad es requerida")
-      .isInt({ min: 1 })
-      .withMessage("La localidad_id debe ser mayor a 1")
-      .custom(async (value) => {
-        const localidad = await Localidad.findByPk(value);
-        if (!localidad) {
-          throw new Error("La localidad indicada no existe");
-        }
-        return true;
-      }),
     body("activo")
       .notEmpty()
       .withMessage("El valor de 'activo' es requerido")

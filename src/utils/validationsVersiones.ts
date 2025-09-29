@@ -27,19 +27,16 @@ export const versionValidation = {
       .withMessage("el precio_mercado_gnc es requerido")
       .isFloat()
       .withMessage("El precio_mercado_gnc debe ser un numero flotante"),
-    body("modelo_id")
-    .notEmpty()
-    .withMessage("El modelo_id es requerido")
-    .isInt()
-    .withMessage("El modelo_id debe ser un entero")
-    .custom(async (value) => {
-        const model = await Modelo.findByPk(value);
+    body("modelo")
+      .notEmpty()
+      .withMessage("El modelo es requerido")
+      .custom(async (value) => {
+        const model = await Modelo.findByPk(value.id);
         if (!model) {
           throw new Error("El modelo indicado no existe");
         }
         return true;
       }),
-    
   ],
 
   // Validación para actualizar la version
@@ -70,13 +67,11 @@ export const versionValidation = {
       .withMessage("el precio_mercado_gnc es requerido")
       .isFloat()
       .withMessage("El precio_mercado_gnc debe ser un numero flotante"),
-    body("modelo_id")
-    .notEmpty()
-    .withMessage("El modelo_id es requerido")
-    .isInt()
-    .withMessage("El modelo_id debe ser un entero")
-    .custom(async (value) => {
-        const model = await Modelo.findByPk(value);
+    body("modelo")
+      .notEmpty()
+      .withMessage("El modelo es requerido")
+      .custom(async (value) => {
+        const model = await Modelo.findByPk(value.id);
         if (!model) {
           throw new Error("El modelo indicado no existe");
         }

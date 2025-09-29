@@ -20,8 +20,8 @@ export const detalleValidation = {
     body("porcentaje_miles")
       .notEmpty()
       .withMessage("El porcentaje_miles del detalle es requerida")
-      .isInt({ min: 1, max: 1000 })
-      .withMessage("El procentaje debe tener entre 1 y 1000 caracteres")
+      .isInt({ min: 0, max: 10 })
+      .withMessage("El procentaje debe tener entre 0 y 10 caracteres")
       .trim(),
 
     body("monto_fijo")
@@ -61,8 +61,8 @@ export const detalleValidation = {
     body("porcentaje_miles")
       .notEmpty()
       .withMessage("El nombre del detalle es requerida")
-      .isInt({ min: 1, max: 1000 })
-      .withMessage("El procentaje debe tener entre 1 y 1000 caracteres")
+      .isInt({ min: 0, max: 10 })
+      .withMessage("El procentaje debe tener entre 0 y 10 caracteres")
       .trim(),
 
     body("monto_fijo")

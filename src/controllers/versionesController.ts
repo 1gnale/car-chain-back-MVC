@@ -32,7 +32,7 @@ export class VersionesController {
           id: version.modelo.id,
           nombre: version.modelo.nombre,
           descripcion: version.modelo.descripcion,
-          activo:version.modelo.activo,
+          activo: version.modelo.activo,
           marca: {
             id: version.modelo.marca.id,
             nombre: version.modelo.marca.nombre,
@@ -101,7 +101,7 @@ export class VersionesController {
             nombre: marca.nombre,
             descripcion: marca.descripcion,
             activo: marca.activo,
-          }
+          },
         },
       };
 
@@ -113,9 +113,21 @@ export class VersionesController {
 
   static async crearVersion(req: Request, res: Response) {
     try {
-      const { descripcion, nombre, modelo_id, precio_mercado, precio_mercado_gnc } = req.body;
-
-      if (!descripcion || !nombre || !modelo_id || !precio_mercado || !precio_mercado_gnc) {
+      const {
+        descripcion,
+        nombre,
+        modelo,
+        precio_mercado,
+        precio_mercado_gnc,
+      } = req.body;
+      const modelo_id = modelo.id;
+      if (
+        !descripcion ||
+        !nombre ||
+        !modelo_id ||
+        !precio_mercado ||
+        !precio_mercado_gnc
+      ) {
         return BaseService.validationError(res, {
           array: () => [
             {
@@ -148,14 +160,31 @@ export class VersionesController {
   static async updateVersion(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { descripcion, nombre, activo } = req.body;
+      const {
+        descripcion,
+        nombre,
+        modelo,
+        precio_mercado,
+        precio_mercado_gnc,
+        activo,
+      } = req.body;
+
+      const modelo_id = modelo.id;
+
       const version = await Version.findByPk(id);
 
       if (!version) {
         return BaseService.notFound(res, "Version no encontrada");
       }
 
-      await version.update({ descripcion, nombre, activo });
+      await version.update({
+        descripcion,
+        nombre,
+        modelo_id,
+        precio_mercado,
+        precio_mercado_gnc,
+        activo,
+      });
 
       return BaseService.success(
         res,

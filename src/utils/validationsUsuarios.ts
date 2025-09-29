@@ -80,7 +80,7 @@ export const usuariosValidation = {
       .isInt({ min: 1 })
       .withMessage("El legajo debe ser un número entero positivo"),
 
-    body("state")
+    body("activo")
       .isBoolean()
       .withMessage("El estado debe ser verdadero o falso")
       .toBoolean(),

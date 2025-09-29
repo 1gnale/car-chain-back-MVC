@@ -61,33 +61,18 @@ export const coberturaDetalleValidation = {
   // Validación para modificar
   update: [
     param("id")
-      .isInt({ min: 1 })
-      .withMessage("El ID debe ser un número entero positivo"),
+      .isInt({ min: 0 })
+      .withMessage("El ID debe ser un número entero positivo o 0"),
     body("cobertura_id")
       .notEmpty()
       .withMessage("La cobertura es requerida")
       .isInt()
-      .withMessage("La cobertura debe ser un número entero")
-      .custom(async (value) => {
-        const cobertura = await Cobertura.findByPk(value);
-        if (!cobertura) {
-          throw new Error("La cobertura indicada no existe");
-        }
-        return true;
-      }),
-
+      .withMessage("La cobertura debe ser un número entero"),
     body("detalle_id")
       .notEmpty()
       .withMessage("El detalle es requerido")
       .isInt()
-      .withMessage("El detalle debe ser un número entero")
-      .custom(async (value) => {
-        const detalle = await Detalle.findByPk(value);
-        if (!detalle) {
-          throw new Error("El detalle indicada no existe");
-        }
-        return true;
-      }),
+      .withMessage("El detalle debe ser un número entero"),
     body("aplica")
       .notEmpty()
       .withMessage("El valor de 'aplica' es requerido")
