@@ -151,11 +151,11 @@ const startServer = async () => {
     await sequelize.authenticate();
 
     //  Sincronizar modelos (solo en desarrollo)
-    /*  if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development") {
       await sequelize.sync({ alter: false });
       console.log("✅ Modelos sincronizados con la base de datos");
     }
-*/
+
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);

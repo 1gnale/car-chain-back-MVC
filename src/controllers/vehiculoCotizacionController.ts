@@ -437,7 +437,7 @@ export class vehiculoCotizacionController {
             id: LinCot.cotizacion.vehiculo.id,
             chasis: LinCot.cotizacion.vehiculo.chasis,
             matricula: LinCot.cotizacion.vehiculo.matricula,
-            añoFabricacion: LinCot.cotizacion.vehiculo.año_fabricacion,
+            añoFabricacion: LinCot.cotizacion.vehiculo.añoFabricacion,
             numeroMotor: LinCot.cotizacion.vehiculo.numeroMotor,
             gnc: LinCot.cotizacion.vehiculo.gnc,
             version: {
