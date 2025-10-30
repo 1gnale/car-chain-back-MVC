@@ -105,20 +105,25 @@ export class ModeloController {
   static async updateModelo(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { descripcion, nombre, activo } = req.body;
+      const { descripcion, nombre, activo, marca_id } = req.body;
       const modelo = await Modelo.findByPk(id);
 
       if (!modelo) {
         return BaseService.notFound(res, "Modelo no encontrado");
       }
 
+      const marca = await Marca.findByPk(marca_id);
+      if (!marca) {
+        return BaseService.notFound(res, "Marca no encontrada");
+      }
       const modeloModificado = await modelo.update({
-        descripcion,
-        nombre,
-        activo,
+        descripcion: descripcion,
+        nombre: nombre,
+        marca_id: marca_id,
+        activo: activo,
       });
-      if (activo) {
-        await Version.update({ activo: true }, { where: { modelo_id: id } });
+      if (!activo) {
+        await Version.update({ activo: false }, { where: { modelo_id: id } });
       }
       return BaseService.success(
         res,
