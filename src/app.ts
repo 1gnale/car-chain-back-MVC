@@ -25,8 +25,8 @@ import tipoContratacionRoutes from "./routes/tipoContratacionRoutes";
 import vehiculoCotizacionRoutes from "./routes/vehiculoCotizacionRoutes";
 import polizaRoutes from "./routes/polizaRoutes";
 import pagoRoutes from "./routes/pagoRoutes";
-import tiposDocumentoRoutes from "./routes/tiposDocumentoRoutes";
-import tiposUsuarioRoutes from "./routes/tiposUsuarioRoutes";
+import tiposDocumentoRoutes from "./routes/enumsRoutes";
+import enumsRoutes from "./routes/enumsRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
 
 // Configurar variables de entorno
@@ -105,7 +105,7 @@ app.use("/api/poliza", polizaRoutes);
 app.use("/api/pago", pagoRoutes);
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/tipos-documento", tiposDocumentoRoutes);
-app.use("/api/tipos-usuario", tiposUsuarioRoutes);
+app.use("/api/enums", enumsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 // Ruta de health check

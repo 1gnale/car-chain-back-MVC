@@ -1,4 +1,5 @@
 import { body, param, query } from "express-validator";
+import { Persona, Usuario } from "../models";
 
 export const usuariosValidation = {
   // Validación para crear usuario
@@ -48,7 +49,28 @@ export const usuariosValidation = {
       .withMessage("El correo electrónico debe ser válido")
       .isLength({ max: 255 })
       .withMessage("El correo no puede exceder 255 caracteres")
-      .normalizeEmail(),
+      .normalizeEmail()
+      .custom(async (value) => {
+        // 1️⃣ Buscar si existe una persona con ese correo
+        const persona = await Persona.findOne({ where: { correo: value } });
+
+        if (persona) {
+          // 2️⃣ Verificar si esa persona tiene un usuario asociado
+          const usuarioExistente = await Usuario.findOne({
+            where: { persona_id: persona.id },
+          });
+
+          // 3️⃣ Si tiene usuario y está activo, lanzar error
+          if (usuarioExistente && usuarioExistente.activo === true) {
+            throw new Error(
+              "El correo ya está asociado a una persona con un usuario activo"
+            );
+          }
+        }
+
+        // ✅ Si no existe persona, o si tiene usuario inactivo, pasa la validación
+        return true;
+      }),
 
     body("personaData.telefono")
       .notEmpty()
@@ -143,7 +165,32 @@ export const usuariosValidation = {
       .withMessage("El correo electrónico debe ser válido")
       .isLength({ max: 255 })
       .withMessage("El correo no puede exceder 255 caracteres")
-      .normalizeEmail(),
+      .normalizeEmail()
+      .custom(async (value) => {
+        // 1️⃣ Buscar si existe una persona con ese correo
+        const persona = await Persona.findOne({ where: { correo: value } });
+
+        if (persona) {
+          // 2️⃣ Verificar si esa persona tiene un usuario asociado
+          const usuarioExistente = await Usuario.findOne({
+            where: { persona_id: persona.id },
+          });
+
+          // 3️⃣ Si tiene usuario y está activo, lanzar error
+          if (
+            usuarioExistente &&
+            usuarioExistente.activo === true &&
+            persona.correo !== value
+          ) {
+            throw new Error(
+              "El correo ya está asociado a una persona con un usuario activo"
+            );
+          }
+        }
+
+        // ✅ Si no existe persona, o si tiene usuario inactivo, pasa la validación
+        return true;
+      }),
 
     body("personaData.telefono")
       .optional()

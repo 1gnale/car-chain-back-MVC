@@ -29,43 +29,51 @@ dotenv.config();
 
 class SimpleDataSeeder {
   private async clearTables() {
-    console.log("🗑️  Limpiando base de datos...");
+    console.log("🗑️  Limpiando base de datos y reiniciando IDs...");
 
-    const queries = [
-      "SET FOREIGN_KEY_CHECKS = 0",
-      "DELETE FROM pago",
-      "DELETE FROM poliza",
-      "DELETE FROM lineacotizacion",
-      "DELETE FROM cotizacion",
-      "DELETE FROM documentacion",
-      "DELETE FROM tipocontratacion",
-      "DELETE FROM periodopago",
-      "DELETE FROM coberturadetalle",
-      "DELETE FROM detalle",
-      "DELETE FROM cobertura",
-      "DELETE FROM vehiculo",
-      "DELETE FROM version",
-      "DELETE FROM modelo",
-      "DELETE FROM marca",
-      "DELETE FROM cliente",
-      "DELETE FROM usuario",
-      "DELETE FROM persona",
-      "DELETE FROM configuracionlocalidad",
-      "DELETE FROM configuracionedad",
-      "DELETE FROM configuracionantiguedad",
-      "DELETE FROM localidad",
-      "DELETE FROM provincia",
-      "SET FOREIGN_KEY_CHECKS = 1",
+    // 🔒 Desactivar constraints
+    await sequelize.query("SET FOREIGN_KEY_CHECKS = 0");
+
+    // 🧹 Tablas en orden de dependencia (de hijas a padres)
+    const tables = [
+      "pago",
+      "poliza",
+      "lineacotizacion",
+      "cotizacion",
+      "documentacion",
+      "tipocontratacion",
+      "periodopago",
+      "coberturadetalle",
+      "detalle",
+      "cobertura",
+      "vehiculo",
+      "version",
+      "modelo",
+      "marca",
+      "cliente",
+      "usuario",
+      "persona",
+      "configuracionlocalidad",
+      "configuracionedad",
+      "configuracionantiguedad",
+      "localidad",
+      "provincia",
     ];
 
-    for (const query of queries) {
+    // 🗑️ Eliminar contenido y reiniciar autoincrement
+    for (const table of tables) {
       try {
-        await sequelize.query(query);
+        await sequelize.query(`DELETE FROM ${table}`);
+        await sequelize.query(`ALTER TABLE ${table} AUTO_INCREMENT = 1`);
       } catch (error) {
-        console.log(`⚠️  Error ejecutando: ${query}`);
+        console.log(`⚠️  Error al limpiar tabla: ${table}`, error);
       }
     }
-    console.log("✅ Base de datos limpiada");
+
+    // 🔓 Reactivar constraints
+    await sequelize.query("SET FOREIGN_KEY_CHECKS = 1");
+
+    console.log("✅ Base de datos limpiada y IDs reiniciados");
   }
 
   private async seedProvincias() {
@@ -796,53 +804,23 @@ class SimpleDataSeeder {
   private async seedConfiguracionesEdad() {
     console.log("👶 Creando configuraciones de edad...");
 
-    const configuraciones = [
-      {
-        nombre: "Jóvenes",
-        minima: 18,
-        maxima: 25,
-        descuento: 0.0,
-        ganancia: 2.0,
-        recargo: 15.0,
+    const configuraciones: Array<any> = [];
+    const rangoMax = 100;
+    const bloque = 10;
+
+    for (let inicio = 18; inicio <= rangoMax; inicio += bloque) {
+      const minima = inicio;
+      const maxima = Math.min(inicio + bloque - 1, rangoMax);
+      configuraciones.push({
+        nombre: `${minima}-${maxima} años`,
+        minima: minima,
+        maxima: maxima,
+        descuento: Math.round(Math.random() * 5), // ejemplo random 0-5%
+        ganancia: Math.round(Math.random() * 6 + 2), // 2-8%
+        recargo: Math.round(Math.random() * 10 + 1), // 1-11%
         activo: true,
-      },
-      {
-        nombre: "Adultos Jóvenes",
-        minima: 26,
-        maxima: 35,
-        descuento: 2.5,
-        ganancia: 4.0,
-        recargo: 8.0,
-        activo: true,
-      },
-      {
-        nombre: "Adultos",
-        minima: 36,
-        maxima: 50,
-        descuento: 5.0,
-        ganancia: 5.0,
-        recargo: 3.0,
-        activo: true,
-      },
-      {
-        nombre: "Mayores",
-        minima: 51,
-        maxima: 70,
-        descuento: 7.5,
-        ganancia: 6.0,
-        recargo: 1.0,
-        activo: true,
-      },
-      {
-        nombre: "Tercera Edad",
-        minima: 71,
-        maxima: 85,
-        descuento: 3.0,
-        ganancia: 3.0,
-        recargo: 10.0,
-        activo: true,
-      },
-    ];
+      });
+    }
 
     const created = await ConfigEdad.bulkCreate(configuraciones);
     console.log(`✅ ${created.length} configuraciones de edad creadas`);
@@ -852,52 +830,17 @@ class SimpleDataSeeder {
   private async seedConfiguracionesLocalidad() {
     console.log("🏙️ Creando configuraciones de localidad...");
 
-    // Obtener las localidades que acabamos de crear
     const localidades = await Localidad.findAll();
     console.log(`Found ${localidades.length} localidades for reference`);
 
-    const configuraciones = [
-      {
-        nombre: "La Plata",
-        descuento: 1.0,
-        ganancia: 10.0,
-        recargo: 1.5,
-        activo: true,
-        localidad_id: localidades[0].id, // La Plata
-      },
-      {
-        nombre: "Mar del Plata",
-        descuento: 2.0,
-        ganancia: 8.0,
-        recargo: 2.0,
-        activo: true,
-        localidad_id: localidades[1].id, // Mar del Plata
-      },
-      {
-        nombre: "Córdoba Capital",
-        descuento: 1.5,
-        ganancia: 9.0,
-        recargo: 1.8,
-        activo: true,
-        localidad_id: localidades[2].id, // Córdoba Capital
-      },
-      {
-        nombre: "Rosario",
-        descuento: 2.5,
-        ganancia: 7.5,
-        recargo: 2.2,
-        activo: true,
-        localidad_id: localidades[3].id, // Rosario
-      },
-      {
-        nombre: "Palermo",
-        descuento: 0.5,
-        ganancia: 12.0,
-        recargo: 3.0,
-        activo: true,
-        localidad_id: localidades[4].id, // Palermo (CABA)
-      },
-    ];
+    const configuraciones = localidades.map((loc) => ({
+      nombre: loc.descripcion,
+      descuento: Math.round(Math.random() * 5 + 0), // ejemplo: descuento random entre 0-5%
+      ganancia: Math.round(Math.random() * 15 + 5), // ganancia random entre 5-20%
+      recargo: Math.round(Math.random() * 5 + 1), // recargo random entre 1-6%
+      activo: true,
+      localidad_id: loc.id,
+    }));
 
     const created = await ConfigLocalidad.bulkCreate(configuraciones);
     console.log(`✅ ${created.length} configuraciones de localidad creadas`);
@@ -907,62 +850,23 @@ class SimpleDataSeeder {
   private async seedConfiguracionesAntiguedad() {
     console.log("📅 Creando configuraciones de antigüedad...");
 
-    const configuraciones = [
-      {
-        nombre: "Vehículo Nuevo",
-        minima: 0,
-        maxima: 1,
-        descuento: 5.0,
-        ganancia: 15.0,
-        recargo: 0.0,
+    const configuraciones: Array<any> = [];
+    const rangoMax = 100;
+    const bloque = 10;
+
+    for (let inicio = 0; inicio <= rangoMax; inicio += bloque) {
+      const minima = inicio;
+      const maxima = Math.min(inicio + bloque - 1, rangoMax);
+      configuraciones.push({
+        nombre: `${minima}-${maxima} años`,
+        minima: minima,
+        maxima: maxima,
+        descuento: Math.round(Math.random() * 5), // ejemplo 0-5%
+        ganancia: Math.round(Math.random() * 10 + 5), // 5-15%
+        recargo: Math.round(Math.random() * 20 + 10), // 10-30%
         activo: true,
-      },
-      {
-        nombre: "Cuando es usado",
-        minima: 4,
-        maxima: 6,
-        descuento: 1.0,
-        ganancia: 20.0,
-        recargo: 100.0,
-        activo: true,
-      },
-      {
-        nombre: "Semi-nuevo",
-        minima: 2,
-        maxima: 3,
-        descuento: 3.0,
-        ganancia: 18.0,
-        recargo: 5.0,
-        activo: true,
-      },
-      {
-        nombre: "Usado estándar",
-        minima: 7,
-        maxima: 10,
-        descuento: 0.0,
-        ganancia: 25.0,
-        recargo: 150.0,
-        activo: true,
-      },
-      {
-        nombre: "Muy usado",
-        minima: 11,
-        maxima: 15,
-        descuento: 0.0,
-        ganancia: 30.0,
-        recargo: 200.0,
-        activo: true,
-      },
-      {
-        nombre: "Antiguo",
-        minima: 16,
-        maxima: 25,
-        descuento: 0.0,
-        ganancia: 35.0,
-        recargo: 300.0,
-        activo: false, // Desactivado por alto riesgo
-      },
-    ];
+      });
+    }
 
     const created = await ConfigAntiguedad.bulkCreate(configuraciones);
     console.log(`✅ ${created.length} configuraciones de antigüedad creadas`);
@@ -1108,15 +1012,19 @@ class SimpleDataSeeder {
 
     // Debug: Verificar que tenemos suficientes datos
     if (cotizaciones.length < 5) {
-      console.log(`⚠️  Solo se encontraron ${cotizaciones.length} cotizaciones, se esperaban 5`);
+      console.log(
+        `⚠️  Solo se encontraron ${cotizaciones.length} cotizaciones, se esperaban 5`
+      );
     }
     if (coberturas.length < 3) {
-      console.log(`⚠️  Solo se encontraron ${coberturas.length} coberturas, se esperaban 3`);
+      console.log(
+        `⚠️  Solo se encontraron ${coberturas.length} coberturas, se esperaban 3`
+      );
     }
 
     // Verificar que todos los elementos existen antes de usar sus IDs
     const lineas = [];
-    
+
     if (cotizaciones[0] && coberturas[0]) {
       lineas.push({
         monto: 15000.0,
@@ -1124,7 +1032,7 @@ class SimpleDataSeeder {
         cobertura_id: coberturas[0].id, // Cobertura Básica
       });
     }
-    
+
     if (cotizaciones[1] && coberturas[1]) {
       lineas.push({
         monto: 25000.0,
@@ -1132,7 +1040,7 @@ class SimpleDataSeeder {
         cobertura_id: coberturas[1].id, // Cobertura Intermedia
       });
     }
-    
+
     if (cotizaciones[2] && coberturas[2]) {
       lineas.push({
         monto: 20000.0,
@@ -1140,7 +1048,7 @@ class SimpleDataSeeder {
         cobertura_id: coberturas[2].id, // Cobertura Total
       });
     }
-    
+
     if (cotizaciones[3] && coberturas[1]) {
       lineas.push({
         monto: 18000.0,
@@ -1148,7 +1056,7 @@ class SimpleDataSeeder {
         cobertura_id: coberturas[1].id, // Cobertura Intermedia
       });
     }
-    
+
     if (cotizaciones[4] && coberturas[0]) {
       lineas.push({
         monto: 22000.0,
@@ -1357,8 +1265,10 @@ class SimpleDataSeeder {
       const coberturaDetalles = await this.seedCoberturaDetalles();
       const tiposContratacion = await this.seedTiposContratacion();
       const configuracionesEdad = await this.seedConfiguracionesEdad();
-      const configuracionesLocalidad = await this.seedConfiguracionesLocalidad();
-      const configuracionesAntiguedad = await this.seedConfiguracionesAntiguedad();
+      const configuracionesLocalidad =
+        await this.seedConfiguracionesLocalidad();
+      const configuracionesAntiguedad =
+        await this.seedConfiguracionesAntiguedad();
       const periodosPago = await this.seedPeriodosPago();
 
       // Crear dependencias para pólizas

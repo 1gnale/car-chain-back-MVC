@@ -73,6 +73,7 @@ async function deployPolizaToBlockchain(
     const documento = persona.documento;
     const estado = poliza.estadoPoliza;
     const fechaVencimiento = poliza.fechaVencimiento?.toString();
+    const numPoliza = poliza.numero_poliza.toString();
     const matriculaVehiculo = vehiculo.matricula;
 
     // 1. Crear hash de los datos
@@ -81,7 +82,7 @@ async function deployPolizaToBlockchain(
       [
         nombre,
         documento,
-        numeroPoliza,
+        numPoliza,
         estado,
         fechaVencimiento,
         matriculaVehiculo,
@@ -96,7 +97,7 @@ async function deployPolizaToBlockchain(
     const tx = await contrato.registrarPoliza(
       nombre,
       documento,
-      numeroPoliza,
+      numPoliza,
       estado,
       fechaVencimiento,
       matriculaVehiculo,
@@ -377,9 +378,7 @@ export class MercadoPagoController {
         Number(idTipoContratacion)
       );
       if (!tipoContratacion) {
-        console.error(
-          `❌ TipoContratacion ${idTipoContratacion} no encontrado`
-        );
+        console.error(` TipoContratacion ${idTipoContratacion} no encontrado`);
         return BaseService.serverError(
           res,
           new Error("Tipo de contratación no encontrado"),
@@ -389,7 +388,7 @@ export class MercadoPagoController {
 
       const periodoPago = await PeriodoPago.findByPk(Number(idPeriodoPago));
       if (!periodoPago) {
-        console.error(`❌ PeriodoPago ${idPeriodoPago} no encontrado`);
+        console.error(` PeriodoPago ${idPeriodoPago} no encontrado`);
         return BaseService.serverError(
           res,
           new Error("Periodo de pago no encontrado"),
@@ -427,7 +426,9 @@ export class MercadoPagoController {
 
       if (deployedPoliza) {
         console.log(
-          `✅ Póliza ${numero_poliza} desplegada en blockchain: ${deployedPoliza}`
+          `✅ Póliza ${numero_poliza} desplegada en blockchain: ${JSON.stringify(
+            deployedPoliza
+          )}`
         );
       } else {
         console.error(
@@ -508,6 +509,13 @@ export class MercadoPagoController {
         });
       }
 
+      const polizaDB = await Poliza.findByPk(numeroPoliza);
+      if (!polizaDB) {
+        return res.status(404).json({
+          message: "Poliza no encontrada en base de datos",
+        });
+      }
+
       // Devolver respuesta JSON
       return res.json({
         nombre: poliza.nombre,
@@ -517,6 +525,7 @@ export class MercadoPagoController {
         fechaVencimiento: poliza.fechaVencimiento,
         matriculaVehiculo: poliza.matriculaVehiculo,
         hashDatos: poliza.hashDatos,
+        hashTransaccion: polizaDB.hashContrato,
         firma: poliza.firma,
       });
     } catch (error: any) {
@@ -561,7 +570,6 @@ export class MercadoPagoController {
         );
       }
 
-      // Crear registro de pago pendiente en la base de datos
       // Crear registro de pago pendiente en la base de datos
       const nuevoPago = await Pago.create({
         total: parseFloat(total),

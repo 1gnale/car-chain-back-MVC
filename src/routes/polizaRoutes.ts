@@ -23,6 +23,16 @@ router.post(
   handleValidationErrors,
   PolizaController.createPoliza
 );
+router.post(
+  "/createCompletePoliza",
+  handleValidationErrors,
+  PolizaController.createPolizaCompleta
+);
+router.post(
+  "/createParcialPoliza",
+  handleValidationErrors,
+  PolizaController.createPolizaParcial
+);
 
 // HU 11/12 --- El backend debe ser capaz de devolver una lista con todas las polizas (Datos de poliza a traer: N° poliza, cobertura, titular, vehiculo, fecha de creacion y estado).
 router.get("/getAllPolizas", PolizaController.getAllPolizas);
