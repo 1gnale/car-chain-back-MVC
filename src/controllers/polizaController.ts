@@ -657,48 +657,21 @@ export class PolizaController {
   // HU 12 --- El backend debe ser capaz guardar una revision.
   static async createRevision(req: Request, res: Response) {
     try {
-      const { usuario_legajo, fecha, hora, poliza_numero, estado } = req.body;
+      const { poliza } = req.body;
 
-      if (!fecha || !hora || !estado) {
-        const errores: { msg: string; path: string }[] = [];
+      const polizaData = await Poliza.findByPk(poliza.numero_poliza);
 
-        if (!fecha)
-          errores.push({
-            msg: "La fecha de la revision es requerida",
-            path: "fecha",
-          });
-        if (!hora)
-          errores.push({
-            msg: "La hora de la revision es requerida",
-            path: "hora",
-          });
-        if (!estado)
-          errores.push({
-            msg: "El estado de la revision es requerido",
-            path: "estado",
-          });
-
-        return BaseService.validationError(res, {
-          array: () => errores,
-        } as any);
-      }
-
-      const poliza = await Poliza.findByPk(poliza_numero);
-
-      if (!poliza) {
+      if (!polizaData) {
         return BaseService.notFound(res, "poliza no encontrada");
       }
 
       const nuevaRevision = await Revision.create({
-        usuario_legajo,
-        fecha,
-        hora,
-        poliza_numero,
-        estado: estado as EstadoRevision,
+        poliza_numero: polizaData.numero_poliza,
+        estado: EstadoRevision.PENDIENTE,
       });
 
-      const polizaModificada = await poliza.update({
-        estadoPoliza: estado as EstadoPoliza,
+      const polizaModificada = await polizaData.update({
+        estadoPoliza: EstadoPoliza.EN_REVISION,
       });
 
       return BaseService.created(
