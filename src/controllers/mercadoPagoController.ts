@@ -205,7 +205,7 @@ export class MercadoPagoController {
             pending: `${process.env.CORS_ORIGIN}`,
             failure: `${process.env.CORS_ORIGIN}/pago-fallido/${nuevoPago.id}`,
           },
-
+          auto_return: "approved",
           // External reference que incluye información para el webhook
           external_reference:
             external_reference ||
