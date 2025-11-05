@@ -87,42 +87,18 @@ export const PolizaValidation = {
   ],
   // HU 12 --- El backend debe ser capaz guardar una revision.
   createRevision: [
-    body("usuario_legajo")
+    body("poliza")
       .notEmpty()
-      .withMessage("El usuario_legajo es obligatorio")
-      .isInt()
-      .withMessage("El usuario_legajo debe ser un número entero")
+      .withMessage("La poliza es obligatorio")
       .custom(async (value) => {
-        const usuario = await Usuario.findByPk(value);
-        if (!usuario) {
-          throw new Error("El usuario indicado no existe");
-        }
-        return true;
-      }),
-    body("poliza_numero")
-      .notEmpty()
-      .withMessage("El poliza_numero es obligatorio")
-      .isInt()
-      .withMessage("El poliza_numero debe ser un número entero")
-      .custom(async (value) => {
-        const poliza = await Poliza.findByPk(value);
+        const poliza = await Poliza.findByPk(value.numero_poliza);
         if (!poliza) {
           throw new Error("La poliza indicada no existe");
         }
         return true;
       }),
-    body("fecha").notEmpty().withMessage("La fecha es obligatoria"),
-    body("hora").notEmpty().withMessage("La hora es obligatoria"),
-    body("estado")
-      .notEmpty()
-      .withMessage("El estado de la revision es requerida")
-      .isIn(Object.values(EstadoRevision))
-      .withMessage(
-        `El estado de la póliza debe ser uno de: ${Object.values(
-          EstadoRevision
-        ).join(", ")}`
-      ),
   ],
+
   // HU 18.1/18.2/18.3/18.4 --- El backend debe ser capaz de devolver una lista de todas las polizas del cliente (Datos de poliza a traer: N° Poliza, cobertura, fecha de contratacion, hora de contracion, estado).
   getAllPolizasByClientID: [
     param("mail")

@@ -9,30 +9,26 @@ export enum EstadoRevision {
 }
 
 interface RevisionAttributes {
-  id: number;
-  fecha: Date;
-  hora: string;
-  estado: EstadoRevision;
-  usuario_legajo: number;
-  poliza_numero: number;
+  id?: number;
+  fecha?: Date;
+  hora?: string;
+  estado?: EstadoRevision;
+  usuario_legajo?: number;
+  poliza_numero?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-interface RevisionCreationAttributes
-  extends Optional<RevisionAttributes, "id"> {}
+class Revision extends Model<RevisionAttributes> implements RevisionAttributes {
+  public id?: number;
+  public fecha?: Date;
+  public hora?: string;
+  public estado?: EstadoRevision;
+  public usuario_legajo?: number;
+  public poliza_numero?: number;
 
-class Revision
-  extends Model<RevisionAttributes, RevisionCreationAttributes>
-  implements RevisionAttributes
-{
-  public id!: number;
-  public fecha!: Date;
-  public hora!: string;
-  public estado!: EstadoRevision;
-  public usuario_legajo!: number;
-  public poliza_numero!: number;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public readonly createdAt?: Date;
+  public readonly updatedAt?: Date;
 }
 
 Revision.init(
@@ -45,22 +41,22 @@ Revision.init(
     },
     fecha: {
       type: DataTypes.DATEONLY,
-      allowNull: false,
+      allowNull: true,
       field: "fecharevision",
     },
     hora: {
       type: DataTypes.TIME,
-      allowNull: false,
+      allowNull: true,
       field: "horarevsion",
     },
     estado: {
       type: DataTypes.ENUM(...Object.values(EstadoRevision)),
-      allowNull: false,
+      allowNull: true,
       defaultValue: EstadoRevision.PENDIENTE,
     },
     usuario_legajo: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: "usuario",
         key: "legajo",
@@ -68,7 +64,7 @@ Revision.init(
     },
     poliza_numero: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       field: "poliza_num",
       references: {
         model: "poliza",
@@ -79,7 +75,7 @@ Revision.init(
   {
     sequelize,
     tableName: "revision",
-    timestamps: false,
+    timestamps: true,
   }
 );
 
