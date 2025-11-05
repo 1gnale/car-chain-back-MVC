@@ -43,4 +43,6 @@ router.get(
   MercadoPagoController.updatePolizaYPagoState
 );
 
+router.get("/failedPago/:pagoId", MercadoPagoController.updatePagoFallido);
+
 export default router;
