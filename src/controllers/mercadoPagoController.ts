@@ -742,6 +742,29 @@ export class MercadoPagoController {
       );
     }
   }
+
+  // HU20.2 - El backed debe ser capaz de actualizar los datos del pago (estado vigente) cuando el pago haya sido confirmado.
+  static async updatePagoFallido(req: Request, res: Response) {
+    try {
+      const { pagoId } = req.params;
+
+      const pago = await Pago.findByPk(pagoId);
+
+      if (!pago) {
+        return BaseService.serverError(res, "pago no encontrado");
+      }
+
+      const pagoModificada = await pago.destroy();
+
+      return BaseService.success(res, "Pago eliminado existosamente");
+    } catch (error: any) {
+      return BaseService.serverError(
+        res,
+        error,
+        "Error al actualizar los datos"
+      );
+    }
+  }
 }
 
 function sumarMeses(meses: number): Date {
