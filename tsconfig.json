@@ -1,18 +1,26 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "lib": ["es2020"],
+    /* 📦 Salida del compilador */
+    "target": "ES2020",
+    "module": "CommonJS",
+    "lib": ["ES2020"],
     "outDir": "./dist",
     "rootDir": "./src",
+
+    /* ⚙️ Configuración general */
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+
+    /* 🧠 Decoradores y metadata (si usas Sequelize o TypeORM) */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "typeRoots": ["./node_modules/@types"]
+
+    /* 🧩 Tipos */
+    "typeRoots": ["./node_modules/@types"],
+    "types": ["node", "express"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
