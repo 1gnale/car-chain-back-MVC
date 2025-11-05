@@ -200,13 +200,10 @@ export class MercadoPagoController {
               },
             }),
           },
-
           back_urls: {
-            success: `${process.env.CORS_ORIGIN}/procesando-primerPago`,
-            pending:
-              "https://www.youtube.com/watch?v=NyVYXRD1Ans&list=RDdXfzorLUMzA&index=3",
-            failure:
-              "https://www.youtube.com/watch?v=NyVYXRD1Ans&list=RDdXfzorLUMzA&index=3",
+            success: `${process.env.CORS_ORIGIN}/procesando-primerPago/${poliza_numero}/${nuevoPago.id}/${idTipoContratacion}/${idPeriodoPago}`,
+            pending: `${process.env.CORS_ORIGIN}`,
+            failure: `${process.env.CORS_ORIGIN}/pago-fallido/${nuevoPago.id}`,
           },
 
           // External reference que incluye información para el webhook
@@ -614,11 +611,9 @@ export class MercadoPagoController {
           },
 
           back_urls: {
-            success: `${process.env.CORS_ORIGIN}/`,
-            pending:
-              "https://www.youtube.com/watch?v=NyVYXRD1Ans&list=RDdXfzorLUMzA&index=3",
-            failure:
-              "https://www.youtube.com/watch?v=NyVYXRD1Ans&list=RDdXfzorLUMzA&index=3",
+            success: `${process.env.CORS_ORIGIN}/procesando-pago/${poliza_numero}/${nuevoPago.id}`,
+            pending: `${process.env.CORS_ORIGIN}`,
+            failure: `${process.env.CORS_ORIGIN}/pago-fallido/${nuevoPago.id}`,
           },
 
           // External reference que incluye información para el webhook
