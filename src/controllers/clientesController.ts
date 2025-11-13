@@ -190,6 +190,7 @@ export class ClientesController {
       const persona = await Persona.findByPk(cliente.persona_id);
       if (persona) {
         await persona.update(personaData);
+        await persona.update({ localidad_id: personaData.localidad });
       } else {
         return BaseService.notFound(res, "Persona asociada no encontrada");
       }
