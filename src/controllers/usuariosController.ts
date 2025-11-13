@@ -453,4 +453,35 @@ export class UsuariosController {
       );
     }
   }
+
+  static async getUserTypeByMail(req: Request, res: Response) {
+    try {
+      const { mail } = req.params;
+      const usuario = await Usuario.findOne({
+        include: [
+          {
+            model: Persona,
+            as: "persona",
+            where: {
+              correo: mail,
+            },
+          },
+        ],
+      });
+      if (!usuario) {
+        return BaseService.success(
+          res,
+          "CLIENTE",
+          "Usuario obtenido exitosamente"
+        );
+      }
+      return BaseService.success(
+        res,
+        usuario.tipoUsuario,
+        "Usuario obtenido exitosamente"
+      );
+    } catch (error: any) {
+      return BaseService.serverError(res, error, "Error al obtener el usuario");
+    }
+  }
 }

@@ -28,6 +28,7 @@ import pagoRoutes from "./routes/pagoRoutes";
 import tiposDocumentoRoutes from "./routes/enumsRoutes";
 import enumsRoutes from "./routes/enumsRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
+import emailRouter from "./routes/mailRoutes";
 
 // Configurar variables de entorno
 dotenv.config();
@@ -107,6 +108,7 @@ app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/tipos-documento", tiposDocumentoRoutes);
 app.use("/api/enums", enumsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api", emailRouter);
 
 // Ruta de health check
 app.get("/health", (req, res) => {

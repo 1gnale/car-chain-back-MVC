@@ -47,4 +47,10 @@ router.put(
   UsuariosController.updateUser
 );
 
+router.get(
+  "/getUserType/:mail",
+  usuariosValidation.update,
+  UsuariosController.getUserTypeByMail
+);
+
 export default router;

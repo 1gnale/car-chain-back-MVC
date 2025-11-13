@@ -1084,7 +1084,7 @@ export class PolizaController {
   // HU 19 --- El backend debe ser capaz de devolver una lista con todas los siniestros (Datos del siniestro a traer: N° poliza, cobertura, titular, vehiculo, fecha, hora y estado).
   static async getAllSiniestros(req: Request, res: Response) {
     try {
-      const siniestos = await Siniestro.findAll({
+      const siniestros = await Siniestro.findAll({
         order: [["fechaSiniestro", "DESC"]],
         include: [
           {
@@ -1144,21 +1144,37 @@ export class PolizaController {
         ],
       });
 
-      if (!siniestos) {
+      if (!siniestros) {
         return BaseService.notFound(res, "siniesto no encontrada");
       }
 
-      const finalSiniestro = siniestos.map((siniesto: any) => ({
-        id: siniesto.poliza_numero,
-        fecha: siniesto.fechaSiniestro,
-        hora: siniesto.horaSiniestro,
-        estado: siniesto.estado,
-        vehiculo: siniesto.poliza.lineaCotizacion.cotizacion.vehiculo,
-        titular:
-          siniesto.poliza.lineaCotizacion.cotizacion.vehiculo.cliente.persona
-            .nombres,
-        cobertura: siniesto.poliza.lineaCotizacion.cobertura.nombre,
-      }));
+      const finalSiniestro = siniestros.map((s: any) => {
+        const siniestro = s.toJSON();
+
+        const cliente =
+          siniestro.poliza?.lineaCotizacion?.cotizacion?.vehiculo?.cliente;
+        const persona = cliente?.persona;
+
+        if (cliente && persona) {
+          siniestro.poliza.lineaCotizacion.cotizacion.vehiculo.cliente = {
+            ...persona,
+            idClient: cliente.idClient,
+            ...cliente,
+            persona: undefined,
+          };
+        }
+
+        const imgSiniestro = {
+          fotoDenuncia: siniestro.fotoDenuncia,
+          fotoVehiculo: siniestro.fotoVehiculo,
+        };
+        const imgSiniestro64 = bufferToBase64ImagesSiniestro(imgSiniestro);
+
+        siniestro.fotoDenuncia = imgSiniestro64.fotoDenuncia;
+        siniestro.fotoVehiculo = imgSiniestro64.fotoVehiculo;
+
+        return siniestro;
+      });
 
       return BaseService.success(res, finalSiniestro);
     } catch (error: any) {
@@ -1374,7 +1390,7 @@ export class PolizaController {
   static async updateStateSiniestro(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { estadoSiniestro } = req.body;
+      const { estado } = req.body;
 
       const siniestro = await Siniestro.findByPk(id);
 
@@ -1383,7 +1399,7 @@ export class PolizaController {
       }
 
       const siniestroModificado = await siniestro.update({
-        estado: estadoSiniestro as EstadoSiniestro,
+        estado: estado as EstadoSiniestro,
       });
 
       return BaseService.success(
@@ -1694,9 +1710,12 @@ export class PolizaController {
       const montoAsegurado =
         poliza.lineaCotizacion.cotizacion.vehiculo.version.precio_mercado;
 
+      console.log("montoAsegurado   " + montoAsegurado);
+
       // PASO 2: CREAR LA DOCUMENTACIÓN (Lógica de validación de base64)
       // (Esta lógica es idéntica a la de 'createPolizaCompleta')
       // Nota: Usamos 'documentacion' del req.body, no 'poliza.documentacion'
+      // Lista de campos obligatorios
       const campos = {
         fotoFrontal: documentacion.fotoFrontal,
         fotoTrasera: documentacion.fotoTrasera,
@@ -1706,17 +1725,54 @@ export class PolizaController {
         cedulaVerde: documentacion.cedulaVerde,
       };
 
-      // Validación de campos de documentación...
+      // Validación: campos requeridos
       for (const [key, value] of Object.entries(campos)) {
         if (!value) {
-          // Lanzamos error para que el CATCH haga el rollback
-          throw new Error(`El campo ${key} es requerido`);
+          return BaseService.validationError(res, {
+            array: () => [{ msg: `El campo ${key} es requerido`, path: key }],
+          } as any);
         }
-        // ... (Aquí iría el resto de tu validación de base64 y regex)
-        // ... (Por brevedad, la omito, pero TÚ DEBES MANTENERLA)
+
+        let base64Data = value;
+
+        // Si viene con encabezado tipo data:image/...
+        if (value.startsWith("data:")) {
+          if (!value.startsWith("data:image/")) {
+            return BaseService.validationError(res, {
+              array: () => [
+                { msg: `El campo ${key} debe contener una imagen`, path: key },
+              ],
+            } as any);
+          }
+
+          // Cortar el encabezado y quedarnos con la parte después de la coma
+          const parts = value.split(",");
+          if (parts.length !== 2) {
+            return BaseService.validationError(res, {
+              array: () => [
+                { msg: `El campo ${key} tiene un formato inválido`, path: key },
+              ],
+            } as any);
+          }
+          base64Data = parts[1];
+        }
+
+        // Validar que la parte base64 sea válida
+        const base64Regex =
+          /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+        if (!base64Regex.test(base64Data)) {
+          return BaseService.validationError(res, {
+            array: () => [
+              {
+                msg: `El campo ${key} debe ser una cadena base64 válida`,
+                path: key,
+              },
+            ],
+          } as any);
+        }
       }
 
-      // Crear el registro de Documentación en la base
+      // Crear el registro en la base
       const nuevaDocumentacion = await Documentacion.create(
         {
           fotoFrontal: Buffer.from(
