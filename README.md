@@ -4,7 +4,7 @@ Backend del sistema de gestión de pólizas de seguro vehicular Car-Chain: cotiz
 
 Proyecto final de la carrera de Ingeniería en Sistemas de Información — Universidad Tecnológica Nacional, Facultad Regional Tucumán.
 
-**[Ver demostración en video]([https://www.youtube.com/watch?v=fzim2_93Q-U])** · Frontend: **[car-chain-front-MVC](https://github.com/JuanCarriles/car-chain-front-MVC/tree/main)**
+**[Ver demostración en video](https://www.youtube.com/watch?v=fzim2_93Q-U)** · Frontend: **[car-chain-front-MVC](https://github.com/JuanCarriles/car-chain-front-MVC/tree/main)**
 
 ---
 
